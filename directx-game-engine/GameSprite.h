@@ -21,23 +21,5 @@ struct GameSprite : public D3DX10_SPRITE {
 	BOOL flipSprite;				// Flip sprite on the horizontal 
 };
 
-struct NpcSprite : public GameSprite {
-	char * walkPattern;				// Basic walking pattern, e.g LLRLUD would walk the NPC left, left, Right, Up, Down...the pattern would then be reversed DULRLL
-};
-
-struct BuildingSprite : public GameSprite {
-	BuildingSprite();
-	float  doorLocation[4];
-};
-
-struct MapSprite : public GameSprite {
-	MapSprite();
-	std::vector<std::vector<float>> * deadZones;		// Areas of the map we cannot traverse. 
-};
-
-struct PcSprite : public GameSprite {
-
-};
-
 ////////////////////// ENDIF for Header Protection //////////////////////
 #endif
