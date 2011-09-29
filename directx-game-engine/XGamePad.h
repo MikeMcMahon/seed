@@ -3,7 +3,7 @@
 
 #include "GameHeaders.h"
 
-#define MAX_CONTROLLERS 1
+#define MAX_CONTROLLERS 4
 
 enum XButtons { 
 	DPAD_UP = XINPUT_GAMEPAD_DPAD_UP,

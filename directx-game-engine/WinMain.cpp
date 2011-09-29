@@ -41,18 +41,26 @@ bool InitWindow( HINSTANCE hInstance, int windowWidth, int windowHeight );
 LRESULT CALLBACK WndProc( HWND, UINT, WPARAM, LPARAM );
 void Render();
 void UpdateScene();
-void MoveSprites();
+void MoveSprites(float);
 void UpdateSprites(); 
 bool InitSprites();
 bool HasFrameElapsed(); 
 
 // Timers
-LARGE_INTEGER timeStart;
-LARGE_INTEGER timeEnd;
-LARGE_INTEGER timerFreq;
-float animRate;
-float lastElapsedFrame = 0;
-float frameDuration = 0.05f;
+const int TICKS_PER_SECOND = 25;
+const float SKIP_TICKS = 1000.0f / (float)TICKS_PER_SECOND;
+const int MAX_FRAMESKIP = 5;
+
+float GetMilis();
+float GetMilis() { 
+	LARGE_INTEGER t, f;
+	QueryPerformanceCounter(&t);
+	QueryPerformanceFrequency(&f);
+
+	// Return in Miliseconds
+	return ((float)t.QuadPart / (float)f.QuadPart) * 1000.0f;
+}
+
 
 // Main entry point
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) 
@@ -77,36 +85,37 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	// Prime the message structure
 	PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE);
 	
-	// Get the clock frequency
-	QueryPerformanceFrequency(&timerFreq);
-
 	// Get the timer frequency
+	int loops = 0;
+	float interpolation = 0;
+	DWORD next_game_tick = GetMilis();
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-
 		// Detects the xbox controllers
 		XControl->GetControllerStates();
+		
+		loops = 0;
+		//for (float f = GetMilis(); f > next_game_tick && loops < MAX_FRAMESKIP; f = GetMilis()) {
+		while ( GetMilis() > next_game_tick && loops < MAX_FRAMESKIP) { 
+			// Handles the textures animation
+			UpdateScene();
+			
+			next_game_tick += SKIP_TICKS;
+			loops++;
+		}
 
+		interpolation = float ( GetMilis() + SKIP_TICKS - next_game_tick ) / float ( SKIP_TICKS );
 		// Moves the sprites around directionaly
-		MoveSprites();
+		MoveSprites(interpolation);		
 
-		// Handles the textures animation
-		UpdateScene();
-
-		// Get the start time
-		QueryPerformanceCounter(&timeStart);
+		// Render the sprites to the screen
 		Render();
-		// Get the end time
-		QueryPerformanceCounter(&timeEnd);
-
-		// set the animation rate
-		animRate = ( (float)timeEnd.QuadPart - (float)timeStart.QuadPart ) / timerFreq.QuadPart;
 
 		// Do any updating of the sprites after the scene is over
-		UpdateSprites();
+		//UpdateSprites();
 	}
 
 	// Clean up the resources we allocated
@@ -190,7 +199,7 @@ void Render() {
     UINT  OriginalSampleMask = 0;
 	if (pD3DDevice != NULL) {
 		// Clear the target buffer
-		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f)); // 7-17 microseconds
+		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 
 		if (pSpriteObject != NULL) {
 			// Start Drawing the sprites
@@ -309,8 +318,8 @@ bool InitSprites() {
 	sprites[0].height = WINDOW_HEIGHT;
 	sprites[0].posX = 0;
 	sprites[0].posY = 0;
-	sprites[0].moveX = .05f; // How much said sprite can move in x direction at a given time
-	sprites[0].moveY = .05f; // How much said sprite can move in the y direciton at a given time
+	sprites[0].moveX = .09f; // How much said sprite can move in x direction at a given time
+	sprites[0].moveY = .09f; // How much said sprite can move in the y direciton at a given time
 	sprites[0].visible = TRUE;
 	sprites[0].canAnimate = FALSE;
 
@@ -319,15 +328,6 @@ bool InitSprites() {
 
 
 void UpdateSprites() { 
-	lastElapsedFrame += animRate;
-		
-	if (lastElapsedFrame < frameDuration) { 
-		// Only update if it's time to update!
-		return;
-	}
-
-	// Reset the frame counter
-	lastElapsedFrame = 0;
 	for (int i = 0; i < MAX_SPRITES; i++) { 
 		if (sprites[i].visible && sprites[i].canAnimate) { 
 			sprites[i].curFrame++;
@@ -340,14 +340,20 @@ void UpdateSprites() {
 	}
 }
 
-void MoveSprites() { 
+void MoveSprites(float interpolation) { 
 	// We want to move a moveable sprite of course! 
 	if (sprites[0].visible) { 
 		// Check to see which direction was pressed
 		float posY = sprites[0].posY;
 		float posX = sprites[0].posX;
-		float moveX = sprites[0].moveX;
-		float moveY = sprites[0].moveY; 
+		float moveX = sprites[0].moveX * interpolation;
+		float moveY = sprites[0].moveY * interpolation;
+
+		// Can the sprite run? we should check that first :) 
+		if (XControl->IsButtonPressedForController(0, A_BUTTON)) {
+			moveX *= 2;
+			moveY *= 2;
+		}
 
 		if (XControl->IsButtonPressedForController(0, DPAD_UP))
 			posY -= moveY;
