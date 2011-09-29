@@ -30,12 +30,12 @@
     <ClCompile Include="GameSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="XGamePad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameModes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XInputControllers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameHeaders.h">
@@ -49,6 +49,21 @@
     </ClInclude>
     <ClInclude Include="NpcSprite.h">
       <Filter>Header Files\Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingSprite.h">
+      <Filter>Header Files\Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="MapSprite.h">
+      <Filter>Header Files\Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterSprite.h">
+      <Filter>Header Files\Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteSheet.h">
+      <Filter>Header Files\Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="XGamePad.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

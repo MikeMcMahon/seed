@@ -82,14 +82,19 @@
     <ClCompile Include="GameModes.cpp" />
     <ClCompile Include="GameSprite.cpp" />
     <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="XGamePad.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BuildingSprite.h" />
+    <ClInclude Include="CharacterSprite.h" />
     <ClInclude Include="DXDrawing.h" />
     <ClInclude Include="GameHeaders.h" />
     <ClInclude Include="GameModes.h" />
     <ClInclude Include="GameSprite.h" />
+    <ClInclude Include="MapSprite.h" />
     <ClInclude Include="NpcSprite.h" />
-    <ClInclude Include="XInputControllers.h" />
+    <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="XGamePad.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

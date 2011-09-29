@@ -3,7 +3,7 @@
 // My Headers
 #include "GameSprite.h"
 #include "GameModes.h"
-#include "XInputControllers.h"
+#include "XGamePad.h"
 #include "DXDrawing.h"
 
 
@@ -32,7 +32,7 @@ ID3DX10Sprite *pSpriteObject = NULL;
 D3DX10_SPRITE  spritePool[NUM_POOL_SPRITES];
 
 // Configure the xbox controller stuff
-XControllers * XControl;
+XGamePad * XControl;
 
 // Game Mode
 GameModes::MODES GAMEMODE = GameModes::MAIN_MENU;
@@ -69,7 +69,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		return 0;
 	}
 	// startup the controller checking
-	 XControl = new XControllers();
+	 XControl = new XGamePad();
 
 	// Main message loop
 	MSG msg = {0};
@@ -264,6 +264,9 @@ void UpdateScene() {
 
 // InitSprites!
 bool InitSprites() {
+	// Absofuckingloutely required or the sprites will not display - this is required because we need to ensure the sprite struct is CLEAN Before sending to the renderer
+	ZeroMemory(sprites, MAX_SPRITES * sizeof(GameSprite));
+
 	ID3D10Texture2D * backgroundTexture = NULL;
 	switch (GAMEMODE) { 
 	case GameModes::MAIN_MENU:

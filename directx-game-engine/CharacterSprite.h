@@ -4,7 +4,7 @@
 #include "GameSprite.h"
 
 struct CharacterSprite : public GameSprite {
-
+	
 };
 
 #endif
