@@ -3,8 +3,15 @@
 
 #include "GameSprite.h"
 
-struct CharacterSprite : public GameSprite {
-	
+class CharacterSprite : public GameSprite {
+	CharacterSprite();	// Default constructor
+	~CharacterSprite();	// Default destructor 
+	void ResetSpriteAnim();
+	void JumpToFramePos(int, int);
+	void SetSpriteDefault(int, int);
+private:
+	int defaultStateFrameX;
+	int defaultStateFrameY;
 };
 
 #endif

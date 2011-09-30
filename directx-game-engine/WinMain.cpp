@@ -89,6 +89,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	int loops = 0;
 	float interpolation = 0;
 	DWORD next_game_tick = GetMilis();
+	BOOL canUpdate = FALSE;
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -102,6 +103,10 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		while ( GetMilis() > next_game_tick && loops < MAX_FRAMESKIP) { 
 			// Handles the textures animation
 			UpdateScene();
+
+			if (canUpdate) {
+				UpdateSprites();	// Catch up and animate any animating we need to do
+			}
 			
 			next_game_tick += SKIP_TICKS;
 			loops++;
@@ -113,9 +118,10 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 
 		// Render the sprites to the screen
 		Render();
+		canUpdate = TRUE;
 
 		// Do any updating of the sprites after the scene is over
-		//UpdateSprites();
+		// UpdateSprites();
 	}
 
 	// Clean up the resources we allocated
@@ -280,7 +286,7 @@ bool InitSprites() {
 	switch (GAMEMODE) { 
 	case GameModes::MAIN_MENU:
 		// Load the background texture
-		backgroundTexture = GetTexture2DFromFile("./images/main_menu_background.png", pD3DDevice);
+		backgroundTexture = GetTexture2DFromFile("./images/ball_bounce_512x64.png", pD3DDevice);
 		if (backgroundTexture == NULL) return false;
 		GetResourceViewFromTexture(backgroundTexture, &gSpriteTextureRV, pD3DDevice);
 		backgroundTexture->Release();
@@ -301,6 +307,10 @@ bool InitSprites() {
 	pD3DDevice->CreateBlendState(&StateDesc, &pBlendState10);
 
 	// Texture for this sprite to use
+	sprites[0].width = 64;
+	sprites[0].height = 64;
+	sprites[0].curFrame = 0;
+	sprites[0].numFrames = 8;
 	sprites[0].pTexture = gSpriteTextureRV;
 	sprites[0].TexCoord.x = 0;		// Determin the top left location in U,V coords
 	sprites[0].TexCoord.y = 0;
@@ -314,14 +324,12 @@ bool InitSprites() {
 		return false;
 	}
 
-	sprites[0].width = WINDOW_WIDTH;
-	sprites[0].height = WINDOW_HEIGHT;
 	sprites[0].posX = 0;
 	sprites[0].posY = 0;
 	sprites[0].moveX = .09f; // How much said sprite can move in x direction at a given time
 	sprites[0].moveY = .09f; // How much said sprite can move in the y direciton at a given time
 	sprites[0].visible = TRUE;
-	sprites[0].canAnimate = FALSE;
+	sprites[0].canAnimate = TRUE;
 
 	return true;
 }
@@ -351,8 +359,8 @@ void MoveSprites(float interpolation) {
 
 		// Can the sprite run? we should check that first :) 
 		if (XControl->IsButtonPressedForController(0, A_BUTTON)) {
-			moveX *= 2;
-			moveY *= 2;
+			moveX *= 2.5f;
+			moveY *= 2.5f;
 		}
 
 		if (XControl->IsButtonPressedForController(0, DPAD_UP))
