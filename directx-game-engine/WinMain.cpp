@@ -85,7 +85,6 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	int loops = 0;
 	float interpolation = 0;
 	float next_game_tick = GetMilis();
-	BOOL canUpdate = FALSE;
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -98,11 +97,8 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		while ( GetMilis() > next_game_tick && loops < MAX_FRAMESKIP) { 
 			// Handles the textures animation
 			UpdateScene();
-
-			if (canUpdate) {
-				UpdateSprites();	// Catch up and animate any animating we need to do
-			}
-			
+			UpdateSprites();
+		
 			next_game_tick += SKIP_TICKS;
 			loops++;
 		}
@@ -113,9 +109,8 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 
 		// Render the sprites to the screen
 		Render();
-		canUpdate = TRUE;
 
-		// Do any updating of the sprites after the scene is over
+		// Handle any animations that need to be handled
 		// UpdateSprites();
 	}
 
@@ -244,21 +239,22 @@ void UpdateScene() {
 	// loop through the sprite
 	for (int i = 0; i < MAX_SPRITES; i++) {
 		// Only update visible sprites
-		if (sprites[i].visible) {
+		if (sprites[i].isVisible()) {
 			// Set the proper scale for the sprite
 			D3DXMATRIX matScaling;
 			D3DXMATRIX matTranslation;
 
-			D3DXMatrixScaling(&matScaling, sprites[i].width, sprites[i].height, 1.0f);
-			D3DXMatrixTranslation(&matTranslation, (float)sprites[i].posX + (sprites[i].width/2), (float)(WINDOW_HEIGHT - sprites[i].posY - (sprites[i].height/2)), 0.1f);
+			D3DXMatrixScaling(&matScaling, sprites[i].spriteSize().width, sprites[i].spriteSize().height, 1.0f);
+			D3DXMatrixTranslation(&matTranslation, 
+				(float)sprites[i].position().x + (sprites[i].spriteSize().width/2), (float)(WINDOW_HEIGHT - sprites[i].position().y - (sprites[i].spriteSize().height/2)), 0.1f);
 
 			// Update the sprites position and scale
 			sprites[i].matWorld = matScaling * matTranslation;
 
 			// Animate the sprite
-			if (sprites[i].canAnimate) {
-				float texCoordX = (float)(sprites[i].curFrame / sprites[i].numFrames);
-				float texSizeX = (float)(sprites[i].width / (sprites[i].width * sprites[i].numFrames));
+			if (sprites[i].canAnimate()) {
+				float texCoordX = (float)(sprites[i].curFrame() / sprites[i].animationDetail().numFrames);
+				float texSizeX = (float)(sprites[i].spriteSize().width / (sprites[i].spriteSize().width * sprites[i].animationDetail().numFrames));
 				sprites[i].TexCoord.x = texCoordX;
 				sprites[i].TexSize.x = texSizeX;
 			}
@@ -303,10 +299,9 @@ bool InitSprites() {
 
 	// Texture for this sprite to use
 	GameSprite* cp = new GameSprite();
-	cp->width = 64;
-	cp->height = 64;
-	cp->curFrame = 0;
-	cp->numFrames = 8;
+	cp->spriteSize(64, 64);
+	cp->curFrame(0);
+	cp->animationDetail(0, 8, 2);
 	cp->pTexture = gSpriteTextureRV;
 	cp->TexCoord.x = 0;
 	cp->TexCoord.y = 0;
@@ -314,12 +309,10 @@ bool InitSprites() {
 	cp->TexSize.y = 1.0f;
 	cp->TextureIndex = 0;
 	cp->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	cp->posX = 0;
-	cp->posY = 0;
-	cp->moveX = 0.09f;
-	cp->moveY = 0.09f;
-	cp->visible = TRUE;
-	cp->canAnimate = TRUE;
+	cp->position(0,0);
+	cp->setMoveDistance(0,0);
+	cp->isVisible(TRUE);
+	cp->canAnimate(TRUE);
 
 	sprites[0] = *cp;
 
@@ -334,12 +327,12 @@ bool InitSprites() {
 
 void UpdateSprites() { 
 	for (int i = 0; i < MAX_SPRITES; i++) { 
-		if (sprites[i].visible && sprites[i].canAnimate) { 
-			sprites[i].curFrame++;
+		if (sprites[i].isVisible() && sprites[i].canAnimate()) { 
+			sprites[i].curFrame(sprites[i].curFrame() + 1);
 
 			// reset the frames if we're past the max # of frames
-			if (sprites[i].curFrame >= sprites[i].numFrames) { 
-				sprites[i].curFrame = 0;
+			if (sprites[i].curFrame() >= sprites[i].animationDetail().numFrames) { 
+				sprites[i].curFrame(0);
 			}
 		}
 	}
@@ -347,12 +340,12 @@ void UpdateSprites() {
 
 void MoveSprites(float interpolation) { 
 	// We want to move a moveable sprite of course! 
-	if (sprites[0].visible) { 
+	if (sprites[0].isVisible()) { 
 		// Check to see which direction was pressed
-		float posY = sprites[0].posY;
-		float posX = sprites[0].posX;
-		float moveX = sprites[0].moveX * interpolation;
-		float moveY = sprites[0].moveY * interpolation;
+		float posY = sprites[0].position().y;
+		float posX = sprites[0].position().x;
+		float moveX = sprites[0].getMoveX() * interpolation;
+		float moveY = sprites[0].getMoveY() * interpolation;
 
 		// Can the sprite run? we should check that first :) 
 		if (XControl->IsButtonPressedForController(0, A_BUTTON)) {
@@ -386,8 +379,7 @@ void MoveSprites(float interpolation) {
 			posX = 0;
 		}
 
-		sprites[0].posY = posY;
-		sprites[0].posX = posX;
+		sprites[0].position(posX, posY);
 	}
 }
 
