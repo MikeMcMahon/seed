@@ -95,7 +95,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		
 		loops = 0;
 		while ( GetMilis() > next_game_tick && loops < MAX_FRAMESKIP) { 
-			// Handles the textures animation
+			// Handles the textures / animation
 			UpdateScene();
 			UpdateSprites();
 		
@@ -301,7 +301,7 @@ bool InitSprites() {
 	GameSprite* cp = new GameSprite();
 	cp->spriteSize(64, 64);
 	cp->curFrame(0);
-	cp->animationDetail(0, 8, 2);
+	cp->animationDetail(0, 8, 0.5f);
 	cp->pTexture = gSpriteTextureRV;
 	cp->TexCoord.x = 0;
 	cp->TexCoord.y = 0;
@@ -310,7 +310,7 @@ bool InitSprites() {
 	cp->TextureIndex = 0;
 	cp->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	cp->position(0,0);
-	cp->setMoveDistance(0,0);
+	cp->setMoveDistance(0.5f,0.5f);
 	cp->isVisible(TRUE);
 	cp->canAnimate(TRUE);
 
@@ -328,7 +328,7 @@ bool InitSprites() {
 void UpdateSprites() { 
 	for (int i = 0; i < MAX_SPRITES; i++) { 
 		if (sprites[i].isVisible() && sprites[i].canAnimate()) { 
-			sprites[i].curFrame(sprites[i].curFrame() + 1);
+			sprites[i].incrementFrame();
 
 			// reset the frames if we're past the max # of frames
 			if (sprites[i].curFrame() >= sprites[i].animationDetail().numFrames) { 
