@@ -1,6 +1,7 @@
 #include "GameHeaders.h"		// Includes all of those fancy external things like DX10 :) 
 
 // My Headers
+//#include "GameSprite.h"
 #include "GameSprite.h"
 #include "GameModes.h"
 #include "XGamePad.h"
@@ -46,11 +47,6 @@ void UpdateSprites();
 bool InitSprites();
 bool HasFrameElapsed(); 
 
-// Timers
-const int TICKS_PER_SECOND = 25;
-const float SKIP_TICKS = 1000.0f / (float)TICKS_PER_SECOND;
-const int MAX_FRAMESKIP = 5;
-
 float GetMilis();
 float GetMilis() { 
 	LARGE_INTEGER t, f;
@@ -88,7 +84,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	// Get the timer frequency
 	int loops = 0;
 	float interpolation = 0;
-	DWORD next_game_tick = GetMilis();
+	float next_game_tick = GetMilis();
 	BOOL canUpdate = FALSE;
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
@@ -99,7 +95,6 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		XControl->GetControllerStates();
 		
 		loops = 0;
-		//for (float f = GetMilis(); f > next_game_tick && loops < MAX_FRAMESKIP; f = GetMilis()) {
 		while ( GetMilis() > next_game_tick && loops < MAX_FRAMESKIP) { 
 			// Handles the textures animation
 			UpdateScene();
@@ -307,29 +302,31 @@ bool InitSprites() {
 	pD3DDevice->CreateBlendState(&StateDesc, &pBlendState10);
 
 	// Texture for this sprite to use
-	sprites[0].width = 64;
-	sprites[0].height = 64;
-	sprites[0].curFrame = 0;
-	sprites[0].numFrames = 8;
-	sprites[0].pTexture = gSpriteTextureRV;
-	sprites[0].TexCoord.x = 0;		// Determin the top left location in U,V coords
-	sprites[0].TexCoord.y = 0;
-	sprites[0].TexSize.x = 1.0f;	// Determine the texture size in U,V coords
-	sprites[0].TexSize.y = 1.0f;
-	sprites[0].TextureIndex = 0;	// The texture index, single textures will use 0
-	sprites[0].ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// The color to apply to the sprite
+	GameSprite* cp = new GameSprite();
+	cp->width = 64;
+	cp->height = 64;
+	cp->curFrame = 0;
+	cp->numFrames = 8;
+	cp->pTexture = gSpriteTextureRV;
+	cp->TexCoord.x = 0;
+	cp->TexCoord.y = 0;
+	cp->TexSize.x = 1.0f;
+	cp->TexSize.y = 1.0f;
+	cp->TextureIndex = 0;
+	cp->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	cp->posX = 0;
+	cp->posY = 0;
+	cp->moveX = 0.09f;
+	cp->moveY = 0.09f;
+	cp->visible = TRUE;
+	cp->canAnimate = TRUE;
+
+	sprites[0] = *cp;
 
 	// Set the projection matrix
 	if (pSpriteObject->SetProjectionTransform(&matProjection) != S_OK) {
 		return false;
 	}
-
-	sprites[0].posX = 0;
-	sprites[0].posY = 0;
-	sprites[0].moveX = .09f; // How much said sprite can move in x direction at a given time
-	sprites[0].moveY = .09f; // How much said sprite can move in the y direciton at a given time
-	sprites[0].visible = TRUE;
-	sprites[0].canAnimate = TRUE;
 
 	return true;
 }

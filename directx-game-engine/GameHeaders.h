@@ -12,4 +12,9 @@
 #include <XInput.h>
 #include <vector>
 
+// Required for rendering stuff on time
+const int TICKS_PER_SECOND = 60;
+const float SKIP_TICKS = 1000.0f / (float)TICKS_PER_SECOND;
+const int MAX_FRAMESKIP = 5;
+
 #endif
