@@ -80,21 +80,27 @@
   <ItemGroup>
     <ClCompile Include="DXDrawing.cpp" />
     <ClCompile Include="GameModes.cpp" />
-    <ClCompile Include="GameSprite.cpp" />
+    <ClCompile Include="Sprites\GameSprite.cpp" />
     <ClCompile Include="WinMain.cpp" />
-    <ClCompile Include="XGamePad.cpp" />
+    <ClCompile Include="input\XGamePad.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BuildingSprite.h" />
-    <ClInclude Include="CharacterSprite.h" />
+    <ClInclude Include="Sprites\CharacterSprite.h" />
     <ClInclude Include="DXDrawing.h" />
     <ClInclude Include="GameHeaders.h" />
     <ClInclude Include="GameModes.h" />
-    <ClInclude Include="GameSprite.h" />
-    <ClInclude Include="MapSprite.h" />
-    <ClInclude Include="NpcSprite.h" />
-    <ClInclude Include="SpriteSheet.h" />
-    <ClInclude Include="XGamePad.h" />
+    <ClInclude Include="Sprites\GameSprite.h" />
+    <ClInclude Include="Sprites\MapSprite.h" />
+    <ClInclude Include="Sprites\NpcSprite.h" />
+    <ClInclude Include="Sprites\SpriteSheet.h" />
+    <ClInclude Include="input\XGamePad.h" />
+    <ClInclude Include="Sprites\TileSprite.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="textures\ball_bounce_512x64.png" />
+    <None Include="textures\main_menu_background.png" />
+    <None Include="textures\sprite-man-192x192.png" />
+    <None Include="textures\text_1_64x64.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

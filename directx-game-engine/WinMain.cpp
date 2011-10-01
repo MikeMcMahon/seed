@@ -2,9 +2,9 @@
 
 // My Headers
 //#include "GameSprite.h"
-#include "GameSprite.h"
+#include "Sprites\GameSprite.h"
 #include "GameModes.h"
-#include "XGamePad.h"
+#include "input\XGamePad.h"
 #include "DXDrawing.h"
 
 
@@ -13,10 +13,13 @@
 #define WINDOW_HEIGHT 600
 #define CLASS_NAME TEXT("PLATFORM-MAN")
 
+using namespace input;
+using namespace sprites;
+
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
 int numActiveSprites = 0;
-GameSprite sprites[MAX_SPRITES];
+GameSprite gameSprites[MAX_SPRITES];
 
 // D3D GLOBALS ////////////////////////////////
 ID3D10Device* pD3DDevice = NULL;
@@ -196,16 +199,16 @@ void Render() {
 	if (pD3DDevice != NULL) {
 		// Clear the target buffer
 		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-
 		if (pSpriteObject != NULL) {
 			// Start Drawing the sprites
 			pSpriteObject->Begin(NULL);		// Do no sorting, we want the sprites drawn as they are in the spritePool! 
 
 			// Copy the sprites into the spritePool
 			for (int i = 0; i < MAX_SPRITES; i++) {
-				spritePool[i] = sprites[i];
+				spritePool[i] = gameSprites[i];
 			}
 
+			
 			// Draw all of the sprites in the pool
 			pSpriteObject->DrawSpritesBuffered(spritePool, 2);
 
@@ -239,24 +242,24 @@ void UpdateScene() {
 	// loop through the sprite
 	for (int i = 0; i < MAX_SPRITES; i++) {
 		// Only update visible sprites
-		if (sprites[i].isVisible()) {
+		if (gameSprites[i].isVisible()) {
 			// Set the proper scale for the sprite
 			D3DXMATRIX matScaling;
 			D3DXMATRIX matTranslation;
 
-			D3DXMatrixScaling(&matScaling, sprites[i].spriteSize().width, sprites[i].spriteSize().height, 1.0f);
+			D3DXMatrixScaling(&matScaling, gameSprites[i].spriteSize().width, gameSprites[i].spriteSize().height, 1.0f);
 			D3DXMatrixTranslation(&matTranslation, 
-				(float)sprites[i].position().x + (sprites[i].spriteSize().width/2), (float)(WINDOW_HEIGHT - sprites[i].position().y - (sprites[i].spriteSize().height/2)), 0.1f);
+				(float)gameSprites[i].position().x + (gameSprites[i].spriteSize().width/2), (float)(WINDOW_HEIGHT - gameSprites[i].position().y - (gameSprites[i].spriteSize().height/2)), 0.1f);
 
 			// Update the sprites position and scale
-			sprites[i].matWorld = matScaling * matTranslation;
+			gameSprites[i].matWorld = matScaling * matTranslation;
 
 			// Animate the sprite
-			if (sprites[i].canAnimate()) {
-				float texCoordX = (float)(sprites[i].curFrame() / sprites[i].animationDetail().numFrames);
-				float texSizeX = (float)(sprites[i].spriteSize().width / (sprites[i].spriteSize().width * sprites[i].animationDetail().numFrames));
-				sprites[i].TexCoord.x = texCoordX;
-				sprites[i].TexSize.x = texSizeX;
+			if (gameSprites[i].canAnimate()) {
+				float texCoordX = (float)(gameSprites[i].curFrame() / gameSprites[i].animationDetail().numFrames);
+				float texSizeX = (float)(gameSprites[i].spriteSize().width / (gameSprites[i].spriteSize().width * gameSprites[i].animationDetail().numFrames));
+				gameSprites[i].TexCoord.x = texCoordX;
+				gameSprites[i].TexSize.x = texSizeX;
 			}
 			
 			// Increment the pool index
@@ -271,13 +274,13 @@ void UpdateScene() {
 // InitSprites!
 bool InitSprites() {
 	// Absofuckingloutely required or the sprites will not display - this is required because we need to ensure the sprite struct is CLEAN Before sending to the renderer
-	ZeroMemory(sprites, MAX_SPRITES * sizeof(GameSprite));
+	ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
 
 	ID3D10Texture2D * backgroundTexture = NULL;
 	switch (GAMEMODE) { 
 	case GameModes::MAIN_MENU:
 		// Load the background texture
-		backgroundTexture = GetTexture2DFromFile("./images/ball_bounce_512x64.png", pD3DDevice);
+		backgroundTexture = GetTexture2DFromFile("./textures/ball_bounce_512x64.png", pD3DDevice);
 		if (backgroundTexture == NULL) return false;
 		GetResourceViewFromTexture(backgroundTexture, &gSpriteTextureRV, pD3DDevice);
 		backgroundTexture->Release();
@@ -314,7 +317,7 @@ bool InitSprites() {
 	cp->isVisible(TRUE);
 	cp->canAnimate(TRUE);
 
-	sprites[0] = *cp;
+	gameSprites[0] = *cp;
 
 	// Set the projection matrix
 	if (pSpriteObject->SetProjectionTransform(&matProjection) != S_OK) {
@@ -327,12 +330,12 @@ bool InitSprites() {
 
 void UpdateSprites() { 
 	for (int i = 0; i < MAX_SPRITES; i++) { 
-		if (sprites[i].isVisible() && sprites[i].canAnimate()) { 
-			sprites[i].incrementFrame();
+		if (gameSprites[i].isVisible() && gameSprites[i].canAnimate()) { 
+			gameSprites[i].incrementFrame();
 
 			// reset the frames if we're past the max # of frames
-			if (sprites[i].curFrame() >= sprites[i].animationDetail().numFrames) { 
-				sprites[i].curFrame(0);
+			if (gameSprites[i].curFrame() >= gameSprites[i].animationDetail().numFrames) { 
+				gameSprites[i].curFrame(0);
 			}
 		}
 	}
@@ -340,12 +343,12 @@ void UpdateSprites() {
 
 void MoveSprites(float interpolation) { 
 	// We want to move a moveable sprite of course! 
-	if (sprites[0].isVisible()) { 
+	if (gameSprites[0].isVisible()) { 
 		// Check to see which direction was pressed
-		float posY = sprites[0].position().y;
-		float posX = sprites[0].position().x;
-		float moveX = sprites[0].getMoveX() * interpolation;
-		float moveY = sprites[0].getMoveY() * interpolation;
+		float posY = gameSprites[0].position().y;
+		float posX = gameSprites[0].position().x;
+		float moveX = gameSprites[0].getMoveX() * interpolation;
+		float moveY = gameSprites[0].getMoveY() * interpolation;
 
 		// Can the sprite run? we should check that first :) 
 		if (XControl->IsButtonPressedForController(0, A_BUTTON)) {
@@ -363,7 +366,7 @@ void MoveSprites(float interpolation) {
 			posX -= moveX;
 
 		// Temp for debugging
-		if (XControl->IsButtonPressedForController(0, BACK))
+		if (XControl->IsButtonPressedForController(0, input::BACK))
 			PostQuitMessage(0);
 
 		if ( (posY > WINDOW_HEIGHT) ) { 
@@ -379,7 +382,7 @@ void MoveSprites(float interpolation) {
 			posX = 0;
 		}
 
-		sprites[0].position(posX, posY);
+		gameSprites[0].position(posX, posY);
 	}
 }
 

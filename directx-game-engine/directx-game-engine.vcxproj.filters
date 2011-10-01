@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Sprites">
-      <UniqueIdentifier>{0be0739b-2fe6-4de7-8360-ed8306d0b6e2}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -27,10 +24,10 @@
     <ClCompile Include="GameModes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameSprite.cpp">
+    <ClCompile Include="Sprites\GameSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XGamePad.cpp">
+    <ClCompile Include="input\XGamePad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,26 +41,40 @@
     <ClInclude Include="DXDrawing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameSprite.h">
-      <Filter>Header Files\Sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="NpcSprite.h">
-      <Filter>Header Files\Sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="BuildingSprite.h">
-      <Filter>Header Files\Sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="MapSprite.h">
-      <Filter>Header Files\Sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="CharacterSprite.h">
-      <Filter>Header Files\Sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteSheet.h">
-      <Filter>Header Files\Sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="XGamePad.h">
+    <ClInclude Include="Sprites\CharacterSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sprites\GameSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites\MapSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites\NpcSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites\SpriteSheet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="input\XGamePad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites\TileSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="textures\text_1_64x64.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="textures\ball_bounce_512x64.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="textures\main_menu_background.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="textures\sprite-man-192x192.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
