@@ -7,12 +7,6 @@
 #include "input\XGamePad.h"
 #include "DXDrawing.h"
 
-
-// Setup the window width / height - should probably move this somewhere else at some point
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
-#define CLASS_NAME TEXT("PLATFORM-MAN")
-
 using namespace input;
 using namespace sprites;
 
@@ -26,11 +20,14 @@ ID3D10Device* pD3DDevice = NULL;
 IDXGISwapChain* pSwapChain = NULL;
 ID3D10RenderTargetView* pRenderTargetView = NULL;
 D3DXMATRIX matProjection;
+
 // Blend State
 ID3D10BlendState* pBlendState10 = NULL;
 ID3D10BlendState* pOriginalBlendState10 = NULL;
+
 // Shader Resource View
 ID3D10ShaderResourceView * gSpriteTextureRV = NULL;
+
 // Sprite stuff
 ID3DX10Sprite *pSpriteObject = NULL;
 D3DX10_SPRITE  spritePool[NUM_POOL_SPRITES];
@@ -51,7 +48,8 @@ bool InitSprites();
 bool HasFrameElapsed(); 
 
 float GetMilis();
-float GetMilis() { 
+float GetMilis() {
+	
 	LARGE_INTEGER t, f;
 	QueryPerformanceCounter(&t);
 	QueryPerformanceFrequency(&f);
@@ -199,15 +197,16 @@ void Render() {
 	if (pD3DDevice != NULL) {
 		// Clear the target buffer
 		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
+		
+		
 		if (pSpriteObject != NULL) {
 			// Start Drawing the sprites
-			pSpriteObject->Begin(NULL);		// Do no sorting, we want the sprites drawn as they are in the spritePool! 
-
+			pSpriteObject->Begin(D3DX10_SPRITE_SORT_DEPTH_FRONT_TO_BACK);
+			
 			// Copy the sprites into the spritePool
 			for (int i = 0; i < MAX_SPRITES; i++) {
 				spritePool[i] = gameSprites[i];
 			}
-
 			
 			// Draw all of the sprites in the pool
 			pSpriteObject->DrawSpritesBuffered(spritePool, 2);
@@ -247,9 +246,11 @@ void UpdateScene() {
 			D3DXMATRIX matScaling;
 			D3DXMATRIX matTranslation;
 
-			D3DXMatrixScaling(&matScaling, gameSprites[i].spriteSize().width, gameSprites[i].spriteSize().height, 1.0f);
+			D3DXMatrixScaling(&matScaling, gameSprites[i].spriteSize().width, gameSprites[i].spriteSize().height, gameSprites[i].position().z);
 			D3DXMatrixTranslation(&matTranslation, 
-				(float)gameSprites[i].position().x + (gameSprites[i].spriteSize().width/2), (float)(WINDOW_HEIGHT - gameSprites[i].position().y - (gameSprites[i].spriteSize().height/2)), 0.1f);
+				(float)gameSprites[i].position().x + (gameSprites[i].spriteSize().width/2), 
+				(float)(WINDOW_HEIGHT - gameSprites[i].position().y - (gameSprites[i].spriteSize().height/2)), 
+				0.1f);	// ZOrder
 
 			// Update the sprites position and scale
 			gameSprites[i].matWorld = matScaling * matTranslation;
@@ -280,7 +281,7 @@ bool InitSprites() {
 	switch (GAMEMODE) { 
 	case GameModes::MAIN_MENU:
 		// Load the background texture
-		backgroundTexture = GetTexture2DFromFile("./textures/ball_bounce_512x64.png", pD3DDevice);
+		backgroundTexture = GetTexture2DFromFile("./textures/large-background-png-1000-800.png", pD3DDevice);
 		if (backgroundTexture == NULL) return false;
 		GetResourceViewFromTexture(backgroundTexture, &gSpriteTextureRV, pD3DDevice);
 		backgroundTexture->Release();
@@ -300,24 +301,57 @@ bool InitSprites() {
 	InitiateDefaultBlend(&StateDesc);
 	pD3DDevice->CreateBlendState(&StateDesc, &pBlendState10);
 
-	// Texture for this sprite to use
-	GameSprite* cp = new GameSprite();
-	cp->spriteSize(64, 64);
-	cp->curFrame(0);
-	cp->animationDetail(0, 8, 0.5f);
-	cp->pTexture = gSpriteTextureRV;
-	cp->TexCoord.x = 0;
-	cp->TexCoord.y = 0;
-	cp->TexSize.x = 1.0f;
-	cp->TexSize.y = 1.0f;
-	cp->TextureIndex = 0;
-	cp->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	cp->position(0,0);
-	cp->setMoveDistance(0.5f,0.5f);
-	cp->isVisible(TRUE);
-	cp->canAnimate(TRUE);
 
-	gameSprites[0] = *cp;
+	// Create another texture for the bouncing ball
+	ID3D10Texture2D * ballBounce = NULL;
+	ballBounce = GetTexture2DFromFile("./textures/ball_bounce_512x64.png", pD3DDevice);
+	ID3D10ShaderResourceView * srv;
+	GetResourceViewFromTexture(ballBounce, &srv, pD3DDevice);
+	ballBounce->Release();
+
+	GameSprite gp;
+	(&gp)->spriteSize(64, 64);
+	(&gp)->curFrame(0);
+	(&gp)->animationDetail(0, 8, 0.5f);
+	(&gp)->pTexture = srv;
+	(&gp)->TexCoord.x = 0;
+	(&gp)->TexCoord.y = 0;
+	(&gp)->TexSize.x = 1.0f;
+	(&gp)->TexSize.y = 1.0f;
+	(&gp)->TextureIndex = 0;
+	(&gp)->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	(&gp)->position(
+		((float)WINDOW_WIDTH/2.0f) - (float)gp.spriteSize().width / 2.0f,		// Moves the sprite to the center of the x axis
+		((float)WINDOW_HEIGHT/2.0f) - (float)gp.spriteSize().height / 2.0f,		// Move the sprite to the center of the y axis
+		0.5f);
+	(&gp)->setMoveDistance(0.5f,0.5f);
+	(&gp)->isVisible(TRUE);
+	(&gp)->canAnimate(TRUE);
+
+	// Texture for this sprite to use
+	GameSprite cp;
+	(&cp)->spriteSize(800, 1000);
+	(&cp)->curFrame(0);
+	(&cp)->animationDetail(0, 8, 0.5f);
+	(&cp)->pTexture = gSpriteTextureRV;
+	(&cp)->TexCoord.x = 0;
+	(&cp)->TexCoord.y = 0;
+	(&cp)->TexSize.x = 1.0f;
+	(&cp)->TexSize.y = 1.0f;
+	(&cp)->TextureIndex = 0;
+	(&cp)->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	(&cp)->position(
+		((float)WINDOW_WIDTH/2.0f) - (float)cp.spriteSize().width / 2.0f,		// Moves the sprite to the center of the x axis
+		((float)WINDOW_HEIGHT/2.0f) - (float)cp.spriteSize().height / 2.0f,		// Move the sprite to the center of the y axis
+		0.5f);
+	(&cp)->setMoveDistance(0.5f,0.5f);
+	(&cp)->isVisible(TRUE);
+	(&cp)->canAnimate(FALSE);
+
+	
+
+	gameSprites[0] = gp;
+	gameSprites[1] = cp;
 
 	// Set the projection matrix
 	if (pSpriteObject->SetProjectionTransform(&matProjection) != S_OK) {
@@ -340,49 +374,55 @@ void UpdateSprites() {
 		}
 	}
 }
-
+D3D10_VIEWPORT m_viewPort;
+float topLeftX, topLeftY, width, height;
 void MoveSprites(float interpolation) { 
 	// We want to move a moveable sprite of course! 
-	if (gameSprites[0].isVisible()) { 
-		// Check to see which direction was pressed
-		float posY = gameSprites[0].position().y;
-		float posX = gameSprites[0].position().x;
-		float moveX = gameSprites[0].getMoveX() * interpolation;
-		float moveY = gameSprites[0].getMoveY() * interpolation;
+	for (int i = 0; i < MAX_SPRITES; i++) {
+		if (gameSprites[i].isVisible() && gameSprites[i].canAnimate()) { 
+			// Check to see which direction was pressed
+			float posY = gameSprites[i].position().y;
+			float posX = gameSprites[i].position().x;
+			float moveX = gameSprites[i].getMoveX() * interpolation;
+			float moveY = gameSprites[i].getMoveY() * interpolation;
 
-		// Can the sprite run? we should check that first :) 
-		if (XControl->IsButtonPressedForController(0, A_BUTTON)) {
-			moveX *= 2.5f;
-			moveY *= 2.5f;
-		}
+			// Can the sprite run? we should check that first :) 
+			if (XControl->IsButtonPressedForController(0, A_BUTTON)) {
+				moveX *= 2.5f;
+				moveY *= 2.5f;
+			}
 
-		if (XControl->IsButtonPressedForController(0, DPAD_UP))
-			posY -= moveY;
-		if (XControl->IsButtonPressedForController(0, DPAD_DOWN)) 
-			posY += moveY;
-		if (XControl->IsButtonPressedForController(0, DPAD_RIGHT)) 
-			posX += moveX;
-		if (XControl->IsButtonPressedForController(0, DPAD_LEFT)) 
-			posX -= moveX;
+			if (XControl->IsButtonPressedForController(0, DPAD_UP))
+				posY -= moveY;
+			if (XControl->IsButtonPressedForController(0, DPAD_DOWN)) 
+				posY += moveY;
+			if (XControl->IsButtonPressedForController(0, DPAD_RIGHT)) 
+				posX += moveX;
+			if (XControl->IsButtonPressedForController(0, DPAD_LEFT)) 
+				posX -= moveX;
 
-		// Temp for debugging
-		if (XControl->IsButtonPressedForController(0, input::BACK))
-			PostQuitMessage(0);
+			// Temp for debugging
+			if (XControl->IsButtonPressedForController(0, input::BACK))
+				PostQuitMessage(0);
 
-		if ( (posY > WINDOW_HEIGHT) ) { 
-			posY = WINDOW_HEIGHT;
-		}
-		if ( (posY <= 0) ) { 
-			posY = 0;
-		}
-		if ( (posX > WINDOW_WIDTH) ) { 
-			posX = WINDOW_WIDTH;
-		}
-		if ( (posX < 0) ) { 
-			posX = 0;
-		}
+			if ( (posY + gameSprites[i].spriteSize().height > WINDOW_HEIGHT) ) { 
+				posY -= moveX;
+				// TODO - translate the world up
+			}
+			if ( (posY <= 0) ) { 
+				// TODO - translate the world down
+				posY = 0;
+			}
+			if ( (posX + gameSprites[i].spriteSize().width) > WINDOW_WIDTH )  {
+				posX -= moveX;
+			}
+			if ( (posX < 0) ) { 
+				// TODO - translate the world to the right
+				posX = 0;
+			}
 
-		gameSprites[0].position(posX, posY);
+			gameSprites[i].position(posX, posY, gameSprites[i].position().z);
+		}
 	}
 }
 
@@ -433,7 +473,6 @@ bool InitDirect3D(HWND hWnd, int windowWidth, int windowHeight) {
 	if (hr != S_OK) {
 		return false;
 	}
-
 	// Create the render target view
 	hr = pD3DDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView);
 
@@ -449,23 +488,28 @@ bool InitDirect3D(HWND hWnd, int windowWidth, int windowHeight) {
 	pD3DDevice->OMSetRenderTargets(1, &pRenderTargetView, NULL);
 
 	// Create and set the viewport
-	D3D10_VIEWPORT viewPort;
-	viewPort.Width = windowWidth;
-	viewPort.Height = windowHeight;
-	viewPort.MinDepth = 0.0f;
-	viewPort.MaxDepth = 1.0f;
-	viewPort.TopLeftX = 0;
-	viewPort.TopLeftY = 0;
-	pD3DDevice->RSSetViewports(1, &viewPort);
+	m_viewPort;
+	m_viewPort.Width = windowWidth;
+	m_viewPort.Height = windowHeight;
+	m_viewPort.MinDepth = 0.0f;
+	m_viewPort.MaxDepth = 1.0f;
+	m_viewPort.TopLeftX = 0;
+	m_viewPort.TopLeftY = 0;
 
+	topLeftX = 0;
+	topLeftY = 0;
+	width = windowWidth;
+	height = windowHeight;
+
+	pD3DDevice->RSSetViewports(1, &m_viewPort);
+	
 	D3DXMatrixOrthoOffCenterLH(&matProjection, 
-		(float)viewPort.TopLeftX, 
-		(float)viewPort.Width, 
-		(float)viewPort.TopLeftY, 
-		(float)viewPort.Height, 
+		(float)m_viewPort.TopLeftX, 
+		(float)m_viewPort.Width, 
+		(float)m_viewPort.TopLeftY, 
+		(float)m_viewPort.Height, 
 		0.1f, 
 		10);
-
 
 	return true;
 }

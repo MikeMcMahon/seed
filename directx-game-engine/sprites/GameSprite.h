@@ -8,10 +8,11 @@
 
 namespace sprites { 
 	class GameSprite : public D3DX10_SPRITE {
-	private:
+	public:
 		struct POINT {
 			float x;
 			float y; 
+			float z;
 		};
 
 		struct SIZE { 
@@ -23,7 +24,7 @@ namespace sprites {
 			int numFrames;
 			float animDuration;
 		};
-
+	private:
 		int defaultStateFrameX;
 		int defaultStateFrameY;
 		char * textureResourceName;		// Location where we can find the map fileE {
@@ -42,41 +43,23 @@ namespace sprites {
 		BOOL canInteract;				// Can this sprite interact with other sprites
 
 	public:
-		void animationDetail(int startFrame, int numFrames, float animDuration) { 
-			ZeroMemory(&animation, sizeof(ANIMATION)); 
-			animation.animDuration = animDuration; 
-			animation.numFrames = numFrames; 
-			animation.startFrame = startFrame;
-
-			// Determine the number of frames to skip
-			skipFrames = ( TICKS_PER_SECOND * animDuration ) / (float) numFrames;
-			curSkip = 0;
-		}
-
-		ANIMATION animationDetail() { return animation; } 
-		float curFrame() { return curFrameAnimate; }
-		void curFrame(float newFrame) { curFrameAnimate = newFrame; }
-		void incrementFrame() { 
-			if (curSkip <= skipFrames && curSkip == 0) { 
-				curFrameAnimate++; 
-			}
-			if (curSkip >= skipFrames) {
-				curSkip = 0;
-				return;
-			}
-			curSkip++;
-		} 
-		void position(float x, float y) { ZeroMemory(&pos, sizeof(POINT)); pos.x = x; pos.y = y; };
-		POINT position() { return pos; }
-		void setMoveDistance( float x, float y ) { moveX = x; moveY = y; }
-		float getMoveX() { return moveX; }
-		float getMoveY() { return moveY; }
-		void spriteSize(float height, float width) { ZeroMemory(&size, sizeof(SIZE)); size.height = height; size.width = width; }
-		SIZE spriteSize() { return size; } 
-		BOOL isVisible() { return visible; }
-		void isVisible(BOOL visbility) { visible = visbility; }
-		BOOL canAnimate() { return animateState; }
-		void canAnimate(BOOL animate) { animateState = animate; }
+		~GameSprite();
+		void animationDetail(int startFrame, int numFrames, float animDuration);
+		ANIMATION animationDetail();
+		float curFrame();
+		void curFrame(float newFrame);
+		void incrementFrame();
+		void position(float x, float y, float z);
+		POINT position();
+		void setMoveDistance( float x, float y );
+		float getMoveX();
+		float getMoveY();
+		void spriteSize(float height, float width);
+		SIZE spriteSize();
+		BOOL isVisible();
+		void isVisible(BOOL visbility);
+		BOOL canAnimate();
+		void canAnimate(BOOL animate);
 
 		void nextFrame();
 		void ResetSpriteAnim();

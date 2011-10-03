@@ -17,4 +17,9 @@ const int TICKS_PER_SECOND = 60;
 const float SKIP_TICKS = 1000.0f / (float)TICKS_PER_SECOND;
 const int MAX_FRAMESKIP = 5;
 
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+#define CLASS_NAME TEXT("PLATFORM-MAN")
+
+
 #endif
