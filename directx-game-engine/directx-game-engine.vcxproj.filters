@@ -24,7 +24,7 @@
     <ClCompile Include="GameModes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sprites\GameSprite.cpp">
+    <ClCompile Include="sprites\GameSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="input\XGamePad.cpp">
@@ -47,22 +47,22 @@
     <ClInclude Include="DXDrawing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sprites\CharacterSprite.h">
+    <ClInclude Include="sprites\CharacterSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sprites\GameSprite.h">
+    <ClInclude Include="sprites\GameSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sprites\MapSprite.h">
+    <ClInclude Include="sprites\MapSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sprites\SpriteSheet.h">
+    <ClInclude Include="sprites\spritesheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="input\XGamePad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sprites\TileSprite.h">
+    <ClInclude Include="sprites\TileSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="font\GameFonts.h">

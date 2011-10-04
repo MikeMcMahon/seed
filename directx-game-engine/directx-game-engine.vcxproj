@@ -85,20 +85,20 @@
     <ClCompile Include="font\GameFonts.cpp" />
     <ClCompile Include="GameModes.cpp" />
     <ClCompile Include="sprites\CharacterSprite.cpp" />
-    <ClCompile Include="Sprites\GameSprite.cpp" />
+    <ClCompile Include="sprites\GameSprite.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="input\XGamePad.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sprites\CharacterSprite.h" />
+    <ClInclude Include="sprites\CharacterSprite.h" />
     <ClInclude Include="DXDrawing.h" />
     <ClInclude Include="GameHeaders.h" />
     <ClInclude Include="GameModes.h" />
-    <ClInclude Include="Sprites\GameSprite.h" />
-    <ClInclude Include="Sprites\MapSprite.h" />
-    <ClInclude Include="Sprites\SpriteSheet.h" />
+    <ClInclude Include="sprites\GameSprite.h" />
+    <ClInclude Include="sprites\MapSprite.h" />
+    <ClInclude Include="sprites\spritesheet.h" />
     <ClInclude Include="input\XGamePad.h" />
-    <ClInclude Include="Sprites\TileSprite.h" />
+    <ClInclude Include="sprites\TileSprite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="textures\ball_bounce_512x64.png" />
