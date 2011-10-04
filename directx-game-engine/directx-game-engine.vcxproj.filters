@@ -30,6 +30,12 @@
     <ClCompile Include="input\XGamePad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sprites\CharacterSprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="font\GameFonts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameModes.h">
@@ -50,9 +56,6 @@
     <ClInclude Include="Sprites\MapSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sprites\NpcSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Sprites\SpriteSheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="Sprites\TileSprite.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="font\GameFonts.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

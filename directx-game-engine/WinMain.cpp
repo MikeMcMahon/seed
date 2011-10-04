@@ -1,8 +1,8 @@
 #include "GameHeaders.h"		// Includes all of those fancy external things like DX10 :) 
 
 // My Headers
-//#include "GameSprite.h"
-#include "Sprites\GameSprite.h"
+#include "sprites\CharacterSprite.h"
+
 #include "GameModes.h"
 #include "input\XGamePad.h"
 #include "DXDrawing.h"
@@ -33,7 +33,7 @@ ID3DX10Sprite *pSpriteObject = NULL;
 D3DX10_SPRITE  spritePool[NUM_POOL_SPRITES];
 
 // Configure the xbox controller stuff
-XGamePad * XControl;
+XGamePad* XControl;
 
 // Game Mode
 GameModes::MODES GAMEMODE = GameModes::MAIN_MENU;
@@ -62,7 +62,6 @@ float GetMilis() {
 // Main entry point
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) 
 {
-	
 	// Initialize the window
 	if (!InitWindow(hInstance, WINDOW_WIDTH, WINDOW_HEIGHT) ) {
 		return false;
