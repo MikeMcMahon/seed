@@ -7,8 +7,14 @@
 #define NUM_POOL_SPRITES 2048		// Max sprites to keep in memory
 
 namespace sprites { 
+	enum TYPE { 
+		BASE,
+		CHARACTER,
+		NPC,
+		TILE};
 	class GameSprite : public D3DX10_SPRITE {
 	public:
+		TYPE kindOf;
 		struct POINT {
 			float x;
 			float y; 
@@ -43,6 +49,7 @@ namespace sprites {
 		BOOL canInteract;				// Can this sprite interact with other sprites
 
 	public:
+		GameSprite();
 		~GameSprite();
 		void animationDetail(int startFrame, int numFrames, float animDuration);
 		ANIMATION animationDetail();

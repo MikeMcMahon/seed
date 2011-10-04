@@ -1,4 +1,11 @@
 #include "GameSprite.h"
+
+using namespace sprites;
+
+sprites::GameSprite::GameSprite() { 
+	this->kindOf = ::BASE;
+}
+
 sprites::GameSprite::~GameSprite() { 
 
 }

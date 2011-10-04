@@ -5,6 +5,9 @@
 
 namespace sprites { 
 	class CharacterSprite : public GameSprite {
+	public:
+		CharacterSprite();
+		~CharacterSprite();
 
 	};
 }
