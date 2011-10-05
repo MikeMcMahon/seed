@@ -22,5 +22,4 @@ const int MAX_FRAMESKIP = 5;
 #define WINDOW_HEIGHT 768
 #define CLASS_NAME TEXT("PLATFORM-MAN")
 
-
 #endif

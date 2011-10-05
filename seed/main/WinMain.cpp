@@ -13,6 +13,7 @@
 using namespace input;
 using namespace sprites;
 
+
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
 int numActiveSprites = 0;
