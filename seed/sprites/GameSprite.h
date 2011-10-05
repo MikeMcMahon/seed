@@ -1,7 +1,7 @@
 #ifndef __GAMEHEADERS_H_INCLUDE__
 #define __GAMEHEADERS_H_INCLUDE__
 
-#include "..\GameHeaders.h"
+#include "../main/GameHeaders.h"
 
 #define MAX_SPRITES 1024			// Max sprites to draw at any given time
 #define NUM_POOL_SPRITES 2048		// Max sprites to keep in memory

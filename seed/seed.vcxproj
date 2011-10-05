@@ -78,25 +78,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DXDrawing.cpp" />
+    <ClCompile Include="main\DXDrawing.cpp" />
     <ClInclude Include="font\GameFonts.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClCompile Include="font\GameFonts.cpp" />
-    <ClCompile Include="GameModes.cpp" />
+    <ClCompile Include="main\GameModes.cpp" />
     <ClCompile Include="sprites\CharacterSprite.cpp" />
     <ClCompile Include="sprites\GameSprite.cpp" />
-    <ClCompile Include="GameWindow.cpp" />
-    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="main\GameWindow.cpp" />
+    <ClCompile Include="main\WinMain.cpp" />
     <ClCompile Include="input\XGamePad.cpp" />
-    <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="main\GameWindow.h" />
     <ClInclude Include="util\XmlIngester.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sprites\CharacterSprite.h" />
-    <ClInclude Include="DXDrawing.h" />
-    <ClInclude Include="GameHeaders.h" />
-    <ClInclude Include="GameModes.h" />
+    <ClInclude Include="main\DXDrawing.h" />
+    <ClInclude Include="main\GameHeaders.h" />
+    <ClInclude Include="main\GameModes.h" />
     <ClInclude Include="sprites\GameSprite.h" />
     <ClInclude Include="sprites\MapSprite.h" />
     <ClInclude Include="input\XGamePad.h" />

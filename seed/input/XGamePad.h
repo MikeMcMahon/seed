@@ -1,7 +1,7 @@
 #ifndef __GAMEPAD_H_INCLUDE__
 #define __GAMEPAD_H_INCLUDE__
 
-#include "..\GameHeaders.h"
+#include "../main/GameHeaders.h"
 
 #define MAX_CONTROLLERS 4
 namespace input { 
