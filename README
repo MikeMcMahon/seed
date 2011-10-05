@@ -1,6 +1,6 @@
 Dev Environment Setup
 --------------------------
-
+Balls
 1) Install DirectX10 SDK
     a) Define an environment variable called DXSDK_DIR that points to your DirectX10 SDK Installation
 2) Configure the the project property pages (in visual studio)
