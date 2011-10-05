@@ -209,7 +209,7 @@ void UpdateScene() {
 // InitSprites!
 bool InitSprites() {
 	// Absofuckingloutely required or the sprites will not display - this is required because we need to ensure the sprite struct is CLEAN Before sending to the renderer
-	ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
+	//ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
 
 	ID3D10Texture2D * backgroundTexture = NULL;
 	switch (GAMEMODE) { 
