@@ -2,14 +2,19 @@ Dev Environment Setup
 --------------------------
 
 1) Install DirectX10 SDK
+    a) Define an environment variable called DXSDK_DIR that points to your DirectX10 SDK Installation
 2) Configure the the project property pages (in visual studio)
     a) Configuration Properties
     b) C/C++ - Additional Include Directories
         * $(DXSDK_DIR)\include
+        * ..\include
     c) Linker - Additional library directories
         * $(DXSDK_DIR)\lib\x86
+        * ..\lib
     d) Link - Input
         * d3d10.lib
         * d3dx10.lib
         * XInput.lib
+        * Zdll.lib
+        * XmlHelperMI.lib
         * $(AdditionalDependencies)
