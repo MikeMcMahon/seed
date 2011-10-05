@@ -4,6 +4,7 @@
 #include "../sprites/CharacterSprite.h"
 #include "../sprites/MapSprite.h"
 #include "../sprites/TileSprite.h"
+#include "../sprites/SpriteUtils.h"
 
 #include "GameModes.h"
 #include "../input/XGamePad.h"
@@ -17,7 +18,7 @@ using namespace sprites;
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
 int numActiveSprites = 0;
-GameSprite gameSprites[MAX_SPRITES];
+GameSprite gameSprites[MAX_SPRITES] = { GameSprite() };
 
 // D3D GLOBALS ////////////////////////////////
 ID3D10Device* pD3DDevice = NULL;
@@ -245,7 +246,7 @@ bool InitSprites() {
 	GameSprite gp;
 	(&gp)->spriteSize(64, 64);
 	(&gp)->curFrame(0);
-	(&gp)->animationDetail(0, 8, 0.5f);
+	(&gp)->animationDetail(0, 8, 0.1f);
 	(&gp)->pTexture = srv;
 	(&gp)->TexCoord.x = 0;
 	(&gp)->TexCoord.y = 0;
@@ -350,7 +351,6 @@ void MoveSprites(float interpolation) {
 				// We have negative space on the screen we cannot traverse
 				actualWindowHeight += _offsetBottom;
 			}
-
 			// Direction is down
 			if (xControl->IsButtonPressedForController(0, DPAD_DOWN)) {
 				posY += moveY;
@@ -364,10 +364,11 @@ void MoveSprites(float interpolation) {
 
 						// Move the background up
 						// TODO - Write a method that translates everything, not just statically known sprite
-						gameSprites[1].position(
+						::SpriteUtil::TranslateSprites(0, (moveY * -1), gameSprites, i);
+						/* gameSprites[1].position(
 							gameSprites[1].position().x, 
 							gameSprites[1].position().y-moveY,
-							gameSprites[1].position().z);
+							gameSprites[1].position().z); */
 
 						// ensure our sprite doesn't go below the bottom edge
 						posY -= moveY;

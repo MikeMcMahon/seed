@@ -15,15 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DXDrawing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameModes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sprites\GameSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,20 +27,23 @@
     <ClCompile Include="font\GameFonts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameWindow.cpp">
+    <ClCompile Include="main\DXDrawing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main\GameModes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main\GameWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main\WinMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sprites\SpriteUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameModes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameHeaders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXDrawing.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sprites\CharacterSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -71,7 +65,19 @@
     <ClInclude Include="util\XmlIngester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameWindow.h">
+    <ClInclude Include="main\GameWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\DXDrawing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\GameHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\GameModes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\SpriteUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
