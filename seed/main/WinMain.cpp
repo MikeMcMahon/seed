@@ -246,7 +246,7 @@ bool InitSprites() {
 	GameSprite gp;
 	(&gp)->spriteSize(64, 64);
 	(&gp)->curFrame(0);
-	(&gp)->animationDetail(0, 8, 0.1f);
+	(&gp)->animationDetail(0, 8, 0.5f);
 	(&gp)->pTexture = srv;
 	(&gp)->TexCoord.x = 0;
 	(&gp)->TexCoord.y = 0;
@@ -273,7 +273,7 @@ bool InitSprites() {
 	_offsetRight = _offsetLeft;
 
 	(&cp)->curFrame(0);
-	(&cp)->animationDetail(0, 8, 0.5f);
+	(&cp)->animationDetail(0, 8, 0.0f);
 	(&cp)->pTexture = gSpriteTextureRV;
 	(&cp)->TexCoord.x = 0;
 	(&cp)->TexCoord.y = 0;
@@ -335,8 +335,6 @@ void MoveSprites(float interpolation) {
 				moveY *= 2.5f;
 			}
 
-			if (xControl->IsButtonPressedForController(0, DPAD_UP))
-				posY -= moveY;
 			if (xControl->IsButtonPressedForController(0, DPAD_RIGHT)) 
 				posX += moveX;
 			if (xControl->IsButtonPressedForController(0, DPAD_LEFT)) 
@@ -346,35 +344,54 @@ void MoveSprites(float interpolation) {
 			if (xControl->IsButtonPressedForController(0, input::BACK))
 				PostQuitMessage(0);
 
-			float actualWindowHeight = WINDOW_HEIGHT;
+			float actualWindowBottom = WINDOW_HEIGHT;
+            float actualWindowTop = 0;
+
+            if (_offsetTop < 0) { 
+                actualWindowTop -= _offsetTop;
+            }
 			if (_offsetBottom < 0) { 
 				// We have negative space on the screen we cannot traverse
-				actualWindowHeight += _offsetBottom;
+				actualWindowBottom += _offsetBottom;
 			}
 			// Direction is down
 			if (xControl->IsButtonPressedForController(0, DPAD_DOWN)) {
 				posY += moveY;
-				if ( actualHeight > actualWindowHeight && _offsetBottom <= 0) { 
-					posY = actualWindowHeight - gameSprites[i].spriteSize().height;
+				if ( actualHeight > actualWindowBottom && _offsetBottom <= 0) { 
+					posY = actualWindowBottom - gameSprites[i].spriteSize().height;
 				} else { 
 					// Check our _offsetBottom if it is a positive nbr we can translate the world up
-					if (_offsetBottom > 0 && actualHeight >= actualWindowHeight) {
+					if (_offsetBottom > 0 && actualHeight >= actualWindowBottom) {
 						_offsetBottom -= moveY;
 						_offsetTop += moveY;
 
-						// Move the background up
-						// TODO - Write a method that translates everything, not just statically known sprite
-						::SpriteUtil::TranslateSprites(0, (moveY * -1), gameSprites, i);
-						/* gameSprites[1].position(
-							gameSprites[1].position().x, 
-							gameSprites[1].position().y-moveY,
-							gameSprites[1].position().z); */
-
+						// Translate the world up
+                        ::SpriteUtil::TranslateSprites(0, (moveY * -1), gameSprites, i);
 						// ensure our sprite doesn't go below the bottom edge
 						posY -= moveY;
 					} 
 				}
 			}
+
+            // Direction is up 
+            if (xControl->IsButtonPressedForController(0, DPAD_UP)) {
+				posY -= moveY;
+
+                if (posY <= actualWindowTop && _offsetTop <= 0) { 
+                    posY = (_offsetTop * -1);
+                } else { 
+                    // check out _offsetTop if it is a positive nbr we can translate the world down
+                    if (_offsetTop > 0 && posY <= 0) { 
+                        _offsetBottom += moveY;
+                        _offsetTop -= moveY;
+                        
+
+                        // Translate the world down
+                        ::SpriteUtil::TranslateSprites(0, moveY, gameSprites, i);
+                        posY -= moveY;
+                    }
+                }
+            }
 
 			// Direction is up 
 			if ( (posY <= 0) ) { 
