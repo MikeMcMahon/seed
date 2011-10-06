@@ -11,7 +11,7 @@ void InitiateDefaultBlend(D3D10_BLEND_DESC* StateDesc) {
 	StateDesc->DestBlendAlpha = D3D10_BLEND_ZERO;
 	StateDesc->BlendOpAlpha = D3D10_BLEND_OP_ADD;
 	StateDesc->RenderTargetWriteMask[0] = D3D10_COLOR_WRITE_ENABLE_ALL;
-}
+} // Initiate Default Blend
 
 
 ID3D10Texture2D* GetTexture2DFromFile(LPCSTR filename, ID3D10Device* pD3DDevice) {
@@ -30,7 +30,7 @@ ID3D10Texture2D* GetTexture2DFromFile(LPCSTR filename, ID3D10Device* pD3DDevice)
 
 	// REturns the ID3D10Texture2D Object
 	return texture2D;
-}
+} // GetTexture2DFromFile
 
 void GetResourceViewFromTexture(ID3D10Texture2D* texture, ID3D10ShaderResourceView **resourceView, ID3D10Device* pD3DDevice)
 {
@@ -49,4 +49,5 @@ void GetResourceViewFromTexture(ID3D10Texture2D* texture, ID3D10ShaderResourceVi
 			
 		pD3DDevice->CreateShaderResourceView(texture, &SRVDesc, resourceView);
 	}
-}
+} // GetResourceViewFromTexture
+/* eof */

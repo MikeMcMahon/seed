@@ -1,6 +1,6 @@
 #include "SpriteUtils.h"
 
-using namespace sprites;
+using namespace Sprites;
 
 /*
 *	Translates the sprites X/Y position based on the input numbers 
@@ -17,6 +17,6 @@ void ::SpriteUtil::TranslateSprites(float x, float y, GameSprite* gameSprites, i
 
 		(gameSprites + i)->position(sX, sY, sZ);
 	}
-} 
+} // TranslateSprites
 
 /* eof */

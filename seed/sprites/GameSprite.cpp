@@ -1,17 +1,19 @@
 #include "GameSprite.h"
 
-using namespace sprites;
-sprites::GameSprite::GameSprite() {
+using namespace Sprites;
+
+Sprites::GameSprite::GameSprite() {
 	this->position(0,0,0);
 	this->canAnimate(FALSE);
 	this->isVisible(FALSE);
 	this->kindOf = ::BASE;
-}
+} // GameSprite
 
-sprites::GameSprite::~GameSprite() { 
+Sprites::GameSprite::~GameSprite() { 
 
-}
-void sprites::GameSprite::animationDetail(int startFrame, int numFrames, float animDuration) { 
+} 
+
+void Sprites::GameSprite::animationDetail(int startFrame, int numFrames, float animDuration) { 
 	ZeroMemory(&animation, sizeof(ANIMATION)); 
 	this->animation.animDuration = animDuration; 
 	this->animation.numFrames = numFrames; 
@@ -19,18 +21,22 @@ void sprites::GameSprite::animationDetail(int startFrame, int numFrames, float a
 
 	// Determine the number of frames to skip
 	this->skipFrames = ( TICKS_PER_SECOND * animDuration ) / (float) numFrames;
-	this->curSkip = 0; }
+	this->curSkip = 0; 
+} // animationDetail
 
-sprites::GameSprite::ANIMATION sprites::GameSprite::animationDetail() { 
-	return this->animation; } 
+Sprites::GameSprite::ANIMATION Sprites::GameSprite::animationDetail() { 
+	return this->animation; 
+} 
 
-float sprites::GameSprite::curFrame() { 
-	return this->curFrameAnimate; }
+float Sprites::GameSprite::curFrame() { 
+	return this->curFrameAnimate; 
+} 
 
-void sprites::GameSprite::curFrame(float newFrame) { 
-	this->curFrameAnimate = newFrame; }
+void Sprites::GameSprite::curFrame(float newFrame) { 
+	this->curFrameAnimate = newFrame; 
+} 
 
-void sprites::GameSprite::incrementFrame() { 
+void Sprites::GameSprite::incrementFrame() { 
 	if (this->curSkip <= this->skipFrames && this->curSkip == 0) { 
 		this->curFrameAnimate++; 
 	}
@@ -38,41 +44,55 @@ void sprites::GameSprite::incrementFrame() {
 		this->curSkip = 0;
 		return;
 	}
-	curSkip++; }
+	curSkip++; 
+}// incrementFrame
 
-void sprites::GameSprite::position(float x, float y, float z) { 
+void Sprites::GameSprite::position(float x, float y, float z) { 
 	ZeroMemory(&pos, sizeof(POINT)); 
 	this->pos.x = x; 
 	this->pos.y = y; 
-	this->pos.z = z; }
+	this->pos.z = z; 
+} // position
 
-sprites::GameSprite::POINT sprites::GameSprite::position() { 
-	return this->pos; }
+Sprites::GameSprite::POINT Sprites::GameSprite::position() { 
+	return this->pos; 
+} 
 
-void sprites::GameSprite::setMoveDistance( float x, float y ) { this->moveX = x; this->moveY = y; }
+void Sprites::GameSprite::setMoveDistance( float x, float y ) { 
+	this->moveX = x; this->moveY = y; 
+} 
 
-float sprites::GameSprite::getMoveX() { 
-	return this->moveX; }
+float Sprites::GameSprite::getMoveX() { 
+	return this->moveX; 
+}
 
-float sprites::GameSprite::getMoveY() { 
-	return this->moveY; }
+float Sprites::GameSprite::getMoveY() { 
+	return this->moveY; 
+}
 
-void sprites::GameSprite::spriteSize(float height, float width) { 
+void Sprites::GameSprite::spriteSize(float height, float width) { 
 	ZeroMemory(&this->size, sizeof(SIZE)); 
 	this->size.height = height; 
-	this->size.width = width; }
+	this->size.width = width; 
+} // spriteSize
 
-sprites::GameSprite::SIZE sprites::GameSprite::spriteSize() { 
-	return this->size; } 
+Sprites::GameSprite::SIZE Sprites::GameSprite::spriteSize() { 
+	return this->size; 
+} 
 
-BOOL sprites::GameSprite::isVisible() { 
-	return this->visible; }
+BOOL Sprites::GameSprite::isVisible() { 
+	return this->visible; 
+}
 
-void sprites::GameSprite::isVisible(BOOL visbility) { 
-	this->visible = visbility; }
+void Sprites::GameSprite::isVisible(BOOL visbility) { 
+	this->visible = visbility; 
+}
 
-BOOL sprites::GameSprite::canAnimate() { 
-	return this->animateState; }
+BOOL Sprites::GameSprite::canAnimate() { 
+	return this->animateState; 
+}
 
-void sprites::GameSprite::canAnimate(BOOL animate) { 
-	this->animateState = animate; }
+void Sprites::GameSprite::canAnimate(BOOL animate) { 
+	this->animateState = animate; 
+}
+/* eof */

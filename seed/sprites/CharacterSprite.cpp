@@ -1,6 +1,7 @@
 #include "CharacterSprite.h"
-using namespace sprites;
+using namespace Sprites;
 
 ::CharacterSprite::CharacterSprite() { 
 	this->kindOf = ::CHARACTER;
 }
+/* eof */

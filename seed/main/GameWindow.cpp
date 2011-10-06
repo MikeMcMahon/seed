@@ -69,3 +69,4 @@ bool InitWindow(HINSTANCE hInstance, int windowWidth, int windowHeight, HWND* wi
 
 	return true;
 }
+/* eof */

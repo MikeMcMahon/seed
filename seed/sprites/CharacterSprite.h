@@ -3,7 +3,7 @@
 
 #include "GameSprite.h"
 
-namespace sprites { 
+namespace Sprites { 
 	class CharacterSprite : public GameSprite {
 	public:
 		CharacterSprite();
@@ -12,3 +12,4 @@ namespace sprites {
 }
 
 #endif
+/* eof */

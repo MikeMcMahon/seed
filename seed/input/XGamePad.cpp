@@ -1,12 +1,12 @@
 #include "XGamePad.h"
 
-input::XGamePad::XGamePad() { 
+Input::XGamePad::XGamePad() { 
 	// By default this is disconnected
 	NULL_CONTROLLER.isConnected = false;
 	ZeroMemory(&controllers, MAX_CONTROLLERS * sizeof(CONTROLLER_INFO));	// Zero this out - remove that gobldygook 
-}
+} // XGamePad
 
-BOOLEAN input::XGamePad::IsButtonPressedForController(int controller, int button) {
+BOOLEAN Input::XGamePad::IsButtonPressedForController(int controller, int button) {
 	GetController(controller);
 	if (GetController(controller).isConnected) { 
 		if ((GetController(controller).curState.Gamepad.wButtons & button))
@@ -17,19 +17,19 @@ BOOLEAN input::XGamePad::IsButtonPressedForController(int controller, int button
 
 	// Can't get the button from an inactive controller
 	return FALSE;
-}
+} // IsButtonPressedForController
 
-input::XGamePad::CONTROLLER_INFO input::XGamePad::GetController(int controller) { 
+Input::XGamePad::CONTROLLER_INFO Input::XGamePad::GetController(int controller) { 
 	if (controller < MAX_CONTROLLERS) {
 		return controllers[controller];
 	}
 	
 	// Return a null controller
 	return XGamePad::NULL_CONTROLLER;
-}
+} // GetController
 
 
-void input::XGamePad::GetControllerStates() { 
+void Input::XGamePad::GetControllerStates() { 
 	for (DWORD i = 0; i < MAX_CONTROLLERS; i++) {
 		
 		ZeroMemory(&controllers[i].curState, sizeof(XINPUT_STATE));
@@ -38,4 +38,6 @@ void input::XGamePad::GetControllerStates() {
 		DWORD dwResult = XInputGetState(i, &controllers[i].curState);
 		controllers[i].isConnected = (dwResult == ERROR_SUCCESS);
 	}
-}
+} // GetControllerStates
+
+/* eof */

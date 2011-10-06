@@ -6,12 +6,14 @@
 #define MAX_SPRITES 1024			// Max sprites to draw at any given time
 #define NUM_POOL_SPRITES 2048		// Max sprites to keep in memory
 
-namespace sprites { 
+namespace Sprites { 
 	enum TYPE { 
 		BASE,
 		CHARACTER,
 		NPC,
-		TILE};
+		TILE
+	}; // Type
+	
 	class GameSprite : public D3DX10_SPRITE {
 	public:
 		TYPE kindOf;
@@ -19,17 +21,19 @@ namespace sprites {
 			float x;
 			float y; 
 			float z;
-		};
+		}; // POINT
 
 		struct SIZE { 
 			float height;
 			float width;
-		};
+		}; // SIZE
+
 		struct ANIMATION {
 			int startFrame;
 			int numFrames;
 			float animDuration;
-		};
+		}; // ANIMATION
+	
 	private:
 		int defaultStateFrameX;
 		int defaultStateFrameY;
@@ -71,8 +75,10 @@ namespace sprites {
 		void ResetSpriteAnim();
 		void JumpToFramePos(int, int);
 		void SetSpriteDefault(int, int);
-	};
 
-}
-////////////////////// ENDIF for Header Protection //////////////////////
+	}; // GameSprite
+
+} // Sprites
+
 #endif
+/* eof */

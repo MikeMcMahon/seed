@@ -2,10 +2,11 @@
 #define __TILESPRITE_H_INCLUDE__
 
 #include "GameSprite.h"
-namespace sprites { 
+namespace Sprites { 
 	struct TileSprite : public CharacterSprite {
 	
-	};
-}
+	};// TileSprite
+} // Sprites
 
 #endif
+/* eof */

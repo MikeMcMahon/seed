@@ -3,13 +3,13 @@
 
 #include "GameSprite.h"
 
-namespace sprites { 
+namespace Sprites { 
 	class SpriteUtil : public GameSprite { 
 	public:
 		static void TranslateSprites(float, float, GameSprite*, int);
 
-	}; // util 
-}
+	}; // SpriteUtil
+}// Sprites
 
-#endif // __SPRITEUTIL_H_INCLUDE__
+#endif
 /* eof */

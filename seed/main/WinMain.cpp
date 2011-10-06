@@ -11,8 +11,8 @@
 #include "DXDrawing.h"
 #include "GameWindow.h"
 
-using namespace input;
-using namespace sprites;
+using namespace Input;
+using namespace Sprites;
 
 
 // GLOBALS ////////////////////////////////////
@@ -31,10 +31,10 @@ ID3D10BlendState* pBlendState10 = NULL;
 ID3D10BlendState* pOriginalBlendState10 = NULL;
 
 // Shader Resource View
-ID3D10ShaderResourceView * gSpriteTextureRV = NULL;
+ID3D10ShaderResourceView* gSpriteTextureRV = NULL;
 
 // Sprite stuff
-ID3DX10Sprite *pSpriteObject = NULL;
+ID3DX10Sprite* pSpriteObject = NULL;
 D3DX10_SPRITE  spritePool[NUM_POOL_SPRITES];
 
 // Configure the xbox controller stuff
@@ -186,9 +186,22 @@ void UpdateScene() {
 				(float)(WINDOW_HEIGHT - gameSprites[i].position().y - (gameSprites[i].spriteSize().height/2)), 
 				0.1f);	// ZOrder
 
-			// Update the sprites position and scale
 			gameSprites[i].matWorld = matScaling * matTranslation;
+			/* TODO - Handle Sprite Rotation
+			if (i != 1) { 
+				D3DXMATRIX matWorld = gameSprites[i].matWorld;
+				D3DXMATRIX matOut;
 
+				// Rotate the bitch	
+				D3DXVECTOR2 center = D3DXVECTOR2(
+					32,
+					32);
+				D3DXVECTOR2 screenPos = D3DXVECTOR2(gameSprites[i].position().x, gameSprites[i].position().y);
+				D3DXVECTOR2 scaling(1,1);
+				D3DXMatrixTransformation2D(&matOut,NULL, 0.0, &scaling, &center, 5.0f,&screenPos);
+				D3DXMATRIX newMat = matWorld * matOut;
+				gameSprites[i].matWorld = newMat;
+			}*/
 			// Animate the sprite
 			if (gameSprites[i].canAnimate()) {
 				float texCoordX = (float)(gameSprites[i].curFrame() / gameSprites[i].animationDetail().numFrames);
@@ -341,7 +354,7 @@ void MoveSprites(float interpolation) {
 				posX -= moveX;
 
 			// Temp for debugging
-			if (xControl->IsButtonPressedForController(0, input::BACK))
+			if (xControl->IsButtonPressedForController(0, BACK))
 				PostQuitMessage(0);
 
 			float actualWindowBottom = WINDOW_HEIGHT;

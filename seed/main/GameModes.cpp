@@ -25,4 +25,6 @@ BOOL GameModes::ValidGameModeTransition(GameModes::MODES srcMode, GameModes::MOD
 	default:
 		return FALSE;
 	}
-}
+} // ValidGameModeTransition
+
+/* eof */

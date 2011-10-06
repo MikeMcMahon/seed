@@ -4,7 +4,7 @@
 #include "../main/GameHeaders.h"
 
 #define MAX_CONTROLLERS 4
-namespace input { 
+namespace Input { 
 
 	enum XButtons { 
 		DPAD_UP = XINPUT_GAMEPAD_DPAD_UP,
@@ -21,7 +21,8 @@ namespace input {
 		B_BUTTON = XINPUT_GAMEPAD_B,
 		X_BUTTON = XINPUT_GAMEPAD_X,
 		Y_BUTTON = XINPUT_GAMEPAD_Y
-	};
+	}; // XButtons
+
 	class XGamePad {
 	private:
 		struct CONTROLLER_INFO {
@@ -39,5 +40,6 @@ namespace input {
 		CONTROLLER_INFO GetController(int);
 
 	};
-}
+} // Input
 #endif
+/* eof */
