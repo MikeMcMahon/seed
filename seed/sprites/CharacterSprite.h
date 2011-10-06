@@ -8,7 +8,6 @@ namespace sprites {
 	public:
 		CharacterSprite();
 		~CharacterSprite();
-
 	};
 }
 

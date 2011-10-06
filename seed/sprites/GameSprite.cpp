@@ -1,8 +1,10 @@
 #include "GameSprite.h"
 
 using namespace sprites;
-
-sprites::GameSprite::GameSprite() { 
+sprites::GameSprite::GameSprite() {
+	this->position(0,0,0);
+	this->canAnimate(FALSE);
+	this->isVisible(FALSE);
 	this->kindOf = ::BASE;
 }
 
