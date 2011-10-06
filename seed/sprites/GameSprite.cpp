@@ -1,7 +1,6 @@
 #include "GameSprite.h"
 
 using namespace Sprites;
-
 Sprites::GameSprite::GameSprite() {
 	this->position(0,0,0);
 	this->canAnimate(FALSE);
