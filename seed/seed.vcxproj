@@ -91,11 +91,8 @@
     <ClCompile Include="main\WinMain.cpp" />
     <ClCompile Include="input\XGamePad.cpp" />
     <ClInclude Include="main\GameWindow.h" />
-<<<<<<< HEAD
     <ClInclude Include="util\TextureHandler.h" />
-=======
     <ClInclude Include="sprites\SpriteUtils.h" />
->>>>>>> 34f385354a0fce9b82e7783b9686b430ee53e5f5
     <ClInclude Include="util\XmlIngester.h" />
   </ItemGroup>
   <ItemGroup>
