@@ -47,7 +47,6 @@ namespace sprites {
 		BOOL animateState;				// Can sprite animate
 		BOOL flipSprite;				// Flip sprite on the horizontal 
 		BOOL canInteract;				// Can this sprite interact with other sprites
-
 	public:
 		GameSprite();
 		~GameSprite();
