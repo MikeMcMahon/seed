@@ -1,6 +1,4 @@
-#ifndef __SPRITEUTIL_H_INCLUDE__
-#define __SPRITEUTIL_H_INCLUDE__
-
+#pragma once
 #include "GameSprite.h"
 
 namespace Sprites { 
@@ -10,6 +8,4 @@ namespace Sprites {
 
 	}; // SpriteUtil
 }// Sprites
-
-#endif
 /* eof */

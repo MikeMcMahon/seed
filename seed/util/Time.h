@@ -1,3 +1,4 @@
+#pragma once
 #include "../main/GameHeaders.h"
 
 namespace GameUtil { 

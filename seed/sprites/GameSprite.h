@@ -1,6 +1,4 @@
-#ifndef __GAMEHEADERS_H_INCLUDE__
-#define __GAMEHEADERS_H_INCLUDE__
-
+#pragma once
 #include "../main/GameHeaders.h"
 
 #define MAX_SPRITES 1024			// Max sprites to draw at any given time
@@ -80,6 +78,4 @@ namespace Sprites {
 	}; // GameSprite
 
 } // Sprites
-
-#endif
 /* eof */

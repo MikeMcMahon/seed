@@ -1,3 +1,4 @@
+#pragma once
 #include <zlib.h>
 #include "../main/GameHeaders.h"
 

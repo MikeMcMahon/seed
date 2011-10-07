@@ -1,6 +1,4 @@
-#ifndef __GAMEPAD_H_INCLUDE__
-#define __GAMEPAD_H_INCLUDE__
-
+#pragma once
 #include "../main/GameHeaders.h"
 
 #define MAX_CONTROLLERS 4
@@ -41,5 +39,4 @@ namespace Input {
 
 	};
 } // Input
-#endif
 /* eof */

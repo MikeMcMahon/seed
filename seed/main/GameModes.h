@@ -1,5 +1,4 @@
-#ifndef __GAMEMODE_H_INCLUDE__
-#define __GAMEMODE_H_INCLUDE__
+#pragma once
 #include "GameHeaders.h"
 
 class GameModes { 
@@ -14,5 +13,5 @@ public:
 	};
 	BOOL ValidGameModeTransition(MODES, MODES); // Determins if the source gamemode can be transitioned into the next gamemode 
 }; // GameModes
-#endif
+
 /* eof */

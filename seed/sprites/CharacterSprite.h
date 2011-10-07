@@ -1,6 +1,4 @@
-#ifndef __CHARACTER_H_INCLUDE__
-#define __CHARACTER_H_INCLUDE__
-
+#pragma once
 #include "GameSprite.h"
 
 namespace Sprites { 
@@ -10,6 +8,4 @@ namespace Sprites {
 		~CharacterSprite();
 	};
 }
-
-#endif
 /* eof */

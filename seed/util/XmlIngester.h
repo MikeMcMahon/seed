@@ -1,6 +1,4 @@
-#ifndef __XMLING_H_INCLUDE__
-#define __XMLING_H_INCLUDE__
-
+#pragma once
 // TODO - is this the right way of loading sprites?  I don't think so, so I won't spend too much time here. 
 // Think speed, is reading the sprites in via XML really the answer?  how much time does it cost...etc
 #include <XmlHelper.h>
@@ -21,6 +19,4 @@ namespace Util {
         void GetCharacterSprite(char* spriteName, sprites::CharacterSprite* sprite);
 	}
 } // Util
-
-#endif
 /* eof */

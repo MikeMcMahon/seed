@@ -1,6 +1,4 @@
-#ifndef __MAPSPRITE_H_INCLUDE__
-#define __MAPSPRITE_H_INCLUDE__
-
+#pragma once
 #include "GameSprite.h"
 
 namespace Sprites { 
@@ -9,6 +7,4 @@ namespace Sprites {
 		std::vector<std::vector<float>> * deadZones;		// Areas of the map we cannot traverse. 
 	}; // MapSprite
 } // Sprites
-
-#endif
 /* eof */

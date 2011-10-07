@@ -1,3 +1,4 @@
+#pragma once
 #include "GameHeaders.h"
 
 void InitiateDefaultBlend(D3D10_BLEND_DESC *);

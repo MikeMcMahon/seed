@@ -1,5 +1,4 @@
-#ifndef __GAME_H_INCLUDE__
-#define __GAME_H_INCLUDE__
+#pragma once
 
 // Balls to the walls SON!
 #define WIN32_LEAN_AND_MEAN
@@ -21,5 +20,3 @@ const int MAX_FRAMESKIP = 5;
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define CLASS_NAME TEXT("SEED")
-
-#endif
