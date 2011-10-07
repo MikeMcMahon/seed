@@ -13,6 +13,8 @@
 #include "../util/TextureHandler.h"
 #include "../util/Time.h"
 
+#include <process.h>
+
 using namespace Input;
 using namespace Sprites;
 using namespace GameUtil;
@@ -122,8 +124,7 @@ void Render() {
 	if (pD3DDevice != NULL) {
 		// Clear the target buffer
 		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-		
-		
+
 		if (pSpriteObject != NULL) {
 			// Start Drawing the sprites
 			pSpriteObject->Begin(D3DX10_SPRITE_SORT_DEPTH_FRONT_TO_BACK);
@@ -155,7 +156,7 @@ void Render() {
 			pSwapChain->Present(0,0);
 		}
 	}
-}
+} // Render 
 
 void UpdateScene() {
 	D3DXMATRIX matScaling;
@@ -208,7 +209,7 @@ void UpdateScene() {
 
 	// Update the number of active sprites
 	numActiveSprites = curPoolIndex;
-}
+} // UpdateScene 
 
 bool InitSprites() {
 	ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
