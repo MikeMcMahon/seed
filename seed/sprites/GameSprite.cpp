@@ -1,6 +1,18 @@
 #include "GameSprite.h"
 
 using namespace Sprites;
+
+Sprites::GameSprite::GameSprite(char* textureName, float width, float height) { 
+    this->position(0,0,0);
+    this->canAnimate(FALSE);
+    this->isVisible(FALSE);
+    this->kindOf = ::BASE;
+
+    // Set the width and height
+    this->spriteSize(height, width);
+    this->textureResourceName = textureName;
+}// GameSprite
+
 Sprites::GameSprite::GameSprite() {
 	this->position(0,0,0);
 	this->canAnimate(FALSE);

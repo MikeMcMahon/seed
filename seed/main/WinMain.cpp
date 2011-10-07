@@ -9,11 +9,13 @@
 #include "GameModes.h"
 #include "../input/XGamePad.h"
 #include "DXDrawing.h"
-#include "GameWindow.h"
+#include "../ui/GameWindow.h"
+#include "../util/TextureHandler.h"
+#include "../util/Time.h"
 
 using namespace Input;
 using namespace Sprites;
-
+using namespace GameUtil;
 
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
@@ -57,18 +59,6 @@ void UpdateSprites();
 bool InitSprites();
 bool HasFrameElapsed(); 
 
-float GetMilis();
-float GetMilis() {
-	
-	LARGE_INTEGER t, f;
-	QueryPerformanceCounter(&t);
-	QueryPerformanceFrequency(&f);
-
-	// Return in Miliseconds
-	return ((float)t.QuadPart / (float)f.QuadPart) * 1000.0f;
-}
-
-
 // Main entry point
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) 
 {
@@ -94,7 +84,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	// Get the timer frequency
 	int loops = 0;
 	float interpolation = 0;
-	float next_game_tick = GetMilis();
+	float next_game_tick = ::Time::GetMilis();
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -104,7 +94,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		xControl->GetControllerStates();
 		
 		loops = 0;
-		while ( GetMilis() > next_game_tick && loops < MAX_FRAMESKIP) { 
+		while ( ::Time::GetMilis() > next_game_tick && loops < MAX_FRAMESKIP) { 
 			// Handles the textures / animation
 			UpdateScene();
 			UpdateSprites();
@@ -113,7 +103,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 			loops++;
 		}
 
-		interpolation = float ( GetMilis() + SKIP_TICKS - next_game_tick ) / float ( SKIP_TICKS );
+		interpolation = float ( ::Time::GetMilis() + SKIP_TICKS - next_game_tick ) / float ( SKIP_TICKS );
 		// Moves the sprites around directionaly
 		MoveSprites(interpolation);		
 
@@ -227,9 +217,9 @@ bool InitSprites() {
 	switch (GAMEMODE) { 
 	case GameModes::MAIN_MENU:
 		// Load the background texture
-		backgroundTexture = GetTexture2DFromFile("./textures/large-background-png-1000-800.png", pD3DDevice);
+		backgroundTexture = TextureHandler::GetTexture2DFromFile("../textures/large-background-png-1000-800.png", pD3DDevice);
 		if (backgroundTexture == NULL) return false;
-		GetResourceViewFromTexture(backgroundTexture, &gSpriteTextureRV, pD3DDevice);
+		TextureHandler::GetResourceViewFromTexture(backgroundTexture, &gSpriteTextureRV, pD3DDevice);
 		backgroundTexture->Release();
 		break;
 	default:
@@ -250,29 +240,28 @@ bool InitSprites() {
 
 	// Create another texture for the bouncing ball
 	ID3D10Texture2D * ballBounce = NULL;
-	ballBounce = GetTexture2DFromFile("./textures/ball_bounce_512x64.png", pD3DDevice);
+    ballBounce = TextureHandler::GetTexture2DFromFile("../textures/ball_bounce_512x64.png", pD3DDevice);
 	ID3D10ShaderResourceView * srv;
-	GetResourceViewFromTexture(ballBounce, &srv, pD3DDevice);
+	TextureHandler::GetResourceViewFromTexture(ballBounce, &srv, pD3DDevice);
 	ballBounce->Release();
 
-	GameSprite gp;
-	(&gp)->spriteSize(64, 64);
-	(&gp)->curFrame(0);
-	(&gp)->animationDetail(0, 8, 0.05f);
-	(&gp)->pTexture = srv;
-	(&gp)->TexCoord.x = 0;
-	(&gp)->TexCoord.y = 0;
-	(&gp)->TexSize.x = 1.0f;
-	(&gp)->TexSize.y = 1.0f;
-	(&gp)->TextureIndex = 0;
-	(&gp)->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	(&gp)->position(
+	GameSprite gp("ball_bounce_512x64.png", 64,64);
+	gp.curFrame(0);
+	gp.animationDetail(0, 8, 0.05f);
+	gp.pTexture = srv;
+	gp.TexCoord.x = 0;
+	gp.TexCoord.y = 0;
+	gp.TexSize.x = 1.0f;
+	gp.TexSize.y = 1.0f;
+	gp.TextureIndex = 0;
+	gp.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	gp.position(
 		((float)WINDOW_WIDTH/2.0f) - (float)gp.spriteSize().width / 2.0f,		// Moves the sprite to the center of the x axis
 		((float)WINDOW_HEIGHT/2.0f) - (float)gp.spriteSize().height / 2.0f,		// Move the sprite to the center of the y axis
 		0.5f);
-	(&gp)->setMoveDistance(0.5f,0.5f);
-	(&gp)->isVisible(TRUE);
-	(&gp)->canAnimate(TRUE);
+	gp.setMoveDistance(0.5f,0.5f);
+	gp.isVisible(TRUE);
+	gp.canAnimate(TRUE);
 
 	// Texture for this sprite to use
 	GameSprite cp;

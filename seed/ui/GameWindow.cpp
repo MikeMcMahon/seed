@@ -48,7 +48,7 @@ bool InitWindow(HINSTANCE hInstance, int windowWidth, int windowHeight, HWND* wi
 
 	// Create the window from the class above
 	*windowHandle = CreateWindow(CLASS_NAME, 
-		TEXT("directx-game-engine"),
+		CLASS_NAME,
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,

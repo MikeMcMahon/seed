@@ -52,6 +52,7 @@ namespace Sprites {
 		BOOL flipSprite;				// Flip sprite on the horizontal 
 		BOOL canInteract;				// Can this sprite interact with other sprites
 	public:
+        GameSprite(char * textureName, float height, float width);
 		GameSprite();
 		~GameSprite();
 		void animationDetail(int startFrame, int numFrames, float animDuration);
