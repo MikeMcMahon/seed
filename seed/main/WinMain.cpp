@@ -18,13 +18,14 @@ using namespace Sprites;
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
 int numActiveSprites = 0;
-GameSprite gameSprites[MAX_SPRITES] = { GameSprite() };
+GameSprite gameSprites[MAX_SPRITES]; // = { GameSprite() };
 
 // D3D GLOBALS ////////////////////////////////
 ID3D10Device* pD3DDevice = NULL;
 IDXGISwapChain* pSwapChain = NULL;
 ID3D10RenderTargetView* pRenderTargetView = NULL;
 D3DXMATRIX matProjection;
+D3D10_VIEWPORT m_viewPort;
 
 // Blend State
 ID3D10BlendState* pBlendState10 = NULL;
@@ -219,10 +220,8 @@ void UpdateScene() {
 	numActiveSprites = curPoolIndex;
 }
 
-// InitSprites!
 bool InitSprites() {
-	// Absofuckingloutely required or the sprites will not display - this is required because we need to ensure the sprite struct is CLEAN Before sending to the renderer
-	//ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
+	ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
 
 	ID3D10Texture2D * backgroundTexture = NULL;
 	switch (GAMEMODE) { 
@@ -259,7 +258,7 @@ bool InitSprites() {
 	GameSprite gp;
 	(&gp)->spriteSize(64, 64);
 	(&gp)->curFrame(0);
-	(&gp)->animationDetail(0, 8, 0.5f);
+	(&gp)->animationDetail(0, 8, 0.05f);
 	(&gp)->pTexture = srv;
 	(&gp)->TexCoord.x = 0;
 	(&gp)->TexCoord.y = 0;
@@ -313,7 +312,7 @@ bool InitSprites() {
 	}
 
 	return true;
-}
+} // InitSprites
 
 
 void UpdateSprites() { 
@@ -327,8 +326,8 @@ void UpdateSprites() {
 			}
 		}
 	}
-}
-D3D10_VIEWPORT m_viewPort;
+} // UpdateSprites
+
 float topLeftX, topLeftY, width, height;
 void MoveSprites(float interpolation) { 
 	// We want to move a moveable sprite of course! 
@@ -348,26 +347,64 @@ void MoveSprites(float interpolation) {
 				moveY *= 2.5f;
 			}
 
-			if (xControl->IsButtonPressedForController(0, DPAD_RIGHT)) 
-				posX += moveX;
-			if (xControl->IsButtonPressedForController(0, DPAD_LEFT)) 
-				posX -= moveX;
-
-			// Temp for debugging
+			// TODO - Create a means to pause
 			if (xControl->IsButtonPressedForController(0, BACK))
 				PostQuitMessage(0);
 
 			float actualWindowBottom = WINDOW_HEIGHT;
             float actualWindowTop = 0;
+            float actualWindowLeft = 0;
+            float actualWindowRight = WINDOW_WIDTH;
 
-            if (_offsetTop < 0) { 
+            // Left & Right Offsets
+            if (_offsetLeft < 0) 
+                actualWindowLeft -= _offsetLeft;
+            if (_offsetRight < 0) 
+                actualWindowRight += _offsetRight; 
+
+            // Top & Bottom Offsets
+            if (_offsetTop < 0)
                 actualWindowTop -= _offsetTop;
-            }
-			if (_offsetBottom < 0) { 
-				// We have negative space on the screen we cannot traverse
+			if (_offsetBottom < 0)
 				actualWindowBottom += _offsetBottom;
-			}
-			// Direction is down
+
+
+            if (xControl->IsButtonPressedForController(0, DPAD_RIGHT)) { 
+				posX += moveX;
+                if (actualWidth >= actualWindowRight && _offsetRight <= 0) {
+                    posX = actualWindowRight - gameSprites[i].spriteSize().width;
+                } else { 
+                    if (_offsetRight > 0 && actualWidth >= actualWindowRight) { 
+                        _offsetRight -= moveX;
+                        _offsetLeft += moveX;
+
+                        // Translate the world to the right
+                        ::SpriteUtil::TranslateSprites((moveX *-1),0,gameSprites,0);
+                        // Ensure our sprite doesn't go below the right edge
+                        posX -= moveX;
+                    }
+                }
+            } // Translate for Right
+
+			if (xControl->IsButtonPressedForController(0, DPAD_LEFT)) { 
+				posX -= moveX;
+
+                if (posX <= actualWindowLeft && _offsetLeft <= 0) {
+                    posX = actualWindowLeft;
+                } else { 
+                    if (_offsetLeft > 0 && posX <= 0) { 
+                        _offsetRight += moveX;
+                        _offsetLeft -= moveX;
+
+                        // Translate the world to the right
+                        ::SpriteUtil::TranslateSprites((moveX),0,gameSprites,0);
+                        // Ensure our sprite doesn't go below the right edge
+                        posX -= moveX;
+                    }
+                }
+            } // Translate for left
+
+            // Direction is down
 			if (xControl->IsButtonPressedForController(0, DPAD_DOWN)) {
 				posY += moveY;
 				if ( actualHeight > actualWindowBottom && _offsetBottom <= 0) { 
@@ -384,14 +421,14 @@ void MoveSprites(float interpolation) {
 						posY -= moveY;
 					} 
 				}
-			}
+			} // Translate for down
 
             // Direction is up 
             if (xControl->IsButtonPressedForController(0, DPAD_UP)) {
 				posY -= moveY;
 
                 if (posY <= actualWindowTop && _offsetTop <= 0) { 
-                    posY = (_offsetTop * -1);
+                    posY = actualWindowTop;
                 } else { 
                     // check out _offsetTop if it is a positive nbr we can translate the world down
                     if (_offsetTop > 0 && posY <= 0) { 
@@ -404,29 +441,27 @@ void MoveSprites(float interpolation) {
                         posY -= moveY;
                     }
                 }
-            }
+            } // Translate for up
 
 			// Direction is up 
 			if ( (posY <= 0) ) { 
-				// TODO - translate the world down
 				posY = 0;
 			}
 
 			// Direction is right
 			if ( actualWidth > WINDOW_WIDTH )  {
-				posX -= moveX;
+				posX = WINDOW_WIDTH;
 			}
 
 			// Direction is left
 			if ( (posX < 0) ) { 
-				// TODO - translate the world to the right
 				posX = 0;
 			}
 
 			gameSprites[i].position(posX, posY, gameSprites[i].position().z);
 		}
 	}
-}
+} // MoveSprites
 
 
 
@@ -514,7 +549,7 @@ bool InitDirect3D(HWND hWnd, int windowWidth, int windowHeight) {
 		10);
 
 	return true;
-}
+} // InitDirect3D
 
 void ShutdownDirect3D() {
 	// Release the original blend state object
@@ -555,4 +590,4 @@ void ShutdownDirect3D() {
 	{
 		pD3DDevice->Release();
 	}
-}
+} // ShutdownDirect3D
