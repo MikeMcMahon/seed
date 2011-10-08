@@ -1,22 +1,22 @@
-#include "GameMenu.h"
+#include "GameMainMenu.h"
 #include "../util/XmlIngester.h"
 #include "../sprites/SpriteUtils.h"
 #include "../util/TextureHandler.h"
 
 
-using namespace Ui;
+using namespace Gui;
 
-GameMenu::GameMenu(ID3D10Device* pD3DDevice)
+GameMainMenu::GameMainMenu(ID3D10Device* pD3DDevice)
 {
     // Util::XmlIngester xmlIngester;
-    // xmlIngester.Load(L"../ui/GameMenu.xml");
+    // xmlIngester.Load(L"../Gui/GameMainMenu.xml");
 
     // TODO - Implement loading of the XML Files
     this->Init(pD3DDevice);
 }
 
 
-GameMenu::~GameMenu(void)
+GameMainMenu::~GameMainMenu(void)
 {
     // Destroy our sprites and other things
     int size = this->textureResourceViews.size();
@@ -36,7 +36,7 @@ GameMenu::~GameMenu(void)
  Returns the number of sprites to draw
  sprites is the sprite array you wish to have filled with sprites
 */
-int GameMenu::Sprites(Sprites::GameSprite *sprites) { 
+int GameMainMenu::Sprites(Sprites::GameSprite *sprites) { 
     Sprites::GameSprite nSprites[MAX_SPRITES];
     
     // Should assign the sprites we've created
@@ -52,7 +52,7 @@ int GameMenu::Sprites(Sprites::GameSprite *sprites) {
 }
 
 
-void GameMenu::Init(ID3D10Device* pD3DDevice) {
+void GameMainMenu::Init(ID3D10Device* pD3DDevice) {
     Sprites::GameSprite background;
     Sprites::GameSprite aButton; 
     
