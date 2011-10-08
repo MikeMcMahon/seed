@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+	<texture-resource 
+			name="background"
+			image="main-menu-1024x768.png"
+			height="fill"
+			width="fill"
+			x="0"
+			y="0" />
+	<texture-resource 
+			name="a-button"
+			image="a-button-32x32.png"
+			height="24"
+			width="24"
+			x="441"
+			y="358" />
+	<render-order>
+		<texture>background</texture>
+		<texture>a-button</texture>
+	</render-order>
+</config>
+	

@@ -39,9 +39,6 @@
     <ClCompile Include="sprites\SpriteUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ui\GameWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="util\TextureHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -49,6 +46,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="input\KMInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="util\XmlIngester.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\GameWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\GameMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,13 +95,16 @@
     <ClInclude Include="util\TextureHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ui\GameWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="util\Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="input\KMInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\GameWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\GameMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,7 +9,7 @@ Sprites::GameSprite::GameSprite(char* textureName, float width, float height) {
     this->kindOf = ::BASE;
 
     // Set the width and height
-    this->spriteSize(height, width);
+    this->spriteSize(width, height);
     this->textureResourceName = textureName;
 }// GameSprite
 
@@ -81,7 +81,7 @@ float Sprites::GameSprite::getMoveY() {
 	return this->moveY; 
 }
 
-void Sprites::GameSprite::spriteSize(float height, float width) { 
+void Sprites::GameSprite::spriteSize(float width, float height) { 
 	ZeroMemory(&this->size, sizeof(SIZE)); 
 	this->size.height = height; 
 	this->size.width = width; 
@@ -105,5 +105,13 @@ BOOL Sprites::GameSprite::canAnimate() {
 
 void Sprites::GameSprite::canAnimate(BOOL animate) { 
 	this->animateState = animate; 
+}
+
+BOOL Sprites::GameSprite::canMove() { 
+    return this->moveable;
+}
+
+void Sprites::GameSprite::canMove(BOOL canMove) { 
+    this->moveable = canMove;
 }
 /* eof */

@@ -49,6 +49,7 @@ namespace Sprites {
 		BOOL animateState;				// Can sprite animate
 		BOOL flipSprite;				// Flip sprite on the horizontal 
 		BOOL canInteract;				// Can this sprite interact with other sprites
+        BOOL moveable;                  // Is this sprite able to move around
 	public:
         GameSprite(char * textureName, float height, float width);
 		GameSprite();
@@ -63,13 +64,14 @@ namespace Sprites {
 		void setMoveDistance( float x, float y );
 		float getMoveX();
 		float getMoveY();
-		void spriteSize(float height, float width);
+		void spriteSize(float width, float height);
 		SIZE spriteSize();
 		BOOL isVisible();
 		void isVisible(BOOL visbility);
 		BOOL canAnimate();
 		void canAnimate(BOOL animate);
-
+        BOOL canMove();
+        void canMove(BOOL canMove);
 		void nextFrame();
 		void ResetSpriteAnim();
 		void JumpToFramePos(int, int);

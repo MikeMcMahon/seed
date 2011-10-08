@@ -12,8 +12,8 @@
 #include "../ui/GameWindow.h"
 #include "../util/TextureHandler.h"
 #include "../util/Time.h"
+#include "../ui/GameMenu.h"
 
-#include <process.h>
 
 using namespace Input;
 using namespace Sprites;
@@ -49,10 +49,12 @@ XGamePad* xControl;
 GameModes::MODES GAMEMODE = GameModes::MAIN_MENU;
 
 // Windowing stuff //////////////////////////////
+WindowOffsets windowOffsets;
 float _offsetLeft = 0;
 float _offsetRight = 0;
 float _offsetTop = 0;
 float _offsetBottom = 0;
+int _spritesToDraw = 0;
 
 void Render();
 void UpdateScene();
@@ -60,6 +62,7 @@ void MoveSprites(float);
 void UpdateSprites(); 
 bool InitSprites();
 bool HasFrameElapsed(); 
+void InitMainMenu();
 
 // Main entry point
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) 
@@ -213,21 +216,18 @@ void UpdateScene() {
 
 bool InitSprites() {
 	ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
+    ZeroMemory(&windowOffsets, sizeof(WindowOffsets)); 
 
 	ID3D10Texture2D * backgroundTexture = NULL;
 	switch (GAMEMODE) { 
 	case GameModes::MAIN_MENU:
-		// Load the background texture
-		backgroundTexture = TextureHandler::GetTexture2DFromFile("../textures/large-background-png-1000-800.png", pD3DDevice);
-		if (backgroundTexture == NULL) return false;
-		TextureHandler::GetResourceViewFromTexture(backgroundTexture, &gSpriteTextureRV, pD3DDevice);
-		backgroundTexture->Release();
+        InitMainMenu();
 		break;
 	default:
 		return false;
 	}
 
-	// Create the sprite object (calls methods to display the sprites)
+    // Create the sprite object (calls methods to display the sprites)
 	HRESULT hr = D3DX10CreateSprite(pD3DDevice, 0, &pSpriteObject);
 	if (hr != S_OK) {
 		return false;
@@ -238,64 +238,6 @@ bool InitSprites() {
 	InitiateDefaultBlend(&StateDesc);
 	pD3DDevice->CreateBlendState(&StateDesc, &pBlendState10);
 
-
-	// Create another texture for the bouncing ball
-	ID3D10Texture2D * ballBounce = NULL;
-    ballBounce = TextureHandler::GetTexture2DFromFile("../textures/ball_bounce_512x64.png", pD3DDevice);
-	ID3D10ShaderResourceView * srv;
-	TextureHandler::GetResourceViewFromTexture(ballBounce, &srv, pD3DDevice);
-	ballBounce->Release();
-
-	GameSprite gp("ball_bounce_512x64.png", 64,64);
-	gp.curFrame(0);
-	gp.animationDetail(0, 8, 0.05f);
-	gp.pTexture = srv;
-	gp.TexCoord.x = 0;
-	gp.TexCoord.y = 0;
-	gp.TexSize.x = 1.0f;
-	gp.TexSize.y = 1.0f;
-	gp.TextureIndex = 0;
-	gp.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	gp.position(
-		((float)WINDOW_WIDTH/2.0f) - (float)gp.spriteSize().width / 2.0f,		// Moves the sprite to the center of the x axis
-		((float)WINDOW_HEIGHT/2.0f) - (float)gp.spriteSize().height / 2.0f,		// Move the sprite to the center of the y axis
-		0.5f);
-	gp.setMoveDistance(0.5f,0.5f);
-	gp.isVisible(TRUE);
-	gp.canAnimate(TRUE);
-
-	// Texture for this sprite to use
-	GameSprite cp;
-	(&cp)->spriteSize(800, 1000);
-
-	// Set the offsets for the sprites moving around
-	_offsetBottom = (cp.spriteSize().height - WINDOW_HEIGHT) / 2.0f;
-	_offsetTop = _offsetBottom;
-	_offsetLeft = (cp.spriteSize().width - WINDOW_WIDTH) / 2.0f;
-	_offsetRight = _offsetLeft;
-
-	(&cp)->curFrame(0);
-	(&cp)->animationDetail(0, 8, 0.0f);
-	(&cp)->pTexture = gSpriteTextureRV;
-	(&cp)->TexCoord.x = 0;
-	(&cp)->TexCoord.y = 0;
-	(&cp)->TexSize.x = 1.0f;
-	(&cp)->TexSize.y = 1.0f;
-	(&cp)->TextureIndex = 0;
-	(&cp)->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	(&cp)->position(
-		((float)WINDOW_WIDTH/2.0f) - (float)cp.spriteSize().width / 2.0f,		// Moves the sprite to the center of the x axis
-		((float)WINDOW_HEIGHT/2.0f) - (float)cp.spriteSize().height / 2.0f,		// Move the sprite to the center of the y axis
-		0.5f);
-	(&cp)->setMoveDistance(0.5f,0.5f);
-	(&cp)->isVisible(TRUE);
-	(&cp)->canAnimate(FALSE);
-
-	
-
-	gameSprites[0] = gp;
-	gameSprites[1] = cp;
-
 	// Set the projection matrix
 	if (pSpriteObject->SetProjectionTransform(&matProjection) != S_OK) {
 		return false;
@@ -304,6 +246,11 @@ bool InitSprites() {
 	return true;
 } // InitSprites
 
+void InitMainMenu() { 
+    Ui::GameMenu* gameMenu = new Ui::GameMenu(pD3DDevice);
+    gameMenu->Sprites(gameSprites);
+    // Add the sprites to draw
+}
 
 void UpdateSprites() { 
 	for (int i = 0; i < MAX_SPRITES; i++) { 
@@ -318,7 +265,10 @@ void UpdateSprites() {
 	}
 } // UpdateSprites
 
-float topLeftX, topLeftY, width, height;
+/*
+*
+*   Moves the sprites their x/y distance times the interpolation (delay from rendering)!
+*/
 void MoveSprites(float interpolation) { 
 	// We want to move a moveable sprite of course! 
 	for (int i = 0; i < MAX_SPRITES; i++) {
@@ -453,8 +403,6 @@ void MoveSprites(float interpolation) {
 	}
 } // MoveSprites
 
-
-
 /*******************************************
 ***    For starting and shutting down
 ***    The directx interface
@@ -522,11 +470,6 @@ bool InitDirect3D(HWND hWnd, int windowWidth, int windowHeight) {
 	m_viewPort.MaxDepth = 1.0f;
 	m_viewPort.TopLeftX = 0;
 	m_viewPort.TopLeftY = 0;
-
-	topLeftX = 0;
-	topLeftY = 0;
-	width = windowWidth;
-	height = windowHeight;
 
 	pD3DDevice->RSSetViewports(1, &m_viewPort);
 	
