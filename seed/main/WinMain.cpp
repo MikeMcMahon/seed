@@ -9,10 +9,10 @@
 #include "GameModes.h"
 #include "../input/XGamePad.h"
 #include "DXDrawing.h"
-#include "../ui/GameWindow.h"
+#include "../gui/GameWindow.h"
 #include "../util/TextureHandler.h"
 #include "../util/Time.h"
-#include "../ui/GameMenu.h"
+#include "../gui/GameMainMenu.h"
 
 
 using namespace Input;
@@ -247,7 +247,7 @@ bool InitSprites() {
 } // InitSprites
 
 void InitMainMenu() { 
-    Ui::GameMenu* gameMenu = new Ui::GameMenu(pD3DDevice);
+    Gui::GameMainMenu* gameMenu = new Gui::GameMainMenu(pD3DDevice);
     gameMenu->Sprites(gameSprites);
     // Add the sprites to draw
 }

@@ -78,8 +78,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ui\GameMenu.cpp" />
-    <ClCompile Include="ui\GameWindow.cpp" />
+    <ClCompile Include="gui\GameMainManu.cpp" />
+    <ClCompile Include="gui\GameWindow.cpp" />
     <ClCompile Include="input\KMInput.cpp" />
     <ClCompile Include="main\DXDrawing.cpp" />
     <ClCompile Include="sprites\SpriteUtils.cpp" />
@@ -95,8 +95,8 @@
     <ClCompile Include="sprites\GameSprite.cpp" />
     <ClCompile Include="main\WinMain.cpp" />
     <ClCompile Include="input\XGamePad.cpp" />
-    <ClInclude Include="ui\GameMenu.h" />
-    <ClInclude Include="ui\GameWindow.h" />
+    <ClInclude Include="gui\GameMainMenu.h" />
+    <ClInclude Include="gui\GameWindow.h" />
     <ClInclude Include="input\KMInput.h" />
     <ClInclude Include="util\TextureHandler.h" />
     <ClInclude Include="sprites\SpriteUtils.h" />
