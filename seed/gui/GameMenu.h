@@ -5,16 +5,19 @@
 #include "../util/XmlIngester.h"
 
 namespace Gui { 
-    class GameMainMenu
+    class GameMenu
     {
     private:
         std::vector<Sprites::GameSprite> gameSprites;
         std::vector<ID3D10ShaderResourceView*> textureResourceViews;
 
     public:
-        GameMainMenu(ID3D10Device*);
-        ~GameMainMenu(void);
-        int Sprites(Sprites::GameSprite *); 
+        GameMenu(ID3D10Device*);
+        ~GameMenu(void);
+        int Sprites(Sprites::GameSprite *);
+		int HandleDownButton(Sprites::GameSprite *);
+		int HandleUpButton(Sprites::GameSprite *);
+		int HandleAButton(Sprites::GameSprite *);		
     private:
         void Init(ID3D10Device*);
     }; // GameMenu

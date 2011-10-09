@@ -12,7 +12,7 @@
 #include "../gui/GameWindow.h"
 #include "../util/TextureHandler.h"
 #include "../util/Time.h"
-#include "../gui/GameMainMenu.h"
+#include "../gui/GameMenu.h"
 
 
 using namespace Input;
@@ -47,6 +47,7 @@ XGamePad* xControl;
 
 // Game Mode
 GameModes::MODES GAMEMODE = GameModes::MAIN_MENU;
+Gui::GameMenu* gameMenu;
 
 // Windowing stuff //////////////////////////////
 WindowOffsets windowOffsets;
@@ -54,7 +55,7 @@ float _offsetLeft = 0;
 float _offsetRight = 0;
 float _offsetTop = 0;
 float _offsetBottom = 0;
-int _spritesToDraw = 0;
+int _spritesToRender = 0;
 
 void Render();
 void UpdateScene();
@@ -138,7 +139,7 @@ void Render() {
 			}
 			
 			// Draw all of the sprites in the pool
-			pSpriteObject->DrawSpritesBuffered(spritePool, 2);
+			pSpriteObject->DrawSpritesBuffered(spritePool, _spritesToRender);
 
 			// Save the current blend state
 			pD3DDevice->OMSetBlendState(pBlendState10, OriginalBlendFactor, 0xffffffff);
@@ -161,6 +162,9 @@ void Render() {
 	}
 } // Render 
 
+/*
+* UpdateScene is really what updates the texture locations and orients the sprites to the world
+*/
 void UpdateScene() {
 	D3DXMATRIX matScaling;
 	D3DXMATRIX matTranslation;
@@ -214,6 +218,9 @@ void UpdateScene() {
 	numActiveSprites = curPoolIndex;
 } // UpdateScene 
 
+/*
+* InitSprites creates the inital sprites either on game start or transition 
+*/
 bool InitSprites() {
 	ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
     ZeroMemory(&windowOffsets, sizeof(WindowOffsets)); 
@@ -247,11 +254,13 @@ bool InitSprites() {
 } // InitSprites
 
 void InitMainMenu() { 
-    Gui::GameMainMenu* gameMenu = new Gui::GameMainMenu(pD3DDevice);
-    gameMenu->Sprites(gameSprites);
-    // Add the sprites to draw
+    gameMenu = new Gui::GameMenu(pD3DDevice);
+    _spritesToRender = gameMenu->Sprites(gameSprites);
 }
 
+/*
+* UpdateSprites() is what handles the animation, on sprites that can animate it increments the frame and resets the frame counter on those that need it. 
+*/
 void UpdateSprites() { 
 	for (int i = 0; i < MAX_SPRITES; i++) { 
 		if (gameSprites[i].isVisible() && gameSprites[i].canAnimate()) { 
@@ -266,13 +275,18 @@ void UpdateSprites() {
 } // UpdateSprites
 
 /*
-*
-*   Moves the sprites their x/y distance times the interpolation (delay from rendering)!
+*  MoveSprites - moves the sprites their x/y distance times the interpolation (delay from rendering)!
 */
 void MoveSprites(float interpolation) { 
+	// Check the gamemode
+	if (GAMEMODE == ::GameModes::MAIN_MENU) {
+
+		return;
+	}
+
 	// We want to move a moveable sprite of course! 
 	for (int i = 0; i < MAX_SPRITES; i++) {
-		if (gameSprites[i].isVisible() && gameSprites[i].canAnimate()) { 
+		if (gameSprites[i].isVisible() && gameSprites[i].canMove()) { 
 			// Check to see which direction was pressed
 			float posY = gameSprites[i].position().y;
 			float posX = gameSprites[i].position().x;
@@ -308,7 +322,7 @@ void MoveSprites(float interpolation) {
 			if (_offsetBottom < 0)
 				actualWindowBottom += _offsetBottom;
 
-
+			// Direction is right
             if (xControl->IsButtonPressedForController(0, DPAD_RIGHT)) { 
 				posX += moveX;
                 if (actualWidth >= actualWindowRight && _offsetRight <= 0) {
@@ -326,6 +340,7 @@ void MoveSprites(float interpolation) {
                 }
             } // Translate for Right
 
+			// Direciton is left
 			if (xControl->IsButtonPressedForController(0, DPAD_LEFT)) { 
 				posX -= moveX;
 
@@ -347,7 +362,7 @@ void MoveSprites(float interpolation) {
             // Direction is down
 			if (xControl->IsButtonPressedForController(0, DPAD_DOWN)) {
 				posY += moveY;
-				if ( actualHeight > actualWindowBottom && _offsetBottom <= 0) { 
+				if ( actualHeight >= actualWindowBottom && _offsetBottom <= 0) { 
 					posY = actualWindowBottom - gameSprites[i].spriteSize().height;
 				} else { 
 					// Check our _offsetBottom if it is a positive nbr we can translate the world up
@@ -382,21 +397,6 @@ void MoveSprites(float interpolation) {
                     }
                 }
             } // Translate for up
-
-			// Direction is up 
-			if ( (posY <= 0) ) { 
-				posY = 0;
-			}
-
-			// Direction is right
-			if ( actualWidth > WINDOW_WIDTH )  {
-				posX = WINDOW_WIDTH;
-			}
-
-			// Direction is left
-			if ( (posX < 0) ) { 
-				posX = 0;
-			}
 
 			gameSprites[i].position(posX, posY, gameSprites[i].position().z);
 		}

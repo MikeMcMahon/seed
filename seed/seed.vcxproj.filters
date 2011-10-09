@@ -51,10 +51,10 @@
     <ClCompile Include="util\XmlIngester.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui\GameMainManu.cpp">
+    <ClCompile Include="gui\GameWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui\GameWindow.cpp">
+    <ClCompile Include="gui\GameMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,7 +104,10 @@
     <ClInclude Include="gui\GameWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gui\GameMainMenu.h">
+    <ClInclude Include="gui\GameMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="input\GameControls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
