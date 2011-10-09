@@ -131,7 +131,7 @@ void Render() {
 
 		if (pSpriteObject != NULL) {
 			// Start Drawing the sprites
-			pSpriteObject->Begin(D3DX10_SPRITE_SORT_DEPTH_FRONT_TO_BACK);
+			pSpriteObject->Begin(NULL);
 			
 			// Copy the sprites into the spritePool
 			for (int i = 0; i < MAX_SPRITES; i++) {
@@ -139,7 +139,7 @@ void Render() {
 			}
 			
 			// Draw all of the sprites in the pool
-			pSpriteObject->DrawSpritesBuffered(spritePool, _spritesToRender);
+			pSpriteObject->DrawSpritesBuffered(spritePool, 2);
 
 			// Save the current blend state
 			pD3DDevice->OMSetBlendState(pBlendState10, OriginalBlendFactor, 0xffffffff);
@@ -254,8 +254,11 @@ bool InitSprites() {
 } // InitSprites
 
 void InitMainMenu() { 
-    gameMenu = new Gui::GameMenu(pD3DDevice);
+    gameMenu = new Gui::GameMenu(pD3DDevice, L"../config/main-menu.xml");
     _spritesToRender = gameMenu->Sprites(gameSprites);
+	if (gameMenu->status != Gui::Status::ok) {
+		// recover
+	}
 }
 
 /*

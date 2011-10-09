@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="MenuConfig" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="MenuConfig" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="TextureResources">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TextureResource" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" />
+                  <xs:attribute name="image" type="xs:string" />
+                  <xs:attribute name="height" type="xs:string" />
+                  <xs:attribute name="width" type="xs:string" />
+                  <xs:attribute name="x" type="xs:string" />
+                  <xs:attribute name="y" type="xs:string" />
+                  <xs:attribute name="type" type="xs:string" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="MenuOptions">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="option" nillable="true" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:simpleContent msdata:ColumnName="option_Text" msdata:Ordinal="1">
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="default" type="xs:string" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="RenderOrder">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="resource" nillable="true" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:simpleContent msdata:ColumnName="resource_Text" msdata:Ordinal="0">
+                    <xs:extension base="xs:string">
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

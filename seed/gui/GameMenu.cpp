@@ -1,17 +1,18 @@
 #include "GameMenu.h"
-#include "../util/XmlIngester.h"
+#include <XmlHelper.h>
 #include "../sprites/SpriteUtils.h"
 #include "../util/TextureHandler.h"
-
+#include "MenuConstants.h"
 
 using namespace Gui;
 
-GameMenu::GameMenu(ID3D10Device* pD3DDevice)
+GameMenu::GameMenu(ID3D10Device* pD3DDevice, wchar_t* config)
 {
     // Util::XmlIngester xmlIngester;
     // xmlIngester.Load(L"../Gui/GameMenu.xml");
 
     // TODO - Implement loading of the XML Files
+	this->LoadConfig(config);
     this->Init(pD3DDevice);
 }
 
@@ -30,6 +31,63 @@ GameMenu::~GameMenu(void)
     for (int i = 0; i < size; i++) { 
         delete &(this->gameSprites.at(i));
     }
+}
+
+/*
+ Loads the config specified when this menu was created
+*/
+void GameMenu::LoadConfig(wchar_t* config) { 
+	_bstr_t configFile(config);
+	Xml::Document document(configFile);
+
+	// if the document opened fine then lets do this if not whoopsie
+	Xml::Status::code docStatus = document.status;
+	if (docStatus == Xml::Status::ok) { 
+		this->status = Status::ok;
+
+		_bstr_t root = document.rootNode.name;
+		if (wcscmp(root,CONFIG_MENU_ROOT) == 0) { 
+			// Get the root node and it's children 
+			Xml::Node rootNode = document.rootNode;
+
+			Xml::Node textureResources = rootNode.find(CONFIG_TEXTURE_RESOURCE_ROOT, NULL, NULL);
+			Xml::Node menuFrame = rootNode.find(CONFIG_MENU_FRAME, NULL, NULL);
+			
+			if (textureResources.status == Xml::Status::ok && menuFrame.status == Xml::Status::ok) {
+
+				// Handle the texture resources 
+				long nodeCount = textureResources.child.count;
+				if (nodeCount == 0) { this->status = Status::failed; return; }
+				for (long i = 0; i < nodeCount; i++) { 
+					_bstr_t name = textureResources.child[i].attribute["name"];
+					_bstr_t image = textureResources.child[i].attribute["image"];
+
+					// Check the height width they can be strings or nbrs
+					int height = 0;
+					int width = 0; 
+					height = (textureResources.child[i].attribute["height"].isNumeric) ? textureResources.child[i].attribute["height"] : -1;
+					width = (textureResources.child[i].attribute["width"].isNumeric) ? textureResources.child[i].attribute["width"] : -1;
+
+					int y = textureResources.child[i].attribute["x"];
+					int x = textureResources.child[i].attribute["y"];
+					// Create a sprite from this information
+				}
+
+				// Handle the menu frame
+				nodeCount = menuFrame.child.count;
+				if (nodeCount == 0) { this->status = Status::failed; return; }
+			} else { 
+				// Required nodes missing
+				this->status = Status::failed;
+			}
+		} else { 
+			// Invalid config file...duh
+			this->status = Status::failed;
+		}
+	} else {
+		// Probably something stupid happened
+		this->status = Status::failed;
+	}
 }
 
 /*
@@ -121,6 +179,6 @@ void GameMenu::Init(ID3D10Device* pD3DDevice) {
 
     // add the sprites
     this->gameSprites.push_back(backgroundSprite);
-    this->gameSprites.push_back(aButtonSprite);
+	this->gameSprites.push_back(aButtonSprite);
 } // Init
 /* eof */

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<MenuConfig>
+	<TextureResources>
+		<TextureResource 
+				name="background"
+				image="main-menu-1024x768.png"
+				height="fill"
+				width="fill"
+				x="0"
+				y="0"/>
+		<TextureResource 
+				name="accept"
+				image="a-button-32x32.png"
+				height="24"
+				width="24"
+				x="441"
+				y="358"/>
+	</TextureResources>
+	<MenuFrame
+		height="fill"
+		width="fill"
+		textureResource="background">
+		<MenuOptions
+			style="absolute"
+			x="441"
+			y="358"
+			cursor="accept">
+			<option default="true" value="start">Start Game</option>
+			<option value="load">Load Game</option>
+			<option value="options">Options</option>
+		</MenuOptions>
+	</MenuFrame>
+</MenuConfig>

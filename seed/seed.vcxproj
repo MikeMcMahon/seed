@@ -97,6 +97,7 @@
     <ClCompile Include="input\XGamePad.cpp" />
     <ClInclude Include="gui\GameMenu.h" />
     <ClInclude Include="gui\GameWindow.h" />
+    <ClInclude Include="gui\MenuConstants.h" />
     <ClInclude Include="input\GameControls.h" />
     <ClInclude Include="input\KMInput.h" />
     <ClInclude Include="util\TextureHandler.h" />
