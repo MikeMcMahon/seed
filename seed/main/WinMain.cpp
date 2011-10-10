@@ -294,13 +294,13 @@ void MoveSprites(float interpolation) {
 			float actualWidth = posX + gameSprites[i].spriteSize().width;
 
 			// Can the sprite run? we should check that first :) 
-			if (xControl->IsButtonPressedForController(0, A_BUTTON)) {
+			if (xControl->IsButtonPressedForController(0, GameControls::A_BUTTON)) {
 				moveX *= 2.5f;
 				moveY *= 2.5f;
 			}
 
 			// TODO - Create a means to pause
-			if (xControl->IsButtonPressedForController(0, BACK))
+			if (xControl->IsButtonPressedForController(0, GameControls::BACK))
 				PostQuitMessage(0);
 
 			float actualWindowBottom = WINDOW_HEIGHT;
@@ -321,7 +321,7 @@ void MoveSprites(float interpolation) {
 				actualWindowBottom += _offsetBottom;
 
 			// Direction is right
-            if (xControl->IsButtonPressedForController(0, DPAD_RIGHT)) { 
+            if (xControl->IsButtonPressedForController(0, GameControls::DPAD_RIGHT)) { 
 				posX += moveX;
                 if (actualWidth >= actualWindowRight && _offsetRight <= 0) {
                     posX = actualWindowRight - gameSprites[i].spriteSize().width;
@@ -339,7 +339,7 @@ void MoveSprites(float interpolation) {
             } // Translate for Right
 
 			// Direciton is left
-			if (xControl->IsButtonPressedForController(0, DPAD_LEFT)) { 
+			if (xControl->IsButtonPressedForController(0, GameControls::DPAD_LEFT)) { 
 				posX -= moveX;
 
                 if (posX <= actualWindowLeft && _offsetLeft <= 0) {
@@ -358,7 +358,7 @@ void MoveSprites(float interpolation) {
             } // Translate for left
 
             // Direction is down
-			if (xControl->IsButtonPressedForController(0, DPAD_DOWN)) {
+			if (xControl->IsButtonPressedForController(0, GameControls::DPAD_DOWN)) {
 				posY += moveY;
 				if ( actualHeight >= actualWindowBottom && _offsetBottom <= 0) { 
 					posY = actualWindowBottom - gameSprites[i].spriteSize().height;
@@ -377,7 +377,7 @@ void MoveSprites(float interpolation) {
 			} // Translate for down
 
             // Direction is up 
-            if (xControl->IsButtonPressedForController(0, DPAD_UP)) {
+            if (xControl->IsButtonPressedForController(0, GameControls::DPAD_UP)) {
 				posY -= moveY;
 
                 if (posY <= actualWindowTop && _offsetTop <= 0) { 

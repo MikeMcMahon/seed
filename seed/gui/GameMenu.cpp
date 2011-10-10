@@ -46,7 +46,7 @@ void GameMenu::LoadConfig(wchar_t* config) {
 
 		Xml::Node textureResources = rootNode.find(CONFIG_TEXTURE_RESOURCE_ROOT, NULL, NULL);
 		Xml::Node menuFrame = rootNode.find(CONFIG_MENU_FRAME, NULL, NULL);
-			
+		
 		if (textureResources.status == Xml::Status::ok && menuFrame.status == Xml::Status::ok) {
 			// Handle the texture resources 
 			long nodeCount = textureResources.child.count;
@@ -58,6 +58,8 @@ void GameMenu::LoadConfig(wchar_t* config) {
 			int width = 0;
 			int x = 0;
 			int y = 0;
+			std::wstring textureDir = L"../textures/";
+			std::wstring texture = L"";
 			for (long i = 0; i < nodeCount; i++) { 
 				name = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_NAME];
 				image = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_IMAGE];
@@ -78,6 +80,13 @@ void GameMenu::LoadConfig(wchar_t* config) {
 				sprite.setMoveDistance(0,0);
 
 				// Get the texture resource
+				texture.append(textureDir);
+				texture.append(image);
+				this->status = Status::ok;
+				
+				// TODO - update the signature of this method to use the pD3DDevice
+				GameUtil::TextureHandler::GetTexture2DFromFile(texture.data(), NULL);
+				texture.clear();
 			}
 			// Handle the menu frame
 			nodeCount = menuFrame.child.count;
