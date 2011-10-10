@@ -1,5 +1,8 @@
 #pragma once
-#include "../main/GameHeaders.h"
+
+#include "../main/GameConstants.h"
+#include <Windows.h>
+#include <WindowsX.h>
 
 LRESULT CALLBACK WndProc( HWND, UINT, WPARAM, LPARAM );
 bool InitWindow( HINSTANCE hInstance, int windowWidth, int windowHeight, HWND* windowHandle); 

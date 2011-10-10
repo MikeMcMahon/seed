@@ -1,5 +1,8 @@
 #pragma once
-#include "../main/GameHeaders.h"
+
+#include <d3d10.h>
+#include <D3DX10.h>
+#include <XInput.h>
 
 #define MAX_CONTROLLERS 4
 namespace Input { 

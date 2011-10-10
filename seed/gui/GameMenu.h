@@ -1,8 +1,10 @@
 #pragma once
 
-#include "../main/GameHeaders.h"
+#include <d3d10.h>
+#include <D3DX10.h>
+#include <vector>
+
 #include "../sprites/GameSprite.h"
-#include "../util/XmlIngester.h"
 
 namespace Gui { 
 	struct Status { enum code { 
@@ -25,6 +27,7 @@ namespace Gui {
     private:
         void Init(ID3D10Device*);
 		void LoadConfig(wchar_t*);
+		void GenerateSprite();
     }; // GameMenu
 }
 /* eof */

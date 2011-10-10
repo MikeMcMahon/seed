@@ -48,9 +48,6 @@
     <ClCompile Include="input\KMInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util\XmlIngester.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gui\GameWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -71,19 +68,10 @@
     <ClInclude Include="input\XGamePad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprites\TileSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="font\GameFonts.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="util\XmlIngester.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="main\DXDrawing.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="main\GameHeaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="main\GameModes.h">
@@ -111,6 +99,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gui\MenuConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\GameConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

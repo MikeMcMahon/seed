@@ -1,6 +1,8 @@
 #ifndef __FONTS_H_INCLUDE__
 #define __FONTS_H_INCLUDE__
-#include "../main/GameHeaders.h"
+
+#include <d3d10.h>
+#include <D3DX10.h>
 
 #define HELVETICA L"Helvetica"
 #define TIMES L"Times"

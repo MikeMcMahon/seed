@@ -1,26 +1,26 @@
 #pragma once
 
-const _bstr_t CONFIG_MENU_ROOT					(L"MenuConfig");
+const char* CONFIG_MENU_ROOT					("MenuConfig");
 const char* CONFIG_MENU_FRAME					("MenuFrame");
 const char* CONFIG_TEXTURE_RESOURCE_ROOT		("TextureResources");
-const _bstr_t CONFIG_TEXTURE_RESOURCE			(L"TextureResource");
-const _bstr_t CONFIG_MENU_OPTIONS				(L"MenuOptions");
-const _bstr_t CONFIG_MENU_OPTIONS_OPTION		(L"option");
+const char* CONFIG_TEXTURE_RESOURCE			("TextureResource");
+const char* CONFIG_MENU_OPTIONS				("MenuOptions");
+const char* CONFIG_MENU_OPTIONS_OPTION		("option");
 
-const _bstr_t CONFIG_TEXTURE_RESOURCE_NAME		(L"name");;
-const _bstr_t CONFIG_TEXTURE_RESOURCE_IMAGE		(L"image");
+const char* CONFIG_TEXTURE_RESOURCE_NAME		("name");;
+const char* CONFIG_TEXTURE_RESOURCE_IMAGE		("image");
 
-const _bstr_t CONFIG_HEIGHT						(L"height");
-const _bstr_t CONFIG_WIDTH						(L"width");
-const _bstr_t CONFIG_POS_X						(L"x");
-const _bstr_t CONFIG_POS_Y						(L"y");
+const char* CONFIG_HEIGHT						("height");
+const char* CONFIG_WIDTH						("width");
+const char* CONFIG_POS_X						("x");
+const char* CONFIG_POS_Y						("y");
 
-const _bstr_t CONFIG_MENU_FRAME_TEXTURE_RESOURCE(L"textureResource");
+const char* CONFIG_MENU_FRAME_TEXTURE_RESOURCE("textureResource");
 
-const _bstr_t CONFIG_MENU_OPTION_STYLE			(L"style");
-const _bstr_t CONFIG_MENU_OPTION_STYLE_ABSOLUTE	(L"absolute");
-const _bstr_t CONFIG_MENU_OPTION_STYLE_FILL		(L"fill");
+const char* CONFIG_MENU_OPTION_STYLE			("style");
+const char* CONFIG_MENU_OPTION_STYLE_ABSOLUTE	("absolute");
+const char* CONFIG_MENU_OPTION_STYLE_FILL		("fill");
 
-const _bstr_t CONFIG_MENU_OPTION_CURSOR			(L"cursor");
-const _bstr_t CONFIG_MENU_OPTION_DEFAULT		(L"default");
-const _bstr_t CONFIG_MENU_OPTION_VALUE			(L"value");
+const char* CONFIG_MENU_OPTION_CURSOR			("cursor");
+const char* CONFIG_MENU_OPTION_DEFAULT		("default");
+const char* CONFIG_MENU_OPTION_VALUE			("value");

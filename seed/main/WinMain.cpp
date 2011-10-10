@@ -1,11 +1,14 @@
-#include "GameHeaders.h"		// Includes all of those fancy external things like DX10 :) 
+#include "GameConstants.h"
+
+#include <Windows.h>
+#include <WindowsX.h>
+#include <d3d10.h>
+#include <D3DX10.h>
+#include <tchar.h>
 
 // My Headers
-#include "../sprites/CharacterSprite.h"
-#include "../sprites/MapSprite.h"
-#include "../sprites/TileSprite.h"
+#include "../sprites/GameSprite.h"
 #include "../sprites/SpriteUtils.h"
-
 #include "GameModes.h"
 #include "../input/XGamePad.h"
 #include "DXDrawing.h"

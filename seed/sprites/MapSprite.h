@@ -1,5 +1,6 @@
 #pragma once
 #include "GameSprite.h"
+#include <vector>
 
 namespace Sprites { 
 	struct MapSprite : public GameSprite {

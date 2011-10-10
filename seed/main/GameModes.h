@@ -1,5 +1,4 @@
 #pragma once
-#include "GameHeaders.h"
 
 class GameModes { 
 public:
@@ -11,7 +10,7 @@ public:
 		LOADING_SCREEN,
 		CREDITS
 	};
-	BOOL ValidGameModeTransition(MODES, MODES); // Determins if the source gamemode can be transitioned into the next gamemode 
+	bool ValidGameModeTransition(MODES, MODES); // Determins if the source gamemode can be transitioned into the next gamemode 
 }; // GameModes
 
 /* eof */

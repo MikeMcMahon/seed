@@ -1,5 +1,8 @@
 #pragma once
-#include "../main/GameHeaders.h"
+
+#include "../main/GameConstants.h"
+#include <D3DX10.h>
+#include <D3D10.h>
 
 #define MAX_SPRITES 1024			// Max sprites to draw at any given time
 #define NUM_POOL_SPRITES 2048		// Max sprites to keep in memory
@@ -35,7 +38,8 @@ namespace Sprites {
 	private:
 		int defaultStateFrameX;
 		int defaultStateFrameY;
-		char * textureResourceName;		// Location where we can find the map fileE {
+		LPCWSTR textureResourceName;	// Location where we can find the map file
+		LPCWSTR name;					// The name of this particular sprite
 		SIZE size;						// Size of the sprite in x/y measurements
 		POINT pos;						// X/Y Position 
 		ANIMATION animation;			// Animation information 
@@ -45,13 +49,13 @@ namespace Sprites {
 		float displayRate;				// How often to display the animation 
 		float skipFrames;				// Number of frames to skip based on duration of animation 
 		float curSkip;					// How many frames have been currently skipped
-		BOOL visible;					// Is sprite visible
-		BOOL animateState;				// Can sprite animate
-		BOOL flipSprite;				// Flip sprite on the horizontal 
-		BOOL canInteract;				// Can this sprite interact with other sprites
-        BOOL moveable;                  // Is this sprite able to move around
+		bool visible;					// Is sprite visible
+		bool animateState;				// Can sprite animate
+		bool flipSprite;				// Flip sprite on the horizontal 
+		bool canInteract;				// Can this sprite interact with other sprites
+        bool moveable;                  // Is this sprite able to move around
 	public:
-        GameSprite(char * textureName, float height, float width);
+        GameSprite(LPCWSTR textureName,LPCWSTR name, float width, float height);
 		GameSprite();
 		~GameSprite();
 		void animationDetail(int startFrame, int numFrames, float animDuration);
@@ -66,17 +70,18 @@ namespace Sprites {
 		float getMoveY();
 		void spriteSize(float width, float height);
 		SIZE spriteSize();
-		BOOL isVisible();
-		void isVisible(BOOL visbility);
-		BOOL canAnimate();
-		void canAnimate(BOOL animate);
-        BOOL canMove();
-        void canMove(BOOL canMove);
+		bool isVisible();
+		void isVisible(bool visbility);
+		bool canAnimate();
+		void canAnimate(bool animate);
+        bool canMove();
+        void canMove(bool canMove);
 		void nextFrame();
 		void ResetSpriteAnim();
-		void JumpToFramePos(int, int);
-		void SetSpriteDefault(int, int);
-
+		void JumpToFramePos(int, int);		// TODO - Method stub
+		void SetSpriteDefault(int, int);	// TODO - Method stub
+		LPCWSTR Name();
+		void Name(LPCWSTR name);
 	}; // GameSprite
 
 } // Sprites

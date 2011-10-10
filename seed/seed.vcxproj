@@ -85,7 +85,6 @@
     <ClCompile Include="sprites\SpriteUtils.cpp" />
     <ClCompile Include="util\TextureHandler.cpp" />
     <ClCompile Include="util\Time.cpp" />
-    <ClCompile Include="util\XmlIngester.cpp" />
     <ClInclude Include="font\GameFonts.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -100,20 +99,18 @@
     <ClInclude Include="gui\MenuConstants.h" />
     <ClInclude Include="input\GameControls.h" />
     <ClInclude Include="input\KMInput.h" />
+    <ClInclude Include="main\GameConstants.h" />
     <ClInclude Include="util\TextureHandler.h" />
     <ClInclude Include="sprites\SpriteUtils.h" />
     <ClInclude Include="util\Time.h" />
-    <ClInclude Include="util\XmlIngester.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sprites\CharacterSprite.h" />
     <ClInclude Include="main\DXDrawing.h" />
-    <ClInclude Include="main\GameHeaders.h" />
     <ClInclude Include="main\GameModes.h" />
     <ClInclude Include="sprites\GameSprite.h" />
     <ClInclude Include="sprites\MapSprite.h" />
     <ClInclude Include="input\XGamePad.h" />
-    <ClInclude Include="sprites\TileSprite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="textures\ball_bounce_512x64.png" />

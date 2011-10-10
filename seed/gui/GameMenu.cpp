@@ -3,14 +3,12 @@
 #include "../sprites/SpriteUtils.h"
 #include "../util/TextureHandler.h"
 #include "MenuConstants.h"
+#include <comutil.h>
 
 using namespace Gui;
 
 GameMenu::GameMenu(ID3D10Device* pD3DDevice, wchar_t* config)
 {
-    // Util::XmlIngester xmlIngester;
-    // xmlIngester.Load(L"../Gui/GameMenu.xml");
-
     // TODO - Implement loading of the XML Files
 	this->LoadConfig(config);
     this->Init(pD3DDevice);
@@ -44,42 +42,47 @@ void GameMenu::LoadConfig(wchar_t* config) {
 	Xml::Status::code docStatus = document.status;
 	if (docStatus == Xml::Status::ok) { 
 		this->status = Status::ok;
+		// Get the root node and it's children 
+		Xml::Node rootNode = document.rootNode;
 
-		_bstr_t root = document.rootNode.name;
-		if (wcscmp(root,CONFIG_MENU_ROOT) == 0) { 
-			// Get the root node and it's children 
-			Xml::Node rootNode = document.rootNode;
-
-			Xml::Node textureResources = rootNode.find(CONFIG_TEXTURE_RESOURCE_ROOT, NULL, NULL);
-			Xml::Node menuFrame = rootNode.find(CONFIG_MENU_FRAME, NULL, NULL);
+		Xml::Node textureResources = rootNode.find(CONFIG_TEXTURE_RESOURCE_ROOT, NULL, NULL);
+		Xml::Node menuFrame = rootNode.find(CONFIG_MENU_FRAME, NULL, NULL);
 			
-			if (textureResources.status == Xml::Status::ok && menuFrame.status == Xml::Status::ok) {
+		if (textureResources.status == Xml::Status::ok && menuFrame.status == Xml::Status::ok) {
+			// Handle the texture resources 
+			long nodeCount = textureResources.child.count;
+			if (nodeCount == 0) { this->status = Status::failed; return; }
+				
+			_bstr_t name(L"");
+			_bstr_t image(L"");
+			int height = 0;
+			int width = 0;
+			int x = 0;
+			int y = 0;
+			for (long i = 0; i < nodeCount; i++) { 
+				name = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_NAME];
+				image = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_IMAGE];
 
-				// Handle the texture resources 
-				long nodeCount = textureResources.child.count;
-				if (nodeCount == 0) { this->status = Status::failed; return; }
-				for (long i = 0; i < nodeCount; i++) { 
-					_bstr_t name = textureResources.child[i].attribute["name"];
-					_bstr_t image = textureResources.child[i].attribute["image"];
+				// Check the height width they can be strings or nbrs
+				height = (textureResources.child[i].attribute[CONFIG_HEIGHT].isNumeric) ? textureResources.child[i].attribute[CONFIG_HEIGHT] : WINDOW_HEIGHT;
+				width = (textureResources.child[i].attribute[CONFIG_WIDTH].isNumeric) ? textureResources.child[i].attribute[CONFIG_WIDTH] : WINDOW_WIDTH;
+				y = textureResources.child[i].attribute[CONFIG_POS_X];
+				x = textureResources.child[i].attribute[CONFIG_POS_Y];
 
-					// Check the height width they can be strings or nbrs
-					int height = 0;
-					int width = 0; 
-					height = (textureResources.child[i].attribute["height"].isNumeric) ? textureResources.child[i].attribute["height"] : -1;
-					width = (textureResources.child[i].attribute["width"].isNumeric) ? textureResources.child[i].attribute["width"] : -1;
+				// Create a sprite from this information
+				Sprites::GameSprite sprite(name,image,(float)width,(float)height);
+				sprite.animationDetail(0,0,0);
+				sprite.canAnimate(FALSE);
+				sprite.isVisible(TRUE);
+				sprite.canMove(FALSE);
+				sprite.position((float)x,(float)y,0);
+				sprite.setMoveDistance(0,0);
 
-					int y = textureResources.child[i].attribute["x"];
-					int x = textureResources.child[i].attribute["y"];
-					// Create a sprite from this information
-				}
-
-				// Handle the menu frame
-				nodeCount = menuFrame.child.count;
-				if (nodeCount == 0) { this->status = Status::failed; return; }
-			} else { 
-				// Required nodes missing
-				this->status = Status::failed;
+				// Get the texture resource
 			}
+			// Handle the menu frame
+			nodeCount = menuFrame.child.count;
+			if (nodeCount == 0) { this->status = Status::failed; return; }
 		} else { 
 			// Invalid config file...duh
 			this->status = Status::failed;
@@ -115,8 +118,8 @@ void GameMenu::Init(ID3D10Device* pD3DDevice) {
     Sprites::GameSprite aButton; 
     
     // Load the texture resources for them
-    ID3D10Texture2D* bgTexture = GameUtil::TextureHandler::GetTexture2DFromFile("../textures/main-menu-1024x768.png", pD3DDevice);
-    ID3D10Texture2D* btnTexture = GameUtil::TextureHandler::GetTexture2DFromFile("../textures/a-button-32x32.png", pD3DDevice); 
+    ID3D10Texture2D* bgTexture = GameUtil::TextureHandler::GetTexture2DFromFile(L"../textures/main-menu-1024x768.png", pD3DDevice);
+    ID3D10Texture2D* btnTexture = GameUtil::TextureHandler::GetTexture2DFromFile(L"../textures/a-button-32x32.png", pD3DDevice); 
 
     // Test the textures
     if (!(bgTexture && btnTexture))

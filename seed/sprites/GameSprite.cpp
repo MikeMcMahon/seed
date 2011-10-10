@@ -2,7 +2,7 @@
 
 using namespace Sprites;
 
-Sprites::GameSprite::GameSprite(char* textureName, float width, float height) { 
+Sprites::GameSprite::GameSprite(LPCWSTR textureName, LPCWSTR name, float width, float height) { 
     this->position(0,0,0);
     this->canAnimate(FALSE);
     this->isVisible(FALSE);
@@ -11,6 +11,7 @@ Sprites::GameSprite::GameSprite(char* textureName, float width, float height) {
     // Set the width and height
     this->spriteSize(width, height);
     this->textureResourceName = textureName;
+	this->name = name;
 }// GameSprite
 
 Sprites::GameSprite::GameSprite() {
@@ -23,6 +24,21 @@ Sprites::GameSprite::GameSprite() {
 Sprites::GameSprite::~GameSprite() { 
 
 } 
+
+
+/*
+* Get the name of the sprite
+*/
+LPCWSTR Sprites::GameSprite::Name() { 
+	return this->name;
+} 
+
+/*
+* Sets the name of the sprite
+*/
+void Sprites::GameSprite::Name(LPCWSTR name) { 
+	this->name = name;
+}
 
 void Sprites::GameSprite::animationDetail(int startFrame, int numFrames, float animDuration) { 
 	ZeroMemory(&animation, sizeof(ANIMATION)); 
@@ -91,27 +107,27 @@ Sprites::GameSprite::SIZE Sprites::GameSprite::spriteSize() {
 	return this->size; 
 } 
 
-BOOL Sprites::GameSprite::isVisible() { 
+bool Sprites::GameSprite::isVisible() { 
 	return this->visible; 
 }
 
-void Sprites::GameSprite::isVisible(BOOL visbility) { 
+void Sprites::GameSprite::isVisible(bool visbility) { 
 	this->visible = visbility; 
 }
 
-BOOL Sprites::GameSprite::canAnimate() { 
+bool Sprites::GameSprite::canAnimate() { 
 	return this->animateState; 
 }
 
-void Sprites::GameSprite::canAnimate(BOOL animate) { 
+void Sprites::GameSprite::canAnimate(bool animate) { 
 	this->animateState = animate; 
 }
 
-BOOL Sprites::GameSprite::canMove() { 
+bool Sprites::GameSprite::canMove() { 
     return this->moveable;
 }
 
-void Sprites::GameSprite::canMove(BOOL canMove) { 
+void Sprites::GameSprite::canMove(bool canMove) { 
     this->moveable = canMove;
 }
 /* eof */
