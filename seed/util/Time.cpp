@@ -1,5 +1,4 @@
 #include "Time.h"
-#include <Windows.h>
 
 using namespace GameUtil;
 

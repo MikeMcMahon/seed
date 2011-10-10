@@ -1,9 +1,5 @@
 #pragma once
 
-#include "../main/GameConstants.h"
-#include <D3DX10.h>
-#include <D3D10.h>
-
 #define MAX_SPRITES 1024			// Max sprites to draw at any given time
 #define NUM_POOL_SPRITES 2048		// Max sprites to keep in memory
 

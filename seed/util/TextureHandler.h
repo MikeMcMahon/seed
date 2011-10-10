@@ -1,10 +1,4 @@
 #pragma once
-#include <zlib.h>
-
-#include <Windows.h>
-#include <WindowsX.h>
-#include <D3DX10.h>
-#include <D3D10.h>
 
 namespace GameUtil { 
 

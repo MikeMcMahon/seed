@@ -1,9 +1,5 @@
 #pragma once
 
-#include <d3d10.h>
-#include <D3DX10.h>
-#include <vector>
-
 #include "../sprites/GameSprite.h"
 
 namespace Gui { 

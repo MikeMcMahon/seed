@@ -1,11 +1,3 @@
-#include "GameConstants.h"
-
-#include <Windows.h>
-#include <WindowsX.h>
-#include <d3d10.h>
-#include <D3DX10.h>
-#include <tchar.h>
-
 // My Headers
 #include "../sprites/GameSprite.h"
 #include "../sprites/SpriteUtils.h"
