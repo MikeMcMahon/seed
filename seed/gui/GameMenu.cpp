@@ -9,8 +9,8 @@ using namespace Gui;
 GameMenu::GameMenu(ID3D10Device* pD3DDevice, wchar_t* config)
 {
     // TODO - Implement loading of the XML Files
-	this->LoadConfig(config);
-    this->Init(pD3DDevice);
+	this->LoadConfig(config, pD3DDevice);
+	// this->Init(pD3DDevice);
 }
 
 
@@ -33,7 +33,7 @@ GameMenu::~GameMenu(void)
 /*
  Loads the config specified when this menu was created
 */
-void GameMenu::LoadConfig(wchar_t* config) { 
+void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) { 
 	_bstr_t configFile(config);
 	Xml::Document document(configFile);
 
@@ -46,13 +46,13 @@ void GameMenu::LoadConfig(wchar_t* config) {
 
 		Xml::Node textureResources = rootNode.find(CONFIG_TEXTURE_RESOURCE_ROOT, NULL, NULL);
 		Xml::Node menuFrame = rootNode.find(CONFIG_MENU_FRAME, NULL, NULL);
-		
 		if (textureResources.status == Xml::Status::ok && menuFrame.status == Xml::Status::ok) {
 			// Handle the texture resources 
 			long nodeCount = textureResources.child.count;
 			if (nodeCount == 0) { this->status = Status::failed; return; }
-				
-			_bstr_t name(L"");
+			
+			// TODO - stick to using std::wstring from wchar_t* and _bstr_t when possible, they create pointers we don't want to use in this context! 
+			std::wstring name;
 			_bstr_t image(L"");
 			int height = 0;
 			int width = 0;
@@ -60,34 +60,45 @@ void GameMenu::LoadConfig(wchar_t* config) {
 			int y = 0;
 			std::wstring textureDir = L"../textures/";
 			std::wstring texture = L"";
+			Sprites::GameSprite sprite;
 			for (long i = 0; i < nodeCount; i++) { 
-				name = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_NAME];
+				name = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_NAME].bstr;
 				image = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_IMAGE];
 
 				// Check the height width they can be strings or nbrs
 				height = (textureResources.child[i].attribute[CONFIG_HEIGHT].isNumeric) ? textureResources.child[i].attribute[CONFIG_HEIGHT] : WINDOW_HEIGHT;
 				width = (textureResources.child[i].attribute[CONFIG_WIDTH].isNumeric) ? textureResources.child[i].attribute[CONFIG_WIDTH] : WINDOW_WIDTH;
-				y = textureResources.child[i].attribute[CONFIG_POS_X];
-				x = textureResources.child[i].attribute[CONFIG_POS_Y];
+				y = textureResources.child[i].attribute[CONFIG_POS_Y];
+				x = textureResources.child[i].attribute[CONFIG_POS_X];
 
 				// Create a sprite from this information
-				Sprites::GameSprite sprite(name,image,(float)width,(float)height);
-				sprite.animationDetail(0,0,0);
-				sprite.canAnimate(FALSE);
-				sprite.isVisible(TRUE);
-				sprite.canMove(FALSE);
-				sprite.position((float)x,(float)y,0);
-				sprite.setMoveDistance(0,0);
-
 				// Get the texture resource
 				texture.append(textureDir);
 				texture.append(image);
-				this->status = Status::ok;
+				// sprite = new Sprites::GameSprite(texture.c_str(),name.c_str(),(float)width,(float)height, pD3DDevice);
+				sprite.Name(name);
+				sprite.Texture(texture.c_str(), pD3DDevice);
+				sprite.spriteSize((float)width, (float)height);
+				sprite.animationDetail(0,0,0);
+				sprite.canAnimate(false);
+				sprite.isVisible(true);
+				sprite.canMove(false);
+				sprite.position((float)x,(float)y,0.5f);
+				sprite.setMoveDistance(0,0);
+				sprite.TexCoord.x = 0;
+				sprite.TexCoord.y = 0;
+				sprite.TexSize.x = 1.0f;
+				sprite.TexSize.y = 1.0f;
+				sprite.TextureIndex = 0;
+				sprite.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 				
 				// TODO - update the signature of this method to use the pD3DDevice
-				GameUtil::TextureHandler::GetTexture2DFromFile(texture.data(), NULL);
-				texture.clear();
+				this->gameSprites.push_back(sprite);
+				texture = L"";
+				this->status = Status::ok;
 			}
+			name = L"This is a test";
+			texture = L"this is another test";
 			// Handle the menu frame
 			nodeCount = menuFrame.child.count;
 			if (nodeCount == 0) { this->status = Status::failed; return; }
@@ -150,7 +161,8 @@ void GameMenu::Init(ID3D10Device* pD3DDevice) {
     // Create the sprites
     Sprites::GameSprite backgroundSprite;
     Sprites::GameSprite aButtonSprite;
-
+	wchar_t* foo = L"background";
+	backgroundSprite.Name(foo);
     backgroundSprite.curFrame(0);
     backgroundSprite.animationDetail(0,0,0);
     backgroundSprite.pTexture = bgRscView;
@@ -164,9 +176,9 @@ void GameMenu::Init(ID3D10Device* pD3DDevice) {
 		0,
 		0,
 		0.5f);
-	backgroundSprite.isVisible(TRUE);
-	backgroundSprite.canAnimate(FALSE);
-	backgroundSprite.canMove(FALSE);
+	backgroundSprite.isVisible(true);
+	backgroundSprite.canAnimate(false);
+	backgroundSprite.canMove(false);
     backgroundSprite.spriteSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     aButtonSprite.curFrame(0);
@@ -182,9 +194,9 @@ void GameMenu::Init(ID3D10Device* pD3DDevice) {
 		441,
 		358,
 		0.5f);
-	aButtonSprite.isVisible(TRUE);
-	aButtonSprite.canAnimate(FALSE);
-	aButtonSprite.canMove(TRUE);
+	aButtonSprite.isVisible(true);
+	aButtonSprite.canAnimate(false);
+	aButtonSprite.canMove(true);
     aButtonSprite.spriteSize(24,24);
     aButtonSprite.setMoveDistance(1,1);
 

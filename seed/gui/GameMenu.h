@@ -22,7 +22,7 @@ namespace Gui {
 		Status::code status;
     private:
         void Init(ID3D10Device*);
-		void LoadConfig(wchar_t*);
+		void LoadConfig(wchar_t*,ID3D10Device*);
 		void GenerateSprite();
     }; // GameMenu
 }

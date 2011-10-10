@@ -252,7 +252,7 @@ void InitMainMenu() {
     gameMenu = new Gui::GameMenu(pD3DDevice, L"../config/main-menu.xml");
     _spritesToRender = gameMenu->Sprites(gameSprites);
 	if (gameMenu->status != Gui::Status::ok) {
-		// recover
+		gameMenu->status;
 	}
 }
 

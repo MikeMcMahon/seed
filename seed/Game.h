@@ -24,7 +24,7 @@
 
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
-#define CLASS_NAME LPCWSTR("SEED")
+#define CLASS_NAME TEXT("SEED")
 
 #if _DEBUG
     #define DIRECTORY_PREFIX "../"

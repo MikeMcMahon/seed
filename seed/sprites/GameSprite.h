@@ -32,10 +32,11 @@ namespace Sprites {
 		}; // ANIMATION
 	
 	private:
-		int defaultStateFrameX;
-		int defaultStateFrameY;
+		void LoadTexture(ID3D10Device* pD3DDevice);		// Tries to load the texture resource
+		int defaultStateFrameX;			// Default start x frame
+		int defaultStateFrameY;			// Default start y frame (likely wont use)
 		LPCWSTR textureResourceName;	// Location where we can find the map file
-		LPCWSTR name;					// The name of this particular sprite
+		std::wstring name;				// The name of this particular sprite
 		SIZE size;						// Size of the sprite in x/y measurements
 		POINT pos;						// X/Y Position 
 		ANIMATION animation;			// Animation information 
@@ -51,7 +52,7 @@ namespace Sprites {
 		bool canInteract;				// Can this sprite interact with other sprites
         bool moveable;                  // Is this sprite able to move around
 	public:
-        GameSprite(LPCWSTR textureName,LPCWSTR name, float width, float height);
+        GameSprite(LPCWSTR textureName, std::wstring name, float width, float height, ID3D10Device* pD3DDevice);
 		GameSprite();
 		~GameSprite();
 		void animationDetail(int startFrame, int numFrames, float animDuration);
@@ -77,7 +78,8 @@ namespace Sprites {
 		void JumpToFramePos(int, int);		// TODO - Method stub
 		void SetSpriteDefault(int, int);	// TODO - Method stub
 		LPCWSTR Name();
-		void Name(LPCWSTR name);
+		void Name( std::wstring name );
+		void Texture(LPCWSTR texture, ID3D10Device* pD3DDevice);
 	}; // GameSprite
 
 } // Sprites

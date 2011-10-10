@@ -1,42 +1,67 @@
 #include "GameSprite.h"
+#include "../util/TextureHandler.h"
 
 using namespace Sprites;
 
-Sprites::GameSprite::GameSprite(LPCWSTR textureName, LPCWSTR name, float width, float height) { 
+Sprites::GameSprite::GameSprite(LPCWSTR textureName, std::wstring name, float width, float height, ID3D10Device* pD3DDevice) { 
     this->position(0,0,0);
-    this->canAnimate(FALSE);
-    this->isVisible(FALSE);
+    this->canAnimate(false);
+    this->isVisible(false);
     this->kindOf = ::BASE;
 
     // Set the width and height
     this->spriteSize(width, height);
     this->textureResourceName = textureName;
 	this->name = name;
+
+	// Load up the texture 
+	this->LoadTexture(pD3DDevice);
+
 }// GameSprite
 
 Sprites::GameSprite::GameSprite() {
 	this->position(0,0,0);
-	this->canAnimate(FALSE);
-	this->isVisible(FALSE);
+	this->canAnimate(false);
+	this->isVisible(false);
 	this->kindOf = ::BASE;
 } // GameSprite
 
 Sprites::GameSprite::~GameSprite() { 
-
+	//this->pTexture->Release();
 } 
+
+void Sprites::GameSprite::Texture(LPCWSTR texture, ID3D10Device* pD3DDevice ) { 
+	this->textureResourceName = texture;
+	this->LoadTexture(pD3DDevice);
+}
+
+void Sprites::GameSprite::LoadTexture(ID3D10Device* pD3DDevice) { 
+	ID3D10Texture2D* texture = GameUtil::TextureHandler::GetTexture2DFromFile(this->textureResourceName,pD3DDevice);
+	try { 
+		if (texture) { 
+			GameUtil::TextureHandler::GetResourceViewFromTexture(texture,&this->pTexture, pD3DDevice);
+		}
+		texture->Release();	
+	} catch (...) { 
+		// TODO - we should set some flag on the sprite that's it not usable
+		this->isVisible(false);
+		this->canAnimate(false);
+		this->canMove(false);
+	}
+}
 
 
 /*
 * Get the name of the sprite
 */
 LPCWSTR Sprites::GameSprite::Name() { 
-	return this->name;
+	return this->name.c_str();
 } 
 
 /*
 * Sets the name of the sprite
 */
-void Sprites::GameSprite::Name(LPCWSTR name) { 
+void Sprites::GameSprite::Name( std::wstring name ) { 
 	this->name = name;
 }
 
