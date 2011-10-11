@@ -3,22 +3,16 @@
 	<TextureResources>
 		<TextureResource 
 				name="background"
-				image="main-menu-1024x768.png"
-				height="fill"
-				width="fill"
-				x="0"
-				y="0"/>
-		<TextureResource 
+				image="main-menu-1024x768.png" />
+    <TextureResource
 				name="accept"
-				image="a-button-32x32.png"
-				height="24"
-				width="24"
-				x="441"
-				y="358"/>
+				image="a-button-32x32.png" />
 	</TextureResources>
 	<MenuFrame
 		height="fill"
 		width="fill"
+		x="0"
+		y="0"
 		textureResource="background">
 		<MenuOptions
 			style="absolute"

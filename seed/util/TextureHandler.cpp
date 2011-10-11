@@ -5,7 +5,7 @@ using namespace GameUtil;
 ID3D10Texture2D* ::TextureHandler::GetTexture2DFromFile(LPCWSTR filename, ID3D10Device* pD3DDevice) {
 	ID3D10Texture2D* texture2D = NULL;
 	ID3D10Resource* pD3D10Resource = NULL;
-
+	
 	// Loads the texture into a temporary ID3D10Resource object
 	HRESULT hr = D3DX10CreateTextureFromFileW(pD3DDevice, filename, NULL, NULL, &pD3D10Resource, NULL);
 	if (FAILED(hr)) {

@@ -4,16 +4,18 @@
 #define NUM_POOL_SPRITES 2048		// Max sprites to keep in memory
 
 namespace Sprites { 
-	enum TYPE { 
-		BASE,
-		CHARACTER,
-		NPC,
-		TILE
+	enum type { 
+		base,
+		character,
+		npc,
+		tile,
+		font,
+		map
 	}; // Type
 	
 	class GameSprite : public D3DX10_SPRITE {
 	public:
-		TYPE kindOf;
+		type kindOf;
 		struct POINT {
 			float x;
 			float y; 
@@ -35,7 +37,7 @@ namespace Sprites {
 		void LoadTexture(ID3D10Device* pD3DDevice);		// Tries to load the texture resource
 		int defaultStateFrameX;			// Default start x frame
 		int defaultStateFrameY;			// Default start y frame (likely wont use)
-		LPCWSTR textureResourceName;	// Location where we can find the map file
+		std::wstring textureResourceName;	// Location where we can find the map file
 		std::wstring name;				// The name of this particular sprite
 		SIZE size;						// Size of the sprite in x/y measurements
 		POINT pos;						// X/Y Position 

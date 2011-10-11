@@ -6,6 +6,11 @@
 
 using namespace Gui;
 
+// Defaults
+const struct MenuFrame MENU_FRAME_DEFUALT = { 0, 0, 0, 0, '\0' };
+const struct MenuOptions MENU_OPTIONS_DEFAULT = { MenuStyle::absolute, 24, 24, 0, 0, '\0' };
+
+
 GameMenu::GameMenu(ID3D10Device* pD3DDevice, wchar_t* config)
 {
     // TODO - Implement loading of the XML Files
@@ -16,17 +21,10 @@ GameMenu::GameMenu(ID3D10Device* pD3DDevice, wchar_t* config)
 
 GameMenu::~GameMenu(void)
 {
-    // Destroy our sprites and other things
-    int size = this->textureResourceViews.size();
-    for (int i = 0; i < size; i++) { 
-        // Release the resource
-        this->textureResourceViews.at(i)->Release();
-    }
-
     // Destroy the sprites
-    size = this->gameSprites.size();
+    int size = this->menuOpts.size();
     for (int i = 0; i < size; i++) { 
-        delete &(this->gameSprites.at(i));
+        delete &(this->menuOpts.at(i));
     }
 }
 
@@ -46,14 +44,19 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 
 		Xml::Node textureResources = rootNode.find(CONFIG_TEXTURE_RESOURCE_ROOT, NULL, NULL);
 		Xml::Node menuFrame = rootNode.find(CONFIG_MENU_FRAME, NULL, NULL);
+		if (!this->LoadMenuFrameConfig(menuFrame)) { 
+			// Something happened trying to read the MenuFrameConfig.  
+			this->status = Status::failed;
+			return;
+		}
 		if (textureResources.status == Xml::Status::ok && menuFrame.status == Xml::Status::ok) {
 			// Handle the texture resources 
 			long nodeCount = textureResources.child.count;
 			if (nodeCount == 0) { this->status = Status::failed; return; }
 			
 			// TODO - stick to using std::wstring from wchar_t* and _bstr_t when possible, they create pointers we don't want to use in this context! 
-			std::wstring name;
-			_bstr_t image(L"");
+			std::wstring name = L"";
+			std::wstring image = L"";
 			int height = 0;
 			int width = 0;
 			int x = 0;
@@ -63,7 +66,7 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 			Sprites::GameSprite sprite;
 			for (long i = 0; i < nodeCount; i++) { 
 				name = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_NAME].bstr;
-				image = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_IMAGE];
+				image = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_IMAGE].bstr;
 
 				// Check the height width they can be strings or nbrs
 				height = (textureResources.child[i].attribute[CONFIG_HEIGHT].isNumeric) ? textureResources.child[i].attribute[CONFIG_HEIGHT] : WINDOW_HEIGHT;
@@ -92,8 +95,7 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 				sprite.TextureIndex = 0;
 				sprite.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 				
-				// TODO - update the signature of this method to use the pD3DDevice
-				this->gameSprites.push_back(sprite);
+				this->menuOpts.push_back(sprite);
 				texture = L"";
 				this->status = Status::ok;
 			}
@@ -110,7 +112,39 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 		// Probably something stupid happened
 		this->status = Status::failed;
 	}
-}
+
+	// Cleanup
+	delete &document;
+} // LoadConfig
+
+bool Gui::GameMenu::LoadMenuFrameConfig(Xml::Node& menuFrame) { 
+	// Get the height / width 
+	// Get the textureResource 
+	int width = (!menuFrame.attribute[CONFIG_WIDTH].isNumeric) ? menuFrame.attribute[CONFIG_WIDTH] : WINDOW_WIDTH;
+	int height = (!menuFrame.attribute[CONFIG_HEIGHT].isNumeric) ? menuFrame.attribute[CONFIG_HEIGHT] : WINDOW_WIDTH;
+
+	// Check if the x/y attributes exist
+	int x = (menuFrame.attribute[CONFIG_POS_X].exists) ? menuFrame.attribute[CONFIG_POS_X] : 0;
+	int y = (menuFrame.attribute[CONFIG_POS_X].exists) ? menuFrame.attribute[CONFIG_POS_Y] : 0;
+
+	// Handle the background
+	this->bgResource = (menuFrame.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].exists) ? (menuFrame.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].bstr) : L"";
+	if (this->bgResource.empty()) 
+		return false;
+	
+	// Handle the cursor
+	this->crsrResource = (menuFrame.attribute[CONFIG_MENU_OPTION_CURSOR].exists) ? (menuFrame.attribute[CONFIG_MENU_OPTION_CURSOR].bstr) : L"";
+	if (this->crsrResource.empty())
+		return false;
+
+	this->menuFrame = MENU_FRAME_DEFUALT;
+	this->menuOptions = MENU_OPTIONS_DEFAULT;
+
+	// Do our magic here
+
+
+	return true;
+} // LoadMenuFrameConfig
 
 /*
  Returns the number of sprites to draw
@@ -118,17 +152,22 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 */
 int GameMenu::Sprites(Sprites::GameSprite *sprites) { 
     Sprites::GameSprite nSprites[MAX_SPRITES];
-    
+
+	// Assign the sprites in order 
+	// Background
+	// Text Options
+	// Cursor
+
     // Should assign the sprites we've created
-    int size = this->gameSprites.size();
+    int size = this->menuOpts.size();
     for (int i = 0; i < size; i++) {
-        *sprites++ = (this->gameSprites.at(i));
+        *sprites++ = (this->menuOpts.at(i));
     }
 
     // Assign the new sprites
 
     // Return the size
-    return this->gameSprites.size();
+    return this->menuOpts.size();
 }
 
 
@@ -149,10 +188,6 @@ void GameMenu::Init(ID3D10Device* pD3DDevice) {
     ID3D10ShaderResourceView * btnRscView;
 	GameUtil::TextureHandler::GetResourceViewFromTexture(bgTexture, &bgRscView, pD3DDevice);
     GameUtil::TextureHandler::GetResourceViewFromTexture(btnTexture, &btnRscView, pD3DDevice);
-
-    // Save
-    this->textureResourceViews.push_back(bgRscView);
-    this->textureResourceViews.push_back(btnRscView);
 
     // Release the textures
     bgTexture->Release();
@@ -201,7 +236,7 @@ void GameMenu::Init(ID3D10Device* pD3DDevice) {
     aButtonSprite.setMoveDistance(1,1);
 
     // add the sprites
-    this->gameSprites.push_back(backgroundSprite);
-	this->gameSprites.push_back(aButtonSprite);
+    this->menuOpts.push_back(backgroundSprite);
+	this->menuOpts.push_back(aButtonSprite);
 } // Init
 /* eof */

@@ -17,7 +17,7 @@ using namespace GameUtil;
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
 int numActiveSprites = 0;
-GameSprite gameSprites[MAX_SPRITES]; // = { GameSprite() };
+GameSprite gameSprites[MAX_SPRITES];
 
 // D3D GLOBALS ////////////////////////////////
 ID3D10Device* pD3DDevice = NULL;

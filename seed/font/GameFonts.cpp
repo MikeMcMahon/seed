@@ -19,7 +19,5 @@ bool InitFont(ID3D10Device* device, ID3DX10Font* font, int height, UINT width, U
 		return false;
 	}
 
-	
-
 	return true;
 }

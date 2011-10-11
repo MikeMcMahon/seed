@@ -7,7 +7,7 @@ Sprites::GameSprite::GameSprite(LPCWSTR textureName, std::wstring name, float wi
     this->position(0,0,0);
     this->canAnimate(false);
     this->isVisible(false);
-    this->kindOf = ::BASE;
+    this->kindOf = ::base;
 
     // Set the width and height
     this->spriteSize(width, height);
@@ -23,7 +23,7 @@ Sprites::GameSprite::GameSprite() {
 	this->position(0,0,0);
 	this->canAnimate(false);
 	this->isVisible(false);
-	this->kindOf = ::BASE;
+	this->kindOf = ::base;
 } // GameSprite
 
 Sprites::GameSprite::~GameSprite() { 
@@ -36,7 +36,7 @@ void Sprites::GameSprite::Texture(LPCWSTR texture, ID3D10Device* pD3DDevice ) {
 }
 
 void Sprites::GameSprite::LoadTexture(ID3D10Device* pD3DDevice) { 
-	ID3D10Texture2D* texture = GameUtil::TextureHandler::GetTexture2DFromFile(this->textureResourceName,pD3DDevice);
+	ID3D10Texture2D* texture = GameUtil::TextureHandler::GetTexture2DFromFile(this->textureResourceName.c_str(),pD3DDevice);
 	try { 
 		if (texture) { 
 			GameUtil::TextureHandler::GetResourceViewFromTexture(texture,&this->pTexture, pD3DDevice);

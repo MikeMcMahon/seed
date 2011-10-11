@@ -6,12 +6,34 @@ namespace Gui {
 	struct Status { enum code { 
 		ok,
 		failed };};
+	struct MenuStyle {enum style {
+			absolute,
+			relative };};
+	struct MenuFrame { 
+		float height;
+		float width;
+		float x;
+		float y;
+		wchar_t* resource;
+	};
+	struct MenuOptions {
+		MenuStyle::style display;
+		float height;
+		float width;
+		float x;
+		float y;
+		wchar_t* cursor;
+	};
     class GameMenu
     {
     private:
-        std::vector<Sprites::GameSprite> gameSprites;
-        std::vector<ID3D10ShaderResourceView*> textureResourceViews;
-
+		MenuFrame menuFrame;
+		MenuOptions menuOptions;
+        std::vector<Sprites::GameSprite> menuOpts;
+		Sprites::GameSprite background;
+		Sprites::GameSprite cursor;
+		std::wstring bgResource;
+		std::wstring crsrResource;
     public:
         GameMenu(ID3D10Device*, wchar_t*);
         ~GameMenu(void);
@@ -24,6 +46,7 @@ namespace Gui {
         void Init(ID3D10Device*);
 		void LoadConfig(wchar_t*,ID3D10Device*);
 		void GenerateSprite();
+		bool LoadMenuFrameConfig(Xml::Node& menuFrame);
     }; // GameMenu
 }
 /* eof */

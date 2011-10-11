@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="sprites\FontSprite.cpp" />
     <ClCompile Include="gui\GameMenu.cpp" />
     <ClCompile Include="gui\GameWindow.cpp" />
     <ClCompile Include="input\KMInput.cpp" />
@@ -86,6 +87,7 @@
     <ClCompile Include="sprites\SpriteUtils.cpp" />
     <ClCompile Include="util\TextureHandler.cpp" />
     <ClCompile Include="util\Time.cpp" />
+    <ClInclude Include="sprites\FontSprite.h" />
     <ClInclude Include="font\GameFonts.h">
       <FileType>CppCode</FileType>
     </ClInclude>
