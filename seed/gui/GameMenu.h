@@ -14,7 +14,7 @@ namespace Gui {
 		float width;
 		float x;
 		float y;
-		wchar_t* resource;
+		std::wstring resource;
 	};
 	struct MenuOptions {
 		MenuStyle::style display;
@@ -22,18 +22,21 @@ namespace Gui {
 		float width;
 		float x;
 		float y;
-		wchar_t* cursor;
+		std::wstring cursor;
+	};
+	struct MenuChoice { 
+		std::wstring value;
+		bool isDefault;
 	};
     class GameMenu
     {
     private:
 		MenuFrame menuFrame;
 		MenuOptions menuOptions;
+		std::vector<MenuChoice> menuChoices;
         std::vector<Sprites::GameSprite> menuOpts;
 		Sprites::GameSprite background;
 		Sprites::GameSprite cursor;
-		std::wstring bgResource;
-		std::wstring crsrResource;
     public:
         GameMenu(ID3D10Device*, wchar_t*);
         ~GameMenu(void);

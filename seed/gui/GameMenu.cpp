@@ -7,9 +7,9 @@
 using namespace Gui;
 
 // Defaults
-const struct MenuFrame MENU_FRAME_DEFUALT = { 0, 0, 0, 0, '\0' };
-const struct MenuOptions MENU_OPTIONS_DEFAULT = { MenuStyle::absolute, 24, 24, 0, 0, '\0' };
-
+const struct MenuFrame MENU_FRAME_DEFUALT = { 0, 0, 0, 0, L"" };
+const struct MenuOptions MENU_OPTIONS_DEFAULT = { MenuStyle::absolute, 24, 24, 0, 0, L"" };
+const struct MenuChoice MENU_CHOICE_DEFAULT = { L"", false };
 
 GameMenu::GameMenu(ID3D10Device* pD3DDevice, wchar_t* config)
 {
@@ -117,28 +117,31 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 	delete &document;
 } // LoadConfig
 
-bool Gui::GameMenu::LoadMenuFrameConfig(Xml::Node& menuFrame) { 
-	// Get the height / width 
-	// Get the textureResource 
-	int width = (!menuFrame.attribute[CONFIG_WIDTH].isNumeric) ? menuFrame.attribute[CONFIG_WIDTH] : WINDOW_WIDTH;
-	int height = (!menuFrame.attribute[CONFIG_HEIGHT].isNumeric) ? menuFrame.attribute[CONFIG_HEIGHT] : WINDOW_WIDTH;
-
-	// Check if the x/y attributes exist
-	int x = (menuFrame.attribute[CONFIG_POS_X].exists) ? menuFrame.attribute[CONFIG_POS_X] : 0;
-	int y = (menuFrame.attribute[CONFIG_POS_X].exists) ? menuFrame.attribute[CONFIG_POS_Y] : 0;
-
-	// Handle the background
-	this->bgResource = (menuFrame.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].exists) ? (menuFrame.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].bstr) : L"";
-	if (this->bgResource.empty()) 
-		return false;
-	
-	// Handle the cursor
-	this->crsrResource = (menuFrame.attribute[CONFIG_MENU_OPTION_CURSOR].exists) ? (menuFrame.attribute[CONFIG_MENU_OPTION_CURSOR].bstr) : L"";
-	if (this->crsrResource.empty())
-		return false;
-
+bool Gui::GameMenu::LoadMenuFrameConfig(Xml::Node& menuFrameNode) { 
+	// Create default structs
 	this->menuFrame = MENU_FRAME_DEFUALT;
 	this->menuOptions = MENU_OPTIONS_DEFAULT;
+
+	this->menuFrame.x = (menuFrameNode.attribute[CONFIG_POS_X].exists) ? menuFrameNode.attribute[CONFIG_POS_X] : 0;
+	this->menuFrame.y = (menuFrameNode.attribute[CONFIG_POS_X].exists) ? menuFrameNode.attribute[CONFIG_POS_Y] : 0;
+	this->menuFrame.width = (menuFrameNode.attribute[CONFIG_WIDTH].isNumeric) ? menuFrameNode.attribute[CONFIG_WIDTH] : WINDOW_WIDTH;
+	this->menuFrame.height = (menuFrameNode.attribute[CONFIG_HEIGHT].isNumeric) ? menuFrameNode.attribute[CONFIG_HEIGHT] : WINDOW_HEIGHT;
+	this->menuFrame.resource = (menuFrameNode.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].exists) ? (menuFrameNode.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].bstr) : L"";
+
+	// Get all of the menu choices
+	Xml::Node options = menuFrameNode.child[CONFIG_MENU_OPTIONS];
+	wchar_t* name = options.name;
+	
+	// Handle the cursor
+	this->menuOptions.cursor = (options.attribute[CONFIG_MENU_OPTION_CURSOR].exists) ? (options.attribute[CONFIG_MENU_OPTION_CURSOR].bstr) : L"";
+
+	long count = options.child.count;
+	MenuChoice choice = MENU_CHOICE_DEFAULT;
+	for (long i = 0; i < count; i++) { 
+		choice.isDefault = options.child[i].attribute["default"];
+		choice.value = options.child[i].attribute["value"].bstr;
+		this->menuChoices.push_back(choice);
+	}
 
 	// Do our magic here
 
