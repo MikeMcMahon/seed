@@ -40,8 +40,8 @@ void Sprites::GameSprite::LoadTexture(ID3D10Device* pD3DDevice) {
 	try { 
 		if (texture) { 
 			GameUtil::TextureHandler::GetResourceViewFromTexture(texture,&this->pTexture, pD3DDevice);
+			texture->Release();	
 		}
-		texture->Release();	
 	} catch (...) { 
 		// TODO - we should set some flag on the sprite that's it not usable
 		this->isVisible(false);

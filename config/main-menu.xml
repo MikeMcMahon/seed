@@ -15,7 +15,7 @@
 		y="0"
 		textureResource="background">
 		<MenuOptions
-			style="absolute"
+			style="relative"
 			x="441"
 			y="358"
 			cursor="accept">

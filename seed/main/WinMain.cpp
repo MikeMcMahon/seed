@@ -124,6 +124,7 @@ void Render() {
 		// Clear the target buffer
 		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
 
+		// TODO - Create a pFontSpriteObject to use with font drawing
 		if (pSpriteObject != NULL) {
 			// Start Drawing the sprites
 			pSpriteObject->Begin(NULL);
@@ -160,6 +161,7 @@ void Render() {
 /*
 * UpdateScene is really what updates the texture locations and orients the sprites to the world
 */
+float rotate = -0.0174532925f;
 void UpdateScene() {
 	D3DXMATRIX matScaling;
 	D3DXMATRIX matTranslation;
@@ -180,22 +182,21 @@ void UpdateScene() {
 				(float)(WINDOW_HEIGHT - gameSprites[i].position().y - (gameSprites[i].spriteSize().height/2)), 
 				0.1f);	// ZOrder
 
-			gameSprites[i].matWorld = matScaling * matTranslation;
-			/* TODO - Handle Sprite Rotation
-			if (i != 1) { 
-				D3DXMATRIX matWorld = gameSprites[i].matWorld;
-				D3DXMATRIX matOut;
+			// TODO - Refactor this out into its own function
+			/* 
+			D3DXMATRIX matRotate;
+			D3DXMATRIX final;
+			
+			//matRotate = matScaling * matTranslation;
+			D3DXMatrixRotationZ(&matRotate, rotate);
+			rotate -= 0.0174532925f;
 
-				// Rotate the bitch	
-				D3DXVECTOR2 center = D3DXVECTOR2(
-					32,
-					32);
-				D3DXVECTOR2 screenPos = D3DXVECTOR2(gameSprites[i].position().x, gameSprites[i].position().y);
-				D3DXVECTOR2 scaling(1,1);
-				D3DXMatrixTransformation2D(&matOut,NULL, 0.0, &scaling, &center, 5.0f,&screenPos);
-				D3DXMATRIX newMat = matWorld * matOut;
-				gameSprites[i].matWorld = newMat;
-			}*/
+			final = (matScaling * matRotate) * matTranslation;
+			//final = matScaling * matTranslation;
+			gameSprites[i].matWorld = final;
+			*/ 
+			gameSprites[i].matWorld = matScaling * matTranslation;
+			
 			// Animate the sprite
 			if (gameSprites[i].canAnimate()) {
 				float texCoordX = (float)(gameSprites[i].curFrame() / gameSprites[i].animationDetail().numFrames);

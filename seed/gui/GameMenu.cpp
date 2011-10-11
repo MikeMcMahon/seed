@@ -7,8 +7,8 @@
 using namespace Gui;
 
 // Defaults
-const struct MenuFrame MENU_FRAME_DEFUALT = { 0, 0, 0, 0, L"" };
-const struct MenuOptions MENU_OPTIONS_DEFAULT = { MenuStyle::absolute, 24, 24, 0, 0, L"" };
+const struct Menu MENU_FRAME_DEFUALT = { MenuStyle::unused, Type::background, 0, 0, 0, 0, L"" };
+const struct Menu MENU_OPTIONS_DEFAULT = { MenuStyle::relative, Type::cursor, 24, 24, 0, 0, L"" };
 const struct MenuChoice MENU_CHOICE_DEFAULT = { L"", false };
 
 GameMenu::GameMenu(ID3D10Device* pD3DDevice, wchar_t* config)
@@ -33,14 +33,14 @@ GameMenu::~GameMenu(void)
 */
 void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) { 
 	_bstr_t configFile(config);
-	Xml::Document document(configFile);
+	Xml::Document* document = new Xml::Document(configFile);
 
 	// if the document opened fine then lets do this if not whoopsie
-	Xml::Status::code docStatus = document.status;
+	Xml::Status::code docStatus = document->status;
 	if (docStatus == Xml::Status::ok) { 
 		this->status = Status::ok;
 		// Get the root node and it's children 
-		Xml::Node rootNode = document.rootNode;
+		Xml::Node rootNode = document->rootNode;
 
 		Xml::Node textureResources = rootNode.find(CONFIG_TEXTURE_RESOURCE_ROOT, NULL, NULL);
 		Xml::Node menuFrame = rootNode.find(CONFIG_MENU_FRAME, NULL, NULL);
@@ -66,44 +66,26 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 			Sprites::GameSprite sprite;
 			for (long i = 0; i < nodeCount; i++) { 
 				name = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_NAME].bstr;
-				image = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_IMAGE].bstr;
-
-				// Check the height width they can be strings or nbrs
-				height = (textureResources.child[i].attribute[CONFIG_HEIGHT].isNumeric) ? textureResources.child[i].attribute[CONFIG_HEIGHT] : WINDOW_HEIGHT;
-				width = (textureResources.child[i].attribute[CONFIG_WIDTH].isNumeric) ? textureResources.child[i].attribute[CONFIG_WIDTH] : WINDOW_WIDTH;
-				y = textureResources.child[i].attribute[CONFIG_POS_Y];
-				x = textureResources.child[i].attribute[CONFIG_POS_X];
 
 				// Create a sprite from this information
 				// Get the texture resource
+				image = textureResources.child[i].attribute[CONFIG_TEXTURE_RESOURCE_IMAGE].bstr;
 				texture.append(textureDir);
 				texture.append(image);
-				// sprite = new Sprites::GameSprite(texture.c_str(),name.c_str(),(float)width,(float)height, pD3DDevice);
-				sprite.Name(name);
-				sprite.Texture(texture.c_str(), pD3DDevice);
-				sprite.spriteSize((float)width, (float)height);
-				sprite.animationDetail(0,0,0);
-				sprite.canAnimate(false);
-				sprite.isVisible(true);
-				sprite.canMove(false);
-				sprite.position((float)x,(float)y,0.5f);
-				sprite.setMoveDistance(0,0);
-				sprite.TexCoord.x = 0;
-				sprite.TexCoord.y = 0;
-				sprite.TexSize.x = 1.0f;
-				sprite.TexSize.y = 1.0f;
-				sprite.TextureIndex = 0;
-				sprite.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-				
-				this->menuOpts.push_back(sprite);
+
+				// Determine if this is an orphaned sprite
+				if (this->menuFrame.resource.compare(name) == 0) {
+					this->GenerateSprite(this->menuFrame, texture.c_str(), pD3DDevice);
+
+				}
+				if (this->menuOptions.resource.compare(name) == 0) {
+					this->GenerateSprite(this->menuOptions, texture.c_str(), pD3DDevice);
+				}
+
+				// Cleanup the texture string
 				texture = L"";
 				this->status = Status::ok;
 			}
-			name = L"This is a test";
-			texture = L"this is another test";
-			// Handle the menu frame
-			nodeCount = menuFrame.child.count;
-			if (nodeCount == 0) { this->status = Status::failed; return; }
 		} else { 
 			// Invalid config file...duh
 			this->status = Status::failed;
@@ -114,8 +96,33 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 	}
 
 	// Cleanup
-	delete &document;
+	delete document;
 } // LoadConfig
+
+void Gui::GameMenu::GenerateSprite(Gui::Menu menuPresets, const wchar_t* texture, ID3D10Device* pD3DDevice) { 
+	Sprites::GameSprite* sprite = new Sprites::GameSprite();
+	sprite->Name(menuPresets.resource);
+	sprite->Texture(texture, pD3DDevice);
+	sprite->spriteSize((float)menuPresets.width, (float)menuPresets.height);
+	sprite->animationDetail(0,0,0);
+	sprite->canAnimate(false);
+	sprite->isVisible(true);
+	sprite->canMove(false);
+	sprite->position((float)menuPresets.x,(float)menuPresets.y,0.5f);
+	sprite->setMoveDistance(0,0);
+	sprite->TexCoord.x = 0;
+	sprite->TexCoord.y = 0;
+	sprite->TexSize.x = 1.0f;
+	sprite->TexSize.y = 1.0f;
+	sprite->TextureIndex = 0;
+	sprite->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
+	if (menuPresets.type == Type::background) 
+		this->background = sprite;
+	if (menuPresets.type == Type::cursor)
+		this->cursor = sprite;
+} // GenerateSprite
+
 
 bool Gui::GameMenu::LoadMenuFrameConfig(Xml::Node& menuFrameNode) { 
 	// Create default structs
@@ -133,7 +140,9 @@ bool Gui::GameMenu::LoadMenuFrameConfig(Xml::Node& menuFrameNode) {
 	wchar_t* name = options.name;
 	
 	// Handle the cursor
-	this->menuOptions.cursor = (options.attribute[CONFIG_MENU_OPTION_CURSOR].exists) ? (options.attribute[CONFIG_MENU_OPTION_CURSOR].bstr) : L"";
+	this->menuOptions.resource = (options.attribute[CONFIG_MENU_OPTION_CURSOR].exists) ? (options.attribute[CONFIG_MENU_OPTION_CURSOR].bstr) : L"";
+	this->menuOptions.x = (options.attribute[CONFIG_POS_X].exists) ? (options.attribute[CONFIG_POS_X]) : 0;
+	this->menuOptions.y = (options.attribute[CONFIG_POS_Y].exists) ? (options.attribute[CONFIG_POS_Y]) : 0;
 
 	long count = options.child.count;
 	MenuChoice choice = MENU_CHOICE_DEFAULT;
@@ -158,22 +167,24 @@ int GameMenu::Sprites(Sprites::GameSprite *sprites) {
 
 	// Assign the sprites in order 
 	// Background
-	// Text Options
 	// Cursor
+	*sprites++ = (*this->background);
+	*sprites++ = (*this->cursor);
 
-    // Should assign the sprites we've created
-    int size = this->menuOpts.size();
+	int size = this->menuOpts.size();
     for (int i = 0; i < size; i++) {
         *sprites++ = (this->menuOpts.at(i));
     }
-
-    // Assign the new sprites
-
+	
+	
     // Return the size
-    return this->menuOpts.size();
+    return size += 2;
 }
 
-
+/*
+** Deprecated ** 
+Inits a game menu with statically set sprites
+*/
 void GameMenu::Init(ID3D10Device* pD3DDevice) {
     Sprites::GameSprite background;
     Sprites::GameSprite aButton; 
