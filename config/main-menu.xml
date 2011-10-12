@@ -16,9 +16,11 @@
 		textureResource="background">
 		<MenuOptions
 			style="relative"
-			x="441"
-			y="358"
-			cursor="accept">
+			x="468"
+			y="356"
+			cursor="accept"
+      font-height="24"
+      font-weight="bold">
 			<option default="true" value="start">Start Game</option>
 			<option value="load">Load Game</option>
 			<option value="options">Options</option>

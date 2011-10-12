@@ -23,7 +23,8 @@ namespace Gui {
 		float y;
 		std::wstring resource;
 	};
-	struct MenuChoice { 
+	struct MenuChoice {
+		float height;
 		std::wstring value;
 		bool isDefault;
 	};
@@ -36,6 +37,7 @@ namespace Gui {
         std::vector<Sprites::GameSprite> menuOpts;
 		Sprites::GameSprite* background;
 		Sprites::GameSprite* cursor;
+		int menuChoiceHeight;
     public:
         GameMenu(ID3D10Device*, wchar_t*);
         ~GameMenu(void);
@@ -48,7 +50,8 @@ namespace Gui {
         void Init(ID3D10Device*);
 		void LoadConfig(wchar_t*,ID3D10Device*);
 		bool LoadMenuFrameConfig(Xml::Node& menuFrame);
-		void GenerateSprite(Menu menuOptions, const wchar_t* texture, ID3D10Device* pD3DDevice); 
+		void GenerateSprite(Menu menuOptions, const wchar_t* texture, ID3D10Device& pD3DDevice); 
+		void GenerateFontSprite(MenuChoice menuChoice, const wchar_t* text, ID3D10Device* pD3DDevice); // TODO - Implement the fontsprite impl. 
     }; // GameMenu
 }
 /* eof */

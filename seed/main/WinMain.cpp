@@ -1,6 +1,7 @@
 // My Headers
 #include "../sprites/GameSprite.h"
 #include "../sprites/SpriteUtils.h"
+#include "../sprites/FontSprite.h"
 #include "GameModes.h"
 #include "../input/XGamePad.h"
 #include "DXDrawing.h"
@@ -8,6 +9,7 @@
 #include "../util/TextureHandler.h"
 #include "../util/Time.h"
 #include "../gui/GameMenu.h"
+#include "../font/GameFonts.h"
 
 
 using namespace Input;
@@ -29,6 +31,7 @@ D3D10_VIEWPORT m_viewPort;
 // Blend State
 ID3D10BlendState* pBlendState10 = NULL;
 ID3D10BlendState* pOriginalBlendState10 = NULL;
+ID3D10BlendState* pFontOriginalBlendState10 = NULL;
 
 // Shader Resource View
 ID3D10ShaderResourceView* gSpriteTextureRV = NULL;
@@ -36,6 +39,7 @@ ID3D10ShaderResourceView* gSpriteTextureRV = NULL;
 // Sprite stuff
 ID3DX10Sprite* pSpriteObject = NULL;
 D3DX10_SPRITE  spritePool[NUM_POOL_SPRITES];
+ID3DX10Font* pGameFont = NULL;
 
 // Configure the xbox controller stuff
 XGamePad* xControl;
@@ -68,6 +72,9 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		return false;
 	}
 	if (!InitDirect3D(wndHandle, WINDOW_WIDTH, WINDOW_HEIGHT) ) {
+		return 0;
+	}
+	if (!InitFont(pD3DDevice, &pGameFont, 24, 0, FW_NORMAL, ARIAL)) { 
 		return 0;
 	}
 	if (!InitSprites()) {
@@ -104,8 +111,8 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 			loops++;
 		}
 
-		interpolation = float ( ::Time::GetMilis() + SKIP_TICKS - next_game_tick ) / float ( SKIP_TICKS );
 		// Moves the sprites around directionaly
+		interpolation = float ( ::Time::GetMilis() + SKIP_TICKS - next_game_tick ) / float ( SKIP_TICKS );
 		MoveSprites(interpolation);		
 
 		// Render the sprites to the screen
@@ -128,14 +135,31 @@ void Render() {
 		if (pSpriteObject != NULL) {
 			// Start Drawing the sprites
 			pSpriteObject->Begin(NULL);
-			
+
 			// Copy the sprites into the spritePool
-			for (int i = 0; i < MAX_SPRITES; i++) {
-				spritePool[i] = gameSprites[i];
+			int i = 0;
+			int c = 0;
+			while (c < MAX_SPRITES) { 
+				if (gameSprites[i].kindOf != Sprites::font) { 
+					// Keep the sprites contiguous
+					spritePool[c] = gameSprites[i];
+					c++;
+				}
+				// Keep itterating over the game sprites
+				i++;
 			}
-			
-			// Draw all of the sprites in the pool
-			pSpriteObject->DrawSpritesBuffered(spritePool, 2);
+
+		
+			// Draw the srpites
+			pSpriteObject->DrawSpritesBuffered(spritePool, _spritesToRender);
+
+			// Draw the text on top
+			c = 0;
+			while (c < MAX_SPRITES) { 
+				if (gameSprites[i].kindOf == Sprites::font)
+					DrawTextNow(pGameFont, pSpriteObject, gameSprites[i].position().x, gameSprites[i].position().y, ((FontSprite*)&gameSprites[i])->Message());
+				c++;
+			}
 
 			// Save the current blend state
 			pD3DDevice->OMSetBlendState(pBlendState10, OriginalBlendFactor, 0xffffffff);
@@ -231,8 +255,7 @@ bool InitSprites() {
 	}
 
     // Create the sprite object (calls methods to display the sprites)
-	HRESULT hr = D3DX10CreateSprite(pD3DDevice, 0, &pSpriteObject);
-	if (hr != S_OK) {
+	if (D3DX10CreateSprite(pD3DDevice, 0, &pSpriteObject) != S_OK) {
 		return false;
 	}
 
@@ -485,41 +508,35 @@ bool InitDirect3D(HWND hWnd, int windowWidth, int windowHeight) {
 
 void ShutdownDirect3D() {
 	// Release the original blend state object
-	if (pOriginalBlendState10 != NULL)
-	{
+	if (pOriginalBlendState10 != NULL){
 		pOriginalBlendState10->Release();
 		pOriginalBlendState10 = NULL;
 	}
 
 	// Release the blend state object
-	if (pBlendState10 != NULL)
-	{
+	if (pBlendState10 != NULL)	{
 		pBlendState10->Release();
 		pBlendState10 = NULL;
 	}
 
     // release the ID3DX10Sprite object
-    if (pSpriteObject)
-    {
+    if (pSpriteObject)    {
         pSpriteObject->Release();
         pSpriteObject = NULL;
     }
 
 	// release the rendertarget
-	if (pRenderTargetView) 
-	{
+	if (pRenderTargetView) 	{
 		pRenderTargetView->Release();
 	}
 
 	// release the swapchain
-    if (pSwapChain)
-	{
+    if (pSwapChain)	{
 		pSwapChain->Release();
 	}
 
 	// release the D3D Device
-    if (pD3DDevice) 
-	{
+    if (pD3DDevice)	{
 		pD3DDevice->Release();
 	}
 } // ShutdownDirect3D

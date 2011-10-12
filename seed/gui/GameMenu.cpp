@@ -3,13 +3,15 @@
 #include "../sprites/SpriteUtils.h"
 #include "../util/TextureHandler.h"
 #include "MenuConstants.h"
+#include "../font/GameFonts.h"
 
 using namespace Gui;
 
 // Defaults
 const struct Menu MENU_FRAME_DEFUALT = { MenuStyle::unused, Type::background, 0, 0, 0, 0, L"" };
 const struct Menu MENU_OPTIONS_DEFAULT = { MenuStyle::relative, Type::cursor, 24, 24, 0, 0, L"" };
-const struct MenuChoice MENU_CHOICE_DEFAULT = { L"", false };
+const struct MenuChoice MENU_CHOICE_DEFAULT = { SZ_NORMAL, L"", false };
+const float _buffer = 5;
 
 GameMenu::GameMenu(ID3D10Device* pD3DDevice, wchar_t* config)
 {
@@ -73,19 +75,41 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 				texture.append(textureDir);
 				texture.append(image);
 
-				// Determine if this is an orphaned sprite
+				// Handle the menu frame sprite
 				if (this->menuFrame.resource.compare(name) == 0) {
-					this->GenerateSprite(this->menuFrame, texture.c_str(), pD3DDevice);
+					this->GenerateSprite(this->menuFrame, texture.c_str(), *pD3DDevice);
 
 				}
+				
+				// handle the menu options
 				if (this->menuOptions.resource.compare(name) == 0) {
-					this->GenerateSprite(this->menuOptions, texture.c_str(), pD3DDevice);
+					// Offset the cursor to the left by 5 px padding + width of the cursor 
+					this->menuOptions.x -= (this->menuOptions.width + 5.0f);
+					this->GenerateSprite(this->menuOptions, texture.c_str(), *pD3DDevice);
 				}
 
 				// Cleanup the texture string
 				texture = L"";
 				this->status = Status::ok;
 			}
+			// Handle the menu options
+			int size = this->menuChoices.size();
+			RECT rc; 
+
+			// Create a new font instance
+			ID3DX10Font* pFont;
+			x = this->menuOptions.x;
+			y = this->menuOptions.y;
+			InitFont(pD3DDevice, &pFont, this->menuChoices.at(0).height, 0, FW_NORMAL, ARIAL);
+			for (int i = 0; i < size; i++) { 
+				SetRectEmpty(&rc);
+				FontRect(pFont, NULL, &rc, x, y, this->menuChoices[i].value.c_str());
+
+				// Calculate the x/y for the next sprite, buffer of 5px
+				y += _buffer + (rc.top - rc.bottom);
+			}
+			// Cleanup
+			pFont->Release();
 		} else { 
 			// Invalid config file...duh
 			this->status = Status::failed;
@@ -96,13 +120,14 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 	}
 
 	// Cleanup
+	pD3DDevice->Release();
 	delete document;
 } // LoadConfig
 
-void Gui::GameMenu::GenerateSprite(Gui::Menu menuPresets, const wchar_t* texture, ID3D10Device* pD3DDevice) { 
+void Gui::GameMenu::GenerateSprite(Gui::Menu menuPresets, const wchar_t* texture, ID3D10Device& pD3DDevice) { 
 	Sprites::GameSprite* sprite = new Sprites::GameSprite();
 	sprite->Name(menuPresets.resource);
-	sprite->Texture(texture, pD3DDevice);
+	sprite->Texture(texture, &pD3DDevice);
 	sprite->spriteSize((float)menuPresets.width, (float)menuPresets.height);
 	sprite->animationDetail(0,0,0);
 	sprite->canAnimate(false);
@@ -121,6 +146,9 @@ void Gui::GameMenu::GenerateSprite(Gui::Menu menuPresets, const wchar_t* texture
 		this->background = sprite;
 	if (menuPresets.type == Type::cursor)
 		this->cursor = sprite;
+
+	ZeroMemory(&menuPresets, sizeof(menuPresets));
+	pD3DDevice.Release();
 } // GenerateSprite
 
 
@@ -143,17 +171,16 @@ bool Gui::GameMenu::LoadMenuFrameConfig(Xml::Node& menuFrameNode) {
 	this->menuOptions.resource = (options.attribute[CONFIG_MENU_OPTION_CURSOR].exists) ? (options.attribute[CONFIG_MENU_OPTION_CURSOR].bstr) : L"";
 	this->menuOptions.x = (options.attribute[CONFIG_POS_X].exists) ? (options.attribute[CONFIG_POS_X]) : 0;
 	this->menuOptions.y = (options.attribute[CONFIG_POS_Y].exists) ? (options.attribute[CONFIG_POS_Y]) : 0;
+	int fontHeight = options.attribute["font-height"].exists ? options.attribute["font-height"] : 20;
 
 	long count = options.child.count;
 	MenuChoice choice = MENU_CHOICE_DEFAULT;
 	for (long i = 0; i < count; i++) { 
+		choice.height = fontHeight;
 		choice.isDefault = options.child[i].attribute["default"];
 		choice.value = options.child[i].attribute["value"].bstr;
 		this->menuChoices.push_back(choice);
 	}
-
-	// Do our magic here
-
 
 	return true;
 } // LoadMenuFrameConfig
@@ -179,6 +206,7 @@ int GameMenu::Sprites(Sprites::GameSprite *sprites) {
 	
     // Return the size
     return size += 2;
+	return 0;
 }
 
 /*

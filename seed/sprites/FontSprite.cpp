@@ -1,5 +1,6 @@
 #include "FontSprite.h"
 
+using namespace Sprites;
 
 FontSprite::FontSprite(void)
 {
@@ -21,4 +22,8 @@ LPCWSTR FontSprite::Message() {
 
 void FontSprite::Message(LPCWSTR message) { 
 	this->message = message;
+}
+
+void FontSprite::FontColor(D3DXCOLOR color) { 
+	this->color = color;
 }

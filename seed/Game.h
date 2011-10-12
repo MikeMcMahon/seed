@@ -1,7 +1,8 @@
 #pragma once
 
-// Balls to the walls SON!
-#define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
+#define STRICT
+#define WINVER       0x500
 
 #include <Windows.h>
 #include <WindowsX.h>
