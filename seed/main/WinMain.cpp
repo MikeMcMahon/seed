@@ -50,10 +50,6 @@ Gui::GameMenu* gameMenu;
 
 // Windowing stuff //////////////////////////////
 WindowOffsets windowOffsets;
-float _offsetLeft = 0;
-float _offsetRight = 0;
-float _offsetTop = 0;
-float _offsetBottom = 0;
 int _spritesToRender = 0;
 
 void Render();
@@ -136,28 +132,14 @@ void Render() {
 			// Start Drawing the sprites
 			pSpriteObject->Begin(NULL);
 
-			// Copy the sprites into the spritePool
-			int i = 0;
-			int c = 0;
-			while (c < MAX_SPRITES) { 
-				if (gameSprites[i].kindOf != Sprites::font) { 
-					// Keep the sprites contiguous
-					spritePool[c] = gameSprites[i];
-					c++;
-				}
-				// Keep itterating over the game sprites
-				i++;
-			}
-
-		
 			// Draw the srpites
 			pSpriteObject->DrawSpritesBuffered(spritePool, _spritesToRender);
 
 			// Draw the text on top
-			c = 0;
+			int c = 0;
 			while (c < MAX_SPRITES) { 
-				if (gameSprites[i].kindOf == Sprites::font)
-					DrawTextNow(pGameFont, pSpriteObject, gameSprites[i].position().x, gameSprites[i].position().y, ((FontSprite*)&gameSprites[i])->Message());
+				if (gameSprites[c].sprite.kindOf == Type::font)
+					DrawTextNow(pGameFont, pSpriteObject, gameSprites[c].sprite.position.x, gameSprites[c].sprite.position.y, ((FontSprite*)&gameSprites[c])->Message());
 				c++;
 			}
 
@@ -195,15 +177,15 @@ void UpdateScene() {
 	// loop through the sprite
 	for (int i = 0; i < MAX_SPRITES; i++) {
 		// Only update visible sprites
-		if (gameSprites[i].isVisible()) {
+		if (gameSprites[i].sprite.isVisible) {
 			// Set the proper scale for the sprite
 			D3DXMATRIX matScaling;
 			D3DXMATRIX matTranslation;
 
-			D3DXMatrixScaling(&matScaling, gameSprites[i].spriteSize().width, gameSprites[i].spriteSize().height, gameSprites[i].position().z);
+			D3DXMatrixScaling(&matScaling, gameSprites[i].sprite.size.width, gameSprites[i].sprite.size.height, gameSprites[i].sprite.position.z);
 			D3DXMatrixTranslation(&matTranslation, 
-				(float)gameSprites[i].position().x + (gameSprites[i].spriteSize().width/2), 
-				(float)(WINDOW_HEIGHT - gameSprites[i].position().y - (gameSprites[i].spriteSize().height/2)), 
+				(float)gameSprites[i].sprite.position.x + (gameSprites[i].sprite.size.width/2), 
+				(float)(WINDOW_HEIGHT - gameSprites[i].sprite.position.y - (gameSprites[i].sprite.size.height/2)), 
 				0.1f);	// ZOrder
 
 			// TODO - Refactor this out into its own function
@@ -219,14 +201,14 @@ void UpdateScene() {
 			//final = matScaling * matTranslation;
 			gameSprites[i].matWorld = final;
 			*/ 
-			gameSprites[i].matWorld = matScaling * matTranslation;
+			spritePool[i].matWorld = matScaling * matTranslation;
 			
 			// Animate the sprite
-			if (gameSprites[i].canAnimate()) {
-				float texCoordX = (float)(gameSprites[i].curFrame() / gameSprites[i].animationDetail().numFrames);
-				float texSizeX = (float)(gameSprites[i].spriteSize().width / (gameSprites[i].spriteSize().width * gameSprites[i].animationDetail().numFrames));
-				gameSprites[i].TexCoord.x = texCoordX;
-				gameSprites[i].TexSize.x = texSizeX;
+			if (gameSprites[i].sprite.canAnimate) {
+				float texCoordX = (float)(gameSprites[i].curFrame() / gameSprites[i].sprite.animation.numFrames);
+				float texSizeX = (float)(gameSprites[i].sprite.size.width / (gameSprites[i].sprite.size.width * gameSprites[i].sprite.animation.numFrames));
+				spritePool[i].TexCoord.x = texCoordX;
+				spritePool[i].TexSize.x = texSizeX;
 			}
 			
 			// Increment the pool index
@@ -273,8 +255,8 @@ bool InitSprites() {
 } // InitSprites
 
 void InitMainMenu() { 
-    gameMenu = new Gui::GameMenu(pD3DDevice, L"../config/main-menu.xml");
-    _spritesToRender = gameMenu->Sprites(gameSprites);
+    gameMenu = new Gui::GameMenu(L"../config/main-menu.xml");
+    //_spritesToRender = gameMenu->Sprites(gameSprites);
 	if (gameMenu->status != Gui::Status::ok) {
 		gameMenu->status;
 	}
@@ -285,11 +267,11 @@ void InitMainMenu() {
 */
 void UpdateSprites() { 
 	for (int i = 0; i < MAX_SPRITES; i++) { 
-		if (gameSprites[i].isVisible() && gameSprites[i].canAnimate()) { 
+		if (gameSprites[i].sprite.isVisible && gameSprites[i].sprite.canAnimate) { 
 			gameSprites[i].incrementFrame();
 
 			// reset the frames if we're past the max # of frames
-			if (gameSprites[i].curFrame() >= gameSprites[i].animationDetail().numFrames) { 
+			if (gameSprites[i].curFrame() >= gameSprites[i].sprite.animation.numFrames) { 
 				gameSprites[i].curFrame(0);
 			}
 		}
@@ -308,14 +290,14 @@ void MoveSprites(float interpolation) {
 
 	// We want to move a moveable sprite of course! 
 	for (int i = 0; i < MAX_SPRITES; i++) {
-		if (gameSprites[i].isVisible() && gameSprites[i].canMove()) { 
+		if (gameSprites[i].sprite.isVisible && gameSprites[i].sprite.canMove) { 
 			// Check to see which direction was pressed
-			float posY = gameSprites[i].position().y;
-			float posX = gameSprites[i].position().x;
-			float moveX = gameSprites[i].getMoveX() * interpolation;
-			float moveY = gameSprites[i].getMoveY() * interpolation;
-			float actualHeight = posY + gameSprites[i].spriteSize().height;
-			float actualWidth = posX + gameSprites[i].spriteSize().width;
+			float posY = gameSprites[i].sprite.position.y;
+			float posX = gameSprites[i].sprite.position.x;
+			float moveX = gameSprites[i].sprite.moveDistance.right * interpolation;
+			float moveY = gameSprites[i].sprite.moveDistance.down * interpolation;
+			float actualHeight = posY + gameSprites[i].sprite.size.height;
+			float actualWidth = posX + gameSprites[i].sprite.size.width;
 
 			// Can the sprite run? we should check that first :) 
 			if (xControl->IsButtonPressedForController(0, GameControls::A_BUTTON)) {
@@ -333,26 +315,26 @@ void MoveSprites(float interpolation) {
             float actualWindowRight = WINDOW_WIDTH;
 
             // Left & Right Offsets
-            if (_offsetLeft < 0) 
-                actualWindowLeft -= _offsetLeft;
-            if (_offsetRight < 0) 
-                actualWindowRight += _offsetRight; 
+            if (windowOffsets.offsetLeft < 0) 
+                actualWindowLeft -= windowOffsets.offsetLeft;
+            if (windowOffsets.offsetRight < 0) 
+                actualWindowRight += windowOffsets.offsetRight; 
 
             // Top & Bottom Offsets
-            if (_offsetTop < 0)
-                actualWindowTop -= _offsetTop;
-			if (_offsetBottom < 0)
-				actualWindowBottom += _offsetBottom;
+            if (windowOffsets.offsetTop < 0)
+                actualWindowTop -= windowOffsets.offsetTop;
+			if (windowOffsets.offsetBottom < 0)
+				actualWindowBottom += windowOffsets.offsetBottom;
 
 			// Direction is right
             if (xControl->IsButtonPressedForController(0, GameControls::DPAD_RIGHT)) { 
 				posX += moveX;
-                if (actualWidth >= actualWindowRight && _offsetRight <= 0) {
-                    posX = actualWindowRight - gameSprites[i].spriteSize().width;
+                if (actualWidth >= actualWindowRight && windowOffsets.offsetRight <= 0) {
+                    posX = actualWindowRight - gameSprites[i].sprite.size.width;
                 } else { 
-                    if (_offsetRight > 0 && actualWidth >= actualWindowRight) { 
-                        _offsetRight -= moveX;
-                        _offsetLeft += moveX;
+                    if (windowOffsets.offsetRight > 0 && actualWidth >= actualWindowRight) { 
+                        windowOffsets.offsetRight -= moveX;
+                        windowOffsets.offsetLeft += moveX;
 
                         // Translate the world to the right
                         ::SpriteUtil::TranslateSprites((moveX *-1),0,gameSprites,0);
@@ -366,12 +348,12 @@ void MoveSprites(float interpolation) {
 			if (xControl->IsButtonPressedForController(0, GameControls::DPAD_LEFT)) { 
 				posX -= moveX;
 
-                if (posX <= actualWindowLeft && _offsetLeft <= 0) {
+                if (posX <= actualWindowLeft && windowOffsets.offsetLeft <= 0) {
                     posX = actualWindowLeft;
                 } else { 
-                    if (_offsetLeft > 0 && posX <= 0) { 
-                        _offsetRight += moveX;
-                        _offsetLeft -= moveX;
+                    if (windowOffsets.offsetLeft > 0 && posX <= 0) { 
+                        windowOffsets.offsetRight += moveX;
+                        windowOffsets.offsetLeft -= moveX;
 
                         // Translate the world to the right
                         ::SpriteUtil::TranslateSprites((moveX),0,gameSprites,0);
@@ -384,13 +366,13 @@ void MoveSprites(float interpolation) {
             // Direction is down
 			if (xControl->IsButtonPressedForController(0, GameControls::DPAD_DOWN)) {
 				posY += moveY;
-				if ( actualHeight >= actualWindowBottom && _offsetBottom <= 0) { 
-					posY = actualWindowBottom - gameSprites[i].spriteSize().height;
+				if ( actualHeight >= actualWindowBottom && windowOffsets.offsetBottom <= 0) { 
+					posY = actualWindowBottom - gameSprites[i].sprite.size.height;
 				} else { 
 					// Check our _offsetBottom if it is a positive nbr we can translate the world up
-					if (_offsetBottom > 0 && actualHeight >= actualWindowBottom) {
-						_offsetBottom -= moveY;
-						_offsetTop += moveY;
+					if (windowOffsets.offsetBottom > 0 && actualHeight >= actualWindowBottom) {
+						windowOffsets.offsetBottom -= moveY;
+						windowOffsets.offsetTop += moveY;
 
 						// Translate the world up
                         ::SpriteUtil::TranslateSprites(0, (moveY * -1), gameSprites, i);
@@ -404,13 +386,13 @@ void MoveSprites(float interpolation) {
             if (xControl->IsButtonPressedForController(0, GameControls::DPAD_UP)) {
 				posY -= moveY;
 
-                if (posY <= actualWindowTop && _offsetTop <= 0) { 
+                if (posY <= actualWindowTop && windowOffsets.offsetTop <= 0) { 
                     posY = actualWindowTop;
                 } else { 
                     // check out _offsetTop if it is a positive nbr we can translate the world down
-                    if (_offsetTop > 0 && posY <= 0) { 
-                        _offsetBottom += moveY;
-                        _offsetTop -= moveY;
+                    if (windowOffsets.offsetTop > 0 && posY <= 0) { 
+                        windowOffsets.offsetBottom += moveY;
+                        windowOffsets.offsetTop -= moveY;
                         
 
                         // Translate the world down
@@ -420,7 +402,9 @@ void MoveSprites(float interpolation) {
                 }
             } // Translate for up
 
-			gameSprites[i].position(posX, posY, gameSprites[i].position().z);
+			gameSprites[i].sprite.position.x = posX;
+			gameSprites[i].sprite.position.y = posY;
+			gameSprites[i].sprite.position.z = gameSprites[i].sprite.position.z;
 		}
 	}
 } // MoveSprites

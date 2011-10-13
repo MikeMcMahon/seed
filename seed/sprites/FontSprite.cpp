@@ -4,11 +4,11 @@ using namespace Sprites;
 
 FontSprite::FontSprite(void)
 {
-	this->canAnimate(false);
+	this->sprite.canAnimate = (false);
 	this->animationDetail(0,0,0);
-	this->canMove(false);
-	this->isVisible(true);
-	this->kindOf = Sprites::font;
+	this->sprite.canMove =(false);
+	this->sprite.isVisible =(true);
+	this->sprite.kindOf = Type::font;
 }
 
 

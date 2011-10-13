@@ -11,7 +11,7 @@ using namespace Gui;
 const struct Menu MENU_FRAME_DEFUALT = { MenuStyle::unused, Type::background, 0, 0, 0, 0, L"" };
 const struct Menu MENU_OPTIONS_DEFAULT = { MenuStyle::relative, Type::cursor, 24, 24, 0, 0, L"" };
 const struct MenuChoice MENU_CHOICE_DEFAULT = { SZ_NORMAL, L"", false };
-const float _buffer = 5;
+const float buffer = 5;
 
 GameMenu::GameMenu(wchar_t* config)
 {
@@ -76,13 +76,13 @@ void GameMenu::LoadConfig(wchar_t* config) {
 
 				// TODO - Implement BOOST String Algs to compare the strings
 				// Handle the menu frame sprite
-				if (0) {
+				if (name.compare(this->menuFrame.resource) == 0) {
 					this->GenerateSprite(this->menuFrame, texture.c_str());
 
 				}
 				
 				// handle the menu options
-				if (0) {
+				if (name.compare(this->menuOptions.resource) == 0) {
 					// Offset the cursor to the left by 5 px padding + width of the cursor 
 					this->menuOptions.x -= (this->menuOptions.width + 5.0f);
 					this->GenerateSprite(this->menuOptions, texture.c_str());
@@ -97,18 +97,20 @@ void GameMenu::LoadConfig(wchar_t* config) {
 			RECT rc; 
 
 			// Create a new font instance
-			ID3DX10Font* pFont;
+			ID3DX10Font* pFont = NULL;
 			x = this->menuOptions.x;
 			y = this->menuOptions.y;
 			for (int i = 0; i < size; i++) { 
 				SetRectEmpty(&rc);
-				FontRect(pFont, NULL, &rc, x, y, this->menuChoices[i].value.c_str());
+				//FontRect(pFont, NULL, &rc, x, y, this->menuChoices[i].value);
 
 				// Calculate the x/y for the next sprite, buffer of 5px
-				y += _buffer + (rc.top - rc.bottom);
+				y += buffer + (rc.top - rc.bottom);
 			}
 			// Cleanup
-			pFont->Release();
+			if (pFont) { 
+				pFont->Release();
+			}
 		} else { 
 			// Invalid config file...duh
 			this->status = Status::failed;
@@ -123,29 +125,23 @@ void GameMenu::LoadConfig(wchar_t* config) {
 	delete document;
 } // LoadConfig
 
-void Gui::GameMenu::GenerateSprite(Gui::Menu menuPresets, const wchar_t* texture, ID3D10Device& pD3DDevice) { 
+void Gui::GameMenu::GenerateSprite(Gui::Menu menuPresets, const wchar_t* texture) { 
 	Sprites::GameSprite* sprite = new Sprites::GameSprite(texture, menuPresets.resource,(float)menuPresets.width, (float)menuPresets.height);
-	sprite->sprite.size.height((float)menuPresets.width, (float)menuPresets.height);
 	sprite->animationDetail(0,0,0);
-	sprite->canAnimate(false);
-	sprite->isVisible(true);
-	sprite->canMove(false);
-	sprite->position((float)menuPresets.x,(float)menuPresets.y,0.5f);
-	sprite->setMoveDistance(0,0);
-	sprite->TexCoord.x = 0;
-	sprite->TexCoord.y = 0;
-	sprite->TexSize.x = 1.0f;
-	sprite->TexSize.y = 1.0f;
-	sprite->TextureIndex = 0;
-	sprite->ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	sprite->sprite.canAnimate = (false);
+	sprite->sprite.isVisible = (true);
+	sprite->sprite.canMove = (false);
+	sprite->sprite.position.x = menuPresets.x;
+	sprite->sprite.position.y = menuPresets.y;
+	sprite->sprite.moveDistance.up = 0;
+	sprite->sprite.moveDistance.down= 0;
+	sprite->sprite.moveDistance.left = 0;
+	sprite->sprite.moveDistance.right = 0;
 
 	if (menuPresets.type == Type::background) 
 		this->background = sprite;
 	if (menuPresets.type == Type::cursor)
 		this->cursor = sprite;
-
-	ZeroMemory(&menuPresets, sizeof(menuPresets));
-	pD3DDevice.Release();
 } // GenerateSprite
 
 

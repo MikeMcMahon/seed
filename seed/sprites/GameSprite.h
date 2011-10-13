@@ -17,9 +17,6 @@ namespace Sprites {
 		float			curFrame();
 		void			curFrame(float newFrame);
 		void			incrementFrame();
-		void			setMoveDistance( float x, float y );
-		float			getMoveX();
-		float			getMoveY();
 		void			nextFrame();
 		void			ResetSpriteAnim();
 	}; // GameSprite

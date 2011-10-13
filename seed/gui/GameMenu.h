@@ -3,10 +3,11 @@
 #include "../sprites/GameSprite.h"
 
 namespace Gui { 
+
 	struct Status { enum code { 
 		ok,
 		failed };};
-	struct MenuStyle {enum style {
+	struct MenuStyle { enum style {
 		absolute,
 		relative,
 		unused};};
