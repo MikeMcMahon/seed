@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GameMenu.h"
+
 const char* CONFIG_MENU_ROOT					("MenuConfig");
 const char* CONFIG_MENU_FRAME					("MenuFrame");
 const char* CONFIG_TEXTURE_RESOURCE_ROOT		("TextureResources");
@@ -24,3 +26,5 @@ const char* CONFIG_MENU_OPTION_STYLE_FILL		("fill");
 const char* CONFIG_MENU_OPTION_CURSOR			("cursor");
 const char* CONFIG_MENU_OPTION_DEFAULT			("default");
 const char* CONFIG_MENU_OPTION_VALUE			("value");
+
+const float _buffer = 5;

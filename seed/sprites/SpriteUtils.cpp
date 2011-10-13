@@ -11,12 +11,8 @@ void ::SpriteUtil::TranslateSprites(float x, float y, GameSprite* gameSprites, i
 		if (i == ignore) 
 			continue;	// Skip this loop and continue on
 
-		float sX = (gameSprites + i)->position().x + x;
-		float sY = (gameSprites + i)->position().y + y;
-		float sZ = (gameSprites + i)->position().z;	// Unchanged
-
-		(gameSprites + i)->position(sX, sY, sZ);
+		float sX = (gameSprites + i)->sprite.position.x += x;
+		float sY = (gameSprites + i)->sprite.position.y += y;
 	}
 } // TranslateSprites
-
 /* eof */

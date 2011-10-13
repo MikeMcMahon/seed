@@ -21,11 +21,11 @@ namespace Gui {
 		float width;
 		float x;
 		float y;
-		std::wstring resource;
+		wchar_t* resource;
 	};
 	struct MenuChoice {
 		float height;
-		std::wstring value;
+		wchar_t* value;
 		bool isDefault;
 	};
     class GameMenu
@@ -39,7 +39,7 @@ namespace Gui {
 		Sprites::GameSprite* cursor;
 		int menuChoiceHeight;
     public:
-        GameMenu(ID3D10Device*, wchar_t*);
+        GameMenu(wchar_t*);
         ~GameMenu(void);
         int Sprites(Sprites::GameSprite *);
 		int HandleDownButton(Sprites::GameSprite *);
@@ -47,11 +47,11 @@ namespace Gui {
 		int HandleInteractButton(Sprites::GameSprite *);
 		Status::code status;
     private:
-        void Init(ID3D10Device*);
-		void LoadConfig(wchar_t*,ID3D10Device*);
+        void Init();
+		void LoadConfig(wchar_t*);
 		bool LoadMenuFrameConfig(Xml::Node& menuFrame);
-		void GenerateSprite(Menu menuOptions, const wchar_t* texture, ID3D10Device& pD3DDevice); 
-		void GenerateFontSprite(MenuChoice menuChoice, const wchar_t* text, ID3D10Device* pD3DDevice); // TODO - Implement the fontsprite impl. 
+		void GenerateSprite(Menu menuOptions, const wchar_t* texture); 
+		void GenerateFontSprite(MenuChoice menuChoice, const wchar_t* text); // TODO - Implement the fontsprite impl. 
     }; // GameMenu
 }
 /* eof */

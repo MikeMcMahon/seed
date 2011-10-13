@@ -13,11 +13,10 @@ const struct Menu MENU_OPTIONS_DEFAULT = { MenuStyle::relative, Type::cursor, 24
 const struct MenuChoice MENU_CHOICE_DEFAULT = { SZ_NORMAL, L"", false };
 const float _buffer = 5;
 
-GameMenu::GameMenu(ID3D10Device* pD3DDevice, wchar_t* config)
+GameMenu::GameMenu(wchar_t* config)
 {
     // TODO - Implement loading of the XML Files
-	this->LoadConfig(config, pD3DDevice);
-	// this->Init(pD3DDevice);
+	this->LoadConfig(config);
 }
 
 
@@ -33,7 +32,7 @@ GameMenu::~GameMenu(void)
 /*
  Loads the config specified when this menu was created
 */
-void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) { 
+void GameMenu::LoadConfig(wchar_t* config) { 
 	_bstr_t configFile(config);
 	Xml::Document* document = new Xml::Document(configFile);
 
@@ -75,17 +74,18 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 				texture.append(textureDir);
 				texture.append(image);
 
+				// TODO - Implement BOOST String Algs to compare the strings
 				// Handle the menu frame sprite
-				if (this->menuFrame.resource.compare(name) == 0) {
-					this->GenerateSprite(this->menuFrame, texture.c_str(), *pD3DDevice);
+				if (0) {
+					this->GenerateSprite(this->menuFrame, texture.c_str());
 
 				}
 				
 				// handle the menu options
-				if (this->menuOptions.resource.compare(name) == 0) {
+				if (0) {
 					// Offset the cursor to the left by 5 px padding + width of the cursor 
 					this->menuOptions.x -= (this->menuOptions.width + 5.0f);
-					this->GenerateSprite(this->menuOptions, texture.c_str(), *pD3DDevice);
+					this->GenerateSprite(this->menuOptions, texture.c_str());
 				}
 
 				// Cleanup the texture string
@@ -100,7 +100,6 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 			ID3DX10Font* pFont;
 			x = this->menuOptions.x;
 			y = this->menuOptions.y;
-			InitFont(pD3DDevice, &pFont, this->menuChoices.at(0).height, 0, FW_NORMAL, ARIAL);
 			for (int i = 0; i < size; i++) { 
 				SetRectEmpty(&rc);
 				FontRect(pFont, NULL, &rc, x, y, this->menuChoices[i].value.c_str());
@@ -120,15 +119,13 @@ void GameMenu::LoadConfig(wchar_t* config, ID3D10Device* pD3DDevice) {
 	}
 
 	// Cleanup
-	pD3DDevice->Release();
+	document = NULL;
 	delete document;
 } // LoadConfig
 
 void Gui::GameMenu::GenerateSprite(Gui::Menu menuPresets, const wchar_t* texture, ID3D10Device& pD3DDevice) { 
-	Sprites::GameSprite* sprite = new Sprites::GameSprite();
-	sprite->Name(menuPresets.resource);
-	sprite->Texture(texture, &pD3DDevice);
-	sprite->spriteSize((float)menuPresets.width, (float)menuPresets.height);
+	Sprites::GameSprite* sprite = new Sprites::GameSprite(texture, menuPresets.resource,(float)menuPresets.width, (float)menuPresets.height);
+	sprite->sprite.size.height((float)menuPresets.width, (float)menuPresets.height);
 	sprite->animationDetail(0,0,0);
 	sprite->canAnimate(false);
 	sprite->isVisible(true);
@@ -209,76 +206,4 @@ int GameMenu::Sprites(Sprites::GameSprite *sprites) {
 	return 0;
 }
 
-/*
-** Deprecated ** 
-Inits a game menu with statically set sprites
-*/
-void GameMenu::Init(ID3D10Device* pD3DDevice) {
-    Sprites::GameSprite background;
-    Sprites::GameSprite aButton; 
-    
-    // Load the texture resources for them
-    ID3D10Texture2D* bgTexture = GameUtil::TextureHandler::GetTexture2DFromFile(L"../textures/main-menu-1024x768.png", pD3DDevice);
-    ID3D10Texture2D* btnTexture = GameUtil::TextureHandler::GetTexture2DFromFile(L"../textures/a-button-32x32.png", pD3DDevice); 
-
-    // Test the textures
-    if (!(bgTexture && btnTexture))
-        return;
-
-    // Resource View
-    ID3D10ShaderResourceView * bgRscView;
-    ID3D10ShaderResourceView * btnRscView;
-	GameUtil::TextureHandler::GetResourceViewFromTexture(bgTexture, &bgRscView, pD3DDevice);
-    GameUtil::TextureHandler::GetResourceViewFromTexture(btnTexture, &btnRscView, pD3DDevice);
-
-    // Release the textures
-    bgTexture->Release();
-    btnTexture->Release();
-
-    // Create the sprites
-    Sprites::GameSprite backgroundSprite;
-    Sprites::GameSprite aButtonSprite;
-	wchar_t* foo = L"background";
-	backgroundSprite.Name(foo);
-    backgroundSprite.curFrame(0);
-    backgroundSprite.animationDetail(0,0,0);
-    backgroundSprite.pTexture = bgRscView;
-    backgroundSprite.TexCoord.x = 0;
-    backgroundSprite.TexCoord.y = 0;
-    backgroundSprite.TexSize.x = 1.0f;
-    backgroundSprite.TexSize.y = 1.0f;
-    backgroundSprite.TextureIndex = 0;
-    backgroundSprite.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	backgroundSprite.position(
-		0,
-		0,
-		0.5f);
-	backgroundSprite.isVisible(true);
-	backgroundSprite.canAnimate(false);
-	backgroundSprite.canMove(false);
-    backgroundSprite.spriteSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-    aButtonSprite.curFrame(0);
-    aButtonSprite.animationDetail(0,0,0);
-    aButtonSprite.pTexture = btnRscView;
-    aButtonSprite.TexCoord.x = 0;
-    aButtonSprite.TexCoord.y = 0;
-    aButtonSprite.TexSize.x = 1.0f;
-    aButtonSprite.TexSize.y = 1.0f;
-    aButtonSprite.TextureIndex = 0;
-    aButtonSprite.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	aButtonSprite.position(
-		441,
-		358,
-		0.5f);
-	aButtonSprite.isVisible(true);
-	aButtonSprite.canAnimate(false);
-	aButtonSprite.canMove(true);
-    aButtonSprite.spriteSize(24,24);
-    aButtonSprite.setMoveDistance(1,1);
-
-    // add the sprites
-    this->menuOpts.push_back(backgroundSprite);
-	this->menuOpts.push_back(aButtonSprite);
-} // Init
 /* eof */
