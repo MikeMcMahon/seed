@@ -110,6 +110,9 @@
     <ClInclude Include="sprites\FontSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sprites\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="textures\text_1_64x64.png">

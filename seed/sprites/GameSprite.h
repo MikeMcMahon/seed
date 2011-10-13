@@ -31,7 +31,6 @@ namespace Sprites {
 		}; // ANIMATION
 	
 	private:
-		void LoadTexture(ID3D10Device* pD3DDevice);		// Tries to load the texture resource
 		int defaultStateFrameX;			// Default start x frame
 		int defaultStateFrameY;			// Default start y frame (likely wont use)
 		std::wstring textureResourceName;	// Location where we can find the map file

@@ -103,6 +103,7 @@
     <ClInclude Include="input\GameControls.h" />
     <ClInclude Include="input\KMInput.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="sprites\Sprite.h" />
     <ClInclude Include="util\TextureHandler.h" />
     <ClInclude Include="sprites\SpriteUtils.h" />
     <ClInclude Include="util\Time.h" />
