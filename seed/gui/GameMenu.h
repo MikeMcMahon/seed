@@ -1,5 +1,7 @@
 #pragma once
 
+#define RESOURCE_BUFFER 200
+
 #include "../sprites/GameSprite.h"
 
 namespace Gui { 
@@ -22,7 +24,7 @@ namespace Gui {
 		float width;
 		float x;
 		float y;
-		wchar_t* resource;
+		wchar_t resource[RESOURCE_BUFFER];
 	};
 	struct MenuChoice {
 		float height;
@@ -36,8 +38,8 @@ namespace Gui {
 		Menu menuOptions;
 		std::vector<MenuChoice> menuChoices;
         std::vector<Sprites::GameSprite> menuOpts;
-		Sprites::GameSprite* background;
-		Sprites::GameSprite* cursor;
+		Sprites::GameSprite background;
+		Sprites::GameSprite cursor;
 		int menuChoiceHeight;
     public:
         GameMenu(wchar_t*);

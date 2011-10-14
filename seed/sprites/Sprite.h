@@ -35,8 +35,8 @@ namespace Sprites {
 			right;
 	};
 	struct Sprite { 
-		const wchar_t*	name;
-		const wchar_t*	resource;
+		std::wstring	name;
+		std::wstring	resource;
 		Type::type		kindOf;
 		Position		position;
 		Size			size;

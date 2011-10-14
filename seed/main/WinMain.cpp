@@ -19,7 +19,7 @@ using namespace GameUtil;
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
 int numActiveSprites = 0;
-GameSprite gameSprites[MAX_SPRITES];
+GameSprite gameSprites[MAX_SPRITES] = { GameSprite() };
 
 // D3D GLOBALS ////////////////////////////////
 ID3D10Device* pD3DDevice = NULL;
@@ -37,6 +37,7 @@ ID3D10BlendState* pFontOriginalBlendState10 = NULL;
 ID3D10ShaderResourceView* gSpriteTextureRV = NULL;
 
 // Sprite stuff
+TextureHandler* pTextureHandler = NULL;
 ID3DX10Sprite* pSpriteObject = NULL;
 D3DX10_SPRITE  spritePool[NUM_POOL_SPRITES];
 ID3DX10Font* pGameFont = NULL;
@@ -57,12 +58,19 @@ void UpdateScene();
 void MoveSprites(float);
 void UpdateSprites(); 
 bool InitSprites();
-bool HasFrameElapsed(); 
 void InitMainMenu();
 
-// Main entry point
+/**************************************
+*** Main Application entry point
+*** 
+***************************************/
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) 
 {
+	DEVMODE dm = { 0 };
+	dm.dmSize = sizeof(dm);
+	for (int iModeNum = 0; EnumDisplaySettings( NULL, iModeNum, &dm ) != 0; iModeNum++) { 
+		
+	}
 	// Initialize the window
 	if (!InitWindow(hInstance, WINDOW_WIDTH, WINDOW_HEIGHT, &wndHandle) ) {
 		return false;
@@ -120,6 +128,10 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	return (int)msg.wParam;
 }
 
+/**************************************
+*** Renders the sprites to the buffer
+*** 
+***************************************/
 void Render() {
 	FLOAT OriginalBlendFactor[4];
     UINT  OriginalSampleMask = 0;
@@ -164,9 +176,10 @@ void Render() {
 	}
 } // Render 
 
-/*
-* UpdateScene is really what updates the texture locations and orients the sprites to the world
-*/
+/**************************************
+*** updates the texture locations and orients the sprites to the world 
+*** 
+***************************************/
 float rotate = -0.0174532925f;
 void UpdateScene() {
 	D3DXMATRIX matScaling;
@@ -201,7 +214,7 @@ void UpdateScene() {
 			//final = matScaling * matTranslation;
 			gameSprites[i].matWorld = final;
 			*/ 
-			spritePool[i].matWorld = matScaling * matTranslation;
+			spritePool[i].matWorld = (matScaling * matTranslation);
 			
 			// Animate the sprite
 			if (gameSprites[i].sprite.canAnimate) {
@@ -220,9 +233,10 @@ void UpdateScene() {
 	numActiveSprites = curPoolIndex;
 } // UpdateScene 
 
-/*
-* InitSprites creates the inital sprites either on game start or transition 
-*/
+/**************************************
+*** creates the inital sprites either on game start or transition 
+*** 
+***************************************/
 bool InitSprites() {
 	ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
     ZeroMemory(&windowOffsets, sizeof(WindowOffsets)); 
@@ -256,15 +270,17 @@ bool InitSprites() {
 
 void InitMainMenu() { 
     gameMenu = new Gui::GameMenu(L"../config/main-menu.xml");
-    //_spritesToRender = gameMenu->Sprites(gameSprites);
-	if (gameMenu->status != Gui::Status::ok) {
-		gameMenu->status;
+    _spritesToRender = gameMenu->Sprites(gameSprites);
+	if (gameMenu->status == Gui::Status::ok) {
+		LoadTexturesForSprites();
 	}
 }
 
-/*
-* UpdateSprites() is what handles the animation, on sprites that can animate it increments the frame and resets the frame counter on those that need it. 
-*/
+/**************************************
+*** Handles incrementing the animation frame 
+*** Sprites must maintain their own knowledge of FPS 
+*** TODO - sprites should animate on time without having to calculate skips themselves
+***************************************/
 void UpdateSprites() { 
 	for (int i = 0; i < MAX_SPRITES; i++) { 
 		if (gameSprites[i].sprite.isVisible && gameSprites[i].sprite.canAnimate) { 
@@ -278,9 +294,10 @@ void UpdateSprites() {
 	}
 } // UpdateSprites
 
-/*
-*  MoveSprites - moves the sprites their x/y distance times the interpolation (delay from rendering)!
-*/
+/**************************************
+*** moves the sprites their x/y distance 
+*** times the interpolation (delay from rendering)!
+***************************************/
 void MoveSprites(float interpolation) { 
 	// Check the gamemode
 	if (GAMEMODE == ::GameModes::MAIN_MENU) {
@@ -410,6 +427,41 @@ void MoveSprites(float interpolation) {
 } // MoveSprites
 
 /*******************************************
+***    Loads the textures for the sprites
+***    
+*******************************************/
+int LoadTexturesForSprites() {
+	int c = 0; // Sprites to render 
+	int i = 0; 
+	while (i < MAX_SPRITES) {
+		if (gameSprites[i].sprite.isVisible) { 
+			// Check and load textures for any sprites that still need it
+			ID3D10Texture2D* texture = TextureHandler::GetTexture2DFromFile(gameSprites[i].sprite.resource.c_str(), pD3DDevice);
+			if (texture) { 
+				ID3D10ShaderResourceView* srv;
+				TextureHandler::GetResourceViewFromTexture(texture, &srv, pD3DDevice);
+				texture->Release();
+				texture = NULL;
+
+				// Set the srv into the poolSprite
+				spritePool[i].pTexture = srv;
+				spritePool[i].TextureIndex = 0;
+				spritePool[i].TexCoord.x = 0;
+				spritePool[i].TexCoord.y = 0;
+				spritePool[i].TexSize.x = 1.0f;
+				spritePool[i].TexSize.y = 1.0f;
+				spritePool[i].ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+			}
+			c++;
+		}
+		i++;
+	}
+
+	return c;
+}
+
+
+/*******************************************
 ***    For starting and shutting down
 ***    The directx interface
 *******************************************/
@@ -490,6 +542,10 @@ bool InitDirect3D(HWND hWnd, int windowWidth, int windowHeight) {
 	return true;
 } // InitDirect3D
 
+/**************************************
+*** Shuts down the Direct3D Interface
+***
+***************************************/
 void ShutdownDirect3D() {
 	// Release the original blend state object
 	if (pOriginalBlendState10 != NULL){
@@ -524,3 +580,4 @@ void ShutdownDirect3D() {
 		pD3DDevice->Release();
 	}
 } // ShutdownDirect3D
+/* eof */

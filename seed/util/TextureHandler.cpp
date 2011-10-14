@@ -15,6 +15,9 @@ ID3D10Texture2D* ::TextureHandler::GetTexture2DFromFile(LPCWSTR filename, ID3D10
 	// Translate the resource into a 2D texture
 	pD3D10Resource->QueryInterface(__uuidof( ID3D10Texture2D), (LPVOID*)&texture2D);
 	pD3D10Resource->Release();
+	pD3D10Resource = NULL;
+	pD3DDevice->Release();
+	pD3DDevice = NULL;
 
 	// Returns the ID3D10Texture2D Object
 	return texture2D;
@@ -35,6 +38,11 @@ void ::TextureHandler::GetResourceViewFromTexture(ID3D10Texture2D* texture, ID3D
 		SRVDesc.Texture2D.MipLevels = desc.MipLevels;
 			
 		pD3DDevice->CreateShaderResourceView(texture, &SRVDesc, resourceView);
+
+		texture->Release();
+		texture = NULL;
+		pD3DDevice->Release();
+		pD3DDevice = NULL;
 	}
 } // GetResourceViewFromTexture
 

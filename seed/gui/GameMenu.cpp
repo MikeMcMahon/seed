@@ -97,7 +97,7 @@ void GameMenu::LoadConfig(wchar_t* config) {
 			RECT rc; 
 
 			// Create a new font instance
-			ID3DX10Font* pFont = NULL;
+			// ID3DX10Font* pFont = NULL;
 			x = this->menuOptions.x;
 			y = this->menuOptions.y;
 			for (int i = 0; i < size; i++) { 
@@ -108,9 +108,9 @@ void GameMenu::LoadConfig(wchar_t* config) {
 				y += buffer + (rc.top - rc.bottom);
 			}
 			// Cleanup
-			if (pFont) { 
-				pFont->Release();
-			}
+			//if (pFont) { 
+			//	pFont->Release();
+			//}
 		} else { 
 			// Invalid config file...duh
 			this->status = Status::failed;
@@ -126,17 +126,17 @@ void GameMenu::LoadConfig(wchar_t* config) {
 } // LoadConfig
 
 void Gui::GameMenu::GenerateSprite(Gui::Menu menuPresets, const wchar_t* texture) { 
-	Sprites::GameSprite* sprite = new Sprites::GameSprite(texture, menuPresets.resource,(float)menuPresets.width, (float)menuPresets.height);
-	sprite->animationDetail(0,0,0);
-	sprite->sprite.canAnimate = (false);
-	sprite->sprite.isVisible = (true);
-	sprite->sprite.canMove = (false);
-	sprite->sprite.position.x = menuPresets.x;
-	sprite->sprite.position.y = menuPresets.y;
-	sprite->sprite.moveDistance.up = 0;
-	sprite->sprite.moveDistance.down= 0;
-	sprite->sprite.moveDistance.left = 0;
-	sprite->sprite.moveDistance.right = 0;
+	Sprites::GameSprite sprite(texture, menuPresets.resource,(float)menuPresets.width, (float)menuPresets.height);
+	sprite.animationDetail(0,0,0);
+	sprite.sprite.canAnimate = (false);
+	sprite.sprite.isVisible = (true);
+	sprite.sprite.canMove = (false);
+	sprite.sprite.position.x = menuPresets.x;
+	sprite.sprite.position.y = menuPresets.y;
+	sprite.sprite.moveDistance.up = 0;
+	sprite.sprite.moveDistance.down= 0;
+	sprite.sprite.moveDistance.left = 0;
+	sprite.sprite.moveDistance.right = 0;
 
 	if (menuPresets.type == Type::background) 
 		this->background = sprite;
@@ -154,14 +154,16 @@ bool Gui::GameMenu::LoadMenuFrameConfig(Xml::Node& menuFrameNode) {
 	this->menuFrame.y = (menuFrameNode.attribute[CONFIG_POS_X].exists) ? menuFrameNode.attribute[CONFIG_POS_Y] : 0;
 	this->menuFrame.width = (menuFrameNode.attribute[CONFIG_WIDTH].isNumeric) ? menuFrameNode.attribute[CONFIG_WIDTH] : WINDOW_WIDTH;
 	this->menuFrame.height = (menuFrameNode.attribute[CONFIG_HEIGHT].isNumeric) ? menuFrameNode.attribute[CONFIG_HEIGHT] : WINDOW_HEIGHT;
-	this->menuFrame.resource = (menuFrameNode.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].exists) ? (menuFrameNode.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].bstr) : L"";
+	wchar_t* tmp = (menuFrameNode.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].exists) ? (menuFrameNode.attribute[CONFIG_MENU_FRAME_TEXTURE_RESOURCE].x_getBstr()) : L"";
+	wcscpy_s(this->menuFrame.resource, tmp);
 
 	// Get all of the menu choices
 	Xml::Node options = menuFrameNode.child[CONFIG_MENU_OPTIONS];
 	wchar_t* name = options.name;
 	
 	// Handle the cursor
-	this->menuOptions.resource = (options.attribute[CONFIG_MENU_OPTION_CURSOR].exists) ? (options.attribute[CONFIG_MENU_OPTION_CURSOR].bstr) : L"";
+	tmp = (options.attribute[CONFIG_MENU_OPTION_CURSOR].exists) ? (options.attribute[CONFIG_MENU_OPTION_CURSOR].bstr) : L"";
+	wcscpy_s(this->menuOptions.resource, tmp);
 	this->menuOptions.x = (options.attribute[CONFIG_POS_X].exists) ? (options.attribute[CONFIG_POS_X]) : 0;
 	this->menuOptions.y = (options.attribute[CONFIG_POS_Y].exists) ? (options.attribute[CONFIG_POS_Y]) : 0;
 	int fontHeight = options.attribute["font-height"].exists ? options.attribute["font-height"] : 20;
@@ -182,21 +184,18 @@ bool Gui::GameMenu::LoadMenuFrameConfig(Xml::Node& menuFrameNode) {
  Returns the number of sprites to draw
  sprites is the sprite array you wish to have filled with sprites
 */
-int GameMenu::Sprites(Sprites::GameSprite *sprites) { 
-    Sprites::GameSprite nSprites[MAX_SPRITES];
-
+int GameMenu::Sprites(Sprites::GameSprite* sprites) { 
 	// Assign the sprites in order 
 	// Background
 	// Cursor
-	*sprites++ = (*this->background);
-	*sprites++ = (*this->cursor);
+	*sprites++ = this->background;
+	*sprites++ = this->cursor;
 
 	int size = this->menuOpts.size();
     for (int i = 0; i < size; i++) {
         *sprites++ = (this->menuOpts.at(i));
     }
-	
-	
+		
     // Return the size
     return size += 2;
 	return 0;
