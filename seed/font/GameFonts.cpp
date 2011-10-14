@@ -22,12 +22,12 @@ bool InitFont(ID3D10Device* device, ID3DX10Font** font, int height, UINT width, 
 	return true;
 }
 
-void DrawTextNow(ID3DX10Font* pFont,ID3DX10Sprite* pSprite, float x, float y, LPCWSTR text, D3DXCOLOR color) {
+void DrawTextNow(ID3DX10Font* pFont,ID3DX10Sprite* pSprite, float x, float y, LPCSTR text, D3DXCOLOR color) {
 	RECT rc;
 	SetRectEmpty(&rc);
 
 	// Get the rectangle dimension
-	pFont->DrawTextW(pSprite,text,-1,&rc,DT_CALCRECT,color);
+	pFont->DrawTextA(pSprite,text,-1,&rc,DT_CALCRECT,color);
 
 	// Apply the x/y if there is one
 	if (x > 0) { 
@@ -40,7 +40,7 @@ void DrawTextNow(ID3DX10Font* pFont,ID3DX10Sprite* pSprite, float x, float y, LP
 	}
 
 	// Actually draw the text
-	pFont->DrawTextW(pSprite, text, -1, &rc, 0, color);
+	pFont->DrawTextA(pSprite, text, -1, &rc, 0, color);
 }
 
 void FontRect(ID3DX10Font* pFont,ID3DX10Sprite* pSprite, RECT* rect, float x, float y, LPCWSTR text) { 

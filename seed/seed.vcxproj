@@ -80,13 +80,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="sprites\FontSprite.cpp" />
-    <ClCompile Include="gui\GameMenu.cpp" />
+    <ClCompile Include="gui\StartMenu.cpp" />
     <ClCompile Include="gui\GameWindow.cpp" />
     <ClCompile Include="input\KMInput.cpp" />
     <ClCompile Include="main\DXDrawing.cpp" />
     <ClCompile Include="sprites\SpriteUtils.cpp" />
     <ClCompile Include="util\TextureHandler.cpp" />
     <ClCompile Include="util\Time.cpp" />
+    <ClInclude Include="main\GameMain.h" />
     <ClInclude Include="sprites\FontSprite.h" />
     <ClInclude Include="font\GameFonts.h">
       <FileType>CppCode</FileType>
@@ -97,7 +98,7 @@
     <ClCompile Include="sprites\GameSprite.cpp" />
     <ClCompile Include="main\WinMain.cpp" />
     <ClCompile Include="input\XGamePad.cpp" />
-    <ClInclude Include="gui\GameMenu.h" />
+    <ClInclude Include="gui\StartMenu.h" />
     <ClInclude Include="gui\GameWindow.h" />
     <ClInclude Include="gui\MenuConstants.h" />
     <ClInclude Include="input\GameControls.h" />

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameMenu.h"
+#include "StartMenu.h"
 
 const char* CONFIG_MENU_ROOT					("MenuConfig");
 const char* CONFIG_MENU_FRAME					("MenuFrame");

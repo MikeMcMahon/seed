@@ -6,23 +6,24 @@ namespace Sprites {
 	class FontSprite :
 		public Sprites::GameSprite
 	{
-	private:
-		std::wstring message;
-		D3DXCOLOR color;
-		D3DXCOLOR hiColor;
-		D3DXCOLOR loColor;
-		bool selected;
 	public:
-		FontSprite(void);
-		~FontSprite(void);
-		void Message(LPCWSTR message);
-		void FontColor(D3DXCOLOR color);
-		D3DXCOLOR FontColor(); 
+		struct Color { 
+			float r;
+			float g;
+			float b;
+			float a;
+		};
 
-		// TODO - implement the selected functionality 
-		bool isSelected(); 
-		void isSelected(bool selected);
-		LPCWSTR Message();
+		FontSprite(void);
+		FontSprite(LPCSTR message);
+		~FontSprite(void);
+
+		std::string message;
+		Color fontColor;
+		Color fontColorDisabled;
+		Color fontColorHi;
+		Color fontSize;
+		bool selected;
 	};
 }
 /* eof */

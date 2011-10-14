@@ -2,13 +2,12 @@
 
 using namespace Sprites;
 
+const struct FontSprite::Color DEFAULT	= { 0.0f, 0.0f, 0.0f, 1.0f };
+const struct FontSprite::Color DISABLED	= { 0.5f, 0.5f, 0.5f, 1.0f };
+const struct FontSprite::Color HILIGHT	= { 1.0f, 0.0f, 0.0f, 0.0f };
+
 FontSprite::FontSprite(void)
 {
-	this->sprite.canAnimate = (false);
-	this->animationDetail(0,0,0);
-	this->sprite.canMove =(false);
-	this->sprite.isVisible =(true);
-	this->sprite.kindOf = Type::font;
 }
 
 
@@ -16,14 +15,11 @@ FontSprite::~FontSprite(void)
 {
 }
 
-LPCWSTR FontSprite::Message() { 
-	return this->message.c_str();
-}
-
-void FontSprite::Message(LPCWSTR message) { 
+FontSprite::FontSprite(LPCSTR message) { 
+	this->sprite.kindOf = Type::font;
+	this->fontColor = DEFAULT;
+	this->fontColorDisabled = DISABLED;
+	this->fontColorHi = HILIGHT;
 	this->message = message;
-}
-
-void FontSprite::FontColor(D3DXCOLOR color) { 
-	this->color = color;
+	this->selected = false;
 }

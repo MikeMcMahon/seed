@@ -14,5 +14,5 @@
 #define FNT_GRAY  D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f)
 
 bool InitFont(ID3D10Device* device, ID3DX10Font** font, int height, UINT width, UINT fontWeight, LPCWSTR fontFace);
-void DrawTextNow(ID3DX10Font* pFont,ID3DX10Sprite* pSprite, float x, float y, LPCWSTR text, D3DXCOLOR color = FNT_BLACK);
+void DrawTextNow(ID3DX10Font* pFont,ID3DX10Sprite* pSprite, float x, float y, LPCSTR text, D3DXCOLOR color = FNT_BLACK);
 void FontRect(ID3DX10Font* pFont,ID3DX10Sprite* pSprite, RECT* rect, float x, float y, LPCWSTR text);

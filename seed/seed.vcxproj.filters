@@ -51,10 +51,10 @@
     <ClCompile Include="gui\GameWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui\GameMenu.cpp">
+    <ClCompile Include="sprites\FontSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sprites\FontSprite.cpp">
+    <ClCompile Include="gui\StartMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,9 +95,6 @@
     <ClInclude Include="gui\GameWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gui\GameMenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="input\GameControls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -111,6 +108,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprites\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\StartMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\GameMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

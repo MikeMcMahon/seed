@@ -11,7 +11,7 @@ Sprites::GameSprite::GameSprite() {
 	this->Init();
 }
 
-Sprites::GameSprite::GameSprite(const wchar_t* resource, const wchar_t* name, float width, float height) { 
+Sprites::GameSprite::GameSprite(const char* resource, const char* name, float width, float height) { 
 	this->Init();
 	ZeroMemory(&(this->sprite.position), sizeof(Position));
 

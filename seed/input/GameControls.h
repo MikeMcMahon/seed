@@ -2,6 +2,7 @@
 
 namespace Input { 
 	struct GameControls { 
+		struct XboxController { 
 		enum XButtons { 
 			DPAD_UP = XINPUT_GAMEPAD_DPAD_UP,
 			DPAD_DOWN = XINPUT_GAMEPAD_DPAD_DOWN,
@@ -17,19 +18,23 @@ namespace Input {
 			B_BUTTON = XINPUT_GAMEPAD_B,
 			X_BUTTON = XINPUT_GAMEPAD_X,
 			Y_BUTTON = XINPUT_GAMEPAD_Y
-		};
+		};}; // XboXController
+
+		struct Controls { 
 		enum Buttons { 
-			KEY_UP,
-			KEY_DOWN,
-			KEY_LEFT,
-			KEY_RIGHT,
-			KEY_START,
+			KEY_NULL	= 0x0,
+			KEY_UP		= 0x1,
+			KEY_DOWN	= (KEY_UP * 2),
+			KEY_LEFT	= (KEY_DOWN * 2),
+			KEY_RIGHT	= (KEY_LEFT * 2),
+			KEY_START	= (KEY_RIGHT * 2),
 			KEY_PAUSE = KEY_START,
-			KEY_BACK,
-			KEY_SELECT = KEY_BACK,
-			KEY_INTERACT,
-			KEY_RUN,
-			KEY_CANCEL
-		}; // Buttons
+			KEY_SELECT	= (KEY_PAUSE * 2),
+			KEY_INTERACT= (KEY_SELECT * 2),
+			KEY_RUN		= (KEY_INTERACT * 2),
+			KEY_CANCEL	= (KEY_RUN * 2)
+		};}; // Buttons
 	};
 }
+
+/* eof */

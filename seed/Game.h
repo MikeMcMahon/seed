@@ -15,9 +15,6 @@
 #include <vector>
 #include <string>
 
-#include <comutil.h>
-#include <XmlHelper.h>
-
 // Required for rendering stuff on time
 #define TICKS_PER_SECOND 60
 #define SKIP_TICKS (1000.0f / (float)TICKS_PER_SECOND)

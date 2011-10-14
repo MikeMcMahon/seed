@@ -8,9 +8,9 @@
 #include "../gui/GameWindow.h"
 #include "../util/TextureHandler.h"
 #include "../util/Time.h"
-#include "../gui/GameMenu.h"
+#include "../gui/StartMenu.h"
 #include "../font/GameFonts.h"
-
+#include "GameMain.h"
 
 using namespace Input;
 using namespace Sprites;
@@ -46,8 +46,7 @@ ID3DX10Font* pGameFont = NULL;
 XGamePad* xControl;
 
 // Game Mode
-GameModes::MODES GAMEMODE = GameModes::MAIN_MENU;
-Gui::GameMenu* gameMenu;
+GameModes::modes GAMEMODE = GameModes::MAIN_MENU;
 
 // Windowing stuff //////////////////////////////
 WindowOffsets windowOffsets;
@@ -58,7 +57,6 @@ void UpdateScene();
 void MoveSprites(float);
 void UpdateSprites(); 
 bool InitSprites();
-void InitMainMenu();
 
 /**************************************
 *** Main Application entry point
@@ -66,11 +64,13 @@ void InitMainMenu();
 ***************************************/
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) 
 {
-	DEVMODE dm = { 0 };
+	// TODO - Implement resulation changing? Maybe? 
+	/*DEVMODE dm = { 0 };
 	dm.dmSize = sizeof(dm);
 	for (int iModeNum = 0; EnumDisplaySettings( NULL, iModeNum, &dm ) != 0; iModeNum++) { 
 		
-	}
+	}*/
+
 	// Initialize the window
 	if (!InitWindow(hInstance, WINDOW_WIDTH, WINDOW_HEIGHT, &wndHandle) ) {
 		return false;
@@ -151,7 +151,7 @@ void Render() {
 			int c = 0;
 			while (c < MAX_SPRITES) { 
 				if (gameSprites[c].sprite.kindOf == Type::font)
-					DrawTextNow(pGameFont, pSpriteObject, gameSprites[c].sprite.position.x, gameSprites[c].sprite.position.y, ((FontSprite*)&gameSprites[c])->Message());
+					DrawTextNow(pGameFont, pSpriteObject, gameSprites[c].sprite.position.x, gameSprites[c].sprite.position.y, ((FontSprite*)&gameSprites[c])->message.c_str());
 				c++;
 			}
 
@@ -238,18 +238,6 @@ void UpdateScene() {
 *** 
 ***************************************/
 bool InitSprites() {
-	ZeroMemory(gameSprites, MAX_SPRITES * sizeof(GameSprite));
-    ZeroMemory(&windowOffsets, sizeof(WindowOffsets)); 
-
-	ID3D10Texture2D * backgroundTexture = NULL;
-	switch (GAMEMODE) { 
-	case GameModes::MAIN_MENU:
-        InitMainMenu();
-		break;
-	default:
-		return false;
-	}
-
     // Create the sprite object (calls methods to display the sprites)
 	if (D3DX10CreateSprite(pD3DDevice, 0, &pSpriteObject) != S_OK) {
 		return false;
@@ -267,14 +255,6 @@ bool InitSprites() {
 
 	return true;
 } // InitSprites
-
-void InitMainMenu() { 
-    gameMenu = new Gui::GameMenu(L"../config/main-menu.xml");
-    _spritesToRender = gameMenu->Sprites(gameSprites);
-	if (gameMenu->status == Gui::Status::ok) {
-		LoadTexturesForSprites();
-	}
-}
 
 /**************************************
 *** Handles incrementing the animation frame 
@@ -299,13 +279,7 @@ void UpdateSprites() {
 *** times the interpolation (delay from rendering)!
 ***************************************/
 void MoveSprites(float interpolation) { 
-	// Check the gamemode
-	if (GAMEMODE == ::GameModes::MAIN_MENU) {
-
-		return;
-	}
-
-	// We want to move a moveable sprite of course! 
+// We want to move a moveable sprite of course! 
 	for (int i = 0; i < MAX_SPRITES; i++) {
 		if (gameSprites[i].sprite.isVisible && gameSprites[i].sprite.canMove) { 
 			// Check to see which direction was pressed
@@ -317,13 +291,13 @@ void MoveSprites(float interpolation) {
 			float actualWidth = posX + gameSprites[i].sprite.size.width;
 
 			// Can the sprite run? we should check that first :) 
-			if (xControl->IsButtonPressedForController(0, GameControls::A_BUTTON)) {
+			if (xControl->IsButtonPressedForController(0, GameControls::XboxController::A_BUTTON)) {
 				moveX *= 2.5f;
 				moveY *= 2.5f;
 			}
 
 			// TODO - Create a means to pause
-			if (xControl->IsButtonPressedForController(0, GameControls::BACK))
+			if (xControl->IsButtonPressedForController(0, GameControls::XboxController::BACK))
 				PostQuitMessage(0);
 
 			float actualWindowBottom = WINDOW_HEIGHT;
@@ -344,7 +318,7 @@ void MoveSprites(float interpolation) {
 				actualWindowBottom += windowOffsets.offsetBottom;
 
 			// Direction is right
-            if (xControl->IsButtonPressedForController(0, GameControls::DPAD_RIGHT)) { 
+            if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_RIGHT)) { 
 				posX += moveX;
                 if (actualWidth >= actualWindowRight && windowOffsets.offsetRight <= 0) {
                     posX = actualWindowRight - gameSprites[i].sprite.size.width;
@@ -362,7 +336,7 @@ void MoveSprites(float interpolation) {
             } // Translate for Right
 
 			// Direciton is left
-			if (xControl->IsButtonPressedForController(0, GameControls::DPAD_LEFT)) { 
+			if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_LEFT)) { 
 				posX -= moveX;
 
                 if (posX <= actualWindowLeft && windowOffsets.offsetLeft <= 0) {
@@ -381,7 +355,7 @@ void MoveSprites(float interpolation) {
             } // Translate for left
 
             // Direction is down
-			if (xControl->IsButtonPressedForController(0, GameControls::DPAD_DOWN)) {
+			if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_DOWN)) {
 				posY += moveY;
 				if ( actualHeight >= actualWindowBottom && windowOffsets.offsetBottom <= 0) { 
 					posY = actualWindowBottom - gameSprites[i].sprite.size.height;
@@ -400,7 +374,7 @@ void MoveSprites(float interpolation) {
 			} // Translate for down
 
             // Direction is up 
-            if (xControl->IsButtonPressedForController(0, GameControls::DPAD_UP)) {
+            if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_UP)) {
 				posY -= moveY;
 
                 if (posY <= actualWindowTop && windowOffsets.offsetTop <= 0) { 

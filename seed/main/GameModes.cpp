@@ -1,5 +1,5 @@
 #include "GameModes.h"
-bool GameModes::ValidGameModeTransition(GameModes::MODES srcMode, GameModes::MODES destMode) { 
+bool GameModes::ValidGameModeTransition(GameModes::modes srcMode, GameModes::modes destMode) { 
 	switch(srcMode) { 
 	case this->LOADING_SCREEN:
 		return true;	// Loading screen go anywhere! 

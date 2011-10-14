@@ -2,7 +2,7 @@
 
 class GameModes { 
 public:
-	static enum MODES { 
+	static enum modes { 
 		MAIN_MENU,
 		IN_GAME,
 		PAUSE,
@@ -10,7 +10,7 @@ public:
 		LOADING_SCREEN,
 		CREDITS
 	};
-	bool ValidGameModeTransition(MODES, MODES); // Determins if the source gamemode can be transitioned into the next gamemode 
+	bool ValidGameModeTransition(modes, modes); // Determins if the source gamemode can be transitioned into the next gamemode 
 }; // GameModes
 
 /* eof */

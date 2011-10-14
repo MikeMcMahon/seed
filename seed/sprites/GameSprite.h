@@ -10,7 +10,7 @@ namespace Sprites {
 		void Init();
 	public:
 		GameSprite();
-        GameSprite(const wchar_t* resource, const wchar_t* name, float width, float height);
+        GameSprite(const char* resource, const char* name, float width, float height);
 		~GameSprite();
 		Sprite			sprite;
 		void			animationDetail(int startFrame, int numFrames, float animDuration);

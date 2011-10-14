@@ -35,8 +35,8 @@ namespace Sprites {
 			right;
 	};
 	struct Sprite { 
-		std::wstring	name;
-		std::wstring	resource;
+		std::string		name;
+		std::string		resource;
 		Type::type		kindOf;
 		Position		position;
 		Size			size;
@@ -51,5 +51,5 @@ namespace Sprites {
 	const struct Size		DefaultSize			= { 0, 0 };
 	const struct Animation	DefaultAnimation	= { 0, 0, 1, 0 };
 	const struct Move		DefaultMove			= { 0, 0, 0, 0 };
-	const struct Sprite		DefaultSprite		= { L"", L"", Type::base, DefaultPosition, DefaultSize, DefaultAnimation, DefaultMove, false, false , false };
+	const struct Sprite		DefaultSprite		= { "", "", Type::base, DefaultPosition, DefaultSize, DefaultAnimation, DefaultMove, false, false , false };
 }
