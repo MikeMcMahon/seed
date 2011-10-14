@@ -124,11 +124,6 @@
     <None Include="textures\sprite-man-192x192.png" />
     <None Include="textures\text_1_64x64.png" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\XMLHelper\XMLHelper.vcxproj">
-      <Project>{15489c03-faa1-4bc1-b0cf-fafff6188a20}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
