@@ -17,4 +17,6 @@ Dev Environment Setup
         * XInput.lib
         * Zdll.lib
         * $(AdditionalDependencies)
+
+# This step not currently needed, removed dependency on XmlHelper until we have more of the engine completed 
 3) Checkout the XmlHelper project as well, this is required for the XML File reading in the project (Seed currently relies on the build of this project) 
