@@ -18,8 +18,6 @@ using namespace GameUtil;
 
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
-int numActiveSprites = 0;
-GameSprite gameSprites[MAX_SPRITES] = { GameSprite() };
 
 // D3D GLOBALS ////////////////////////////////
 ID3D10Device* pD3DDevice = NULL;
@@ -41,6 +39,7 @@ TextureHandler* pTextureHandler = NULL;
 ID3DX10Sprite* pSpriteObject = NULL;
 D3DX10_SPRITE  spritePool[NUM_POOL_SPRITES];
 ID3DX10Font* pGameFont = NULL;
+int numActiveSprites;
 
 // Configure the xbox controller stuff
 XGamePad* xControl;
@@ -50,11 +49,14 @@ GameModes::modes GAMEMODE = GameModes::MAIN_MENU;
 
 // Windowing stuff //////////////////////////////
 WindowOffsets windowOffsets;           // Determins the offsets for up/right/down/left 
+
+// Prototypes ///////////////////////////////////
 void Render(GameSprite*, int);
 void UpdateScene(GameSprite*);
 void MoveSprites(GameSprite*, float);
 void UpdateSprites(); 
 bool InitSprites();
+void LoadTextures(GameSprite*);
 
 /**************************************
 *** Main Application entry point
@@ -75,6 +77,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
     gameMain->lpfUpdateSc = (UPDATE_DX)UpdateScene;
     gameMain->lpfMoveSprts = (MOVE_DX)MoveSprites;
     gameMain->windowOffsets = &windowOffsets;
+    gameMain->lpfLoadTxtrs = (LOADTX_DX)LoadTextures;
 
 	// Initialize the window
 	if (!InitWindow(hInstance, WINDOW_WIDTH, WINDOW_HEIGHT, &wndHandle) ) {
@@ -131,53 +134,6 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	return (int)msg.wParam;
 }
 
-/**************************************
-*** Renders the sprites to the buffer
-*** 
-***************************************
-void Render() {
-	FLOAT OriginalBlendFactor[4];
-    UINT  OriginalSampleMask = 0;
-	if (pD3DDevice != NULL) {
-		// Clear the target buffer
-		pD3DDevice->ClearRenderTargetView(pRenderTargetView, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-
-		// TODO - Create a pFontSpriteObject to use with font drawing
-		if (pSpriteObject != NULL) {
-			// Start Drawing the sprites
-			pSpriteObject->Begin(NULL);
-
-			// Draw the srpites
-			pSpriteObject->DrawSpritesBuffered(spritePool, _spritesToRender);
-
-			// Draw the text on top
-			int c = 0;
-			while (c < MAX_SPRITES) { 
-				if (gameSprites[c].sprite.kindOf == Type::font)
-					DrawTextNow(pGameFont, pSpriteObject, gameSprites[c].sprite.position.x, gameSprites[c].sprite.position.y, ((FontSprite*)&gameSprites[c])->message.c_str());
-				c++;
-			}
-
-			// Save the current blend state
-			pD3DDevice->OMSetBlendState(pBlendState10, OriginalBlendFactor, 0xffffffff);
-			
-			if (pBlendState10) {
-				FLOAT NewBlendFactor[4] = {0,0,0,0};
-				pD3DDevice->OMSetBlendState(pBlendState10, NewBlendFactor, 0xffffffff);
-			}
-
-			// Finish up and send the sprites to the hardware
-			pSpriteObject->Flush();
-			pSpriteObject->End();
-			
-			// Restore the previous blend state
-			pD3DDevice->OMSetBlendState(pOriginalBlendState10, OriginalBlendFactor, OriginalSampleMask);
-			
-			// display the next item in the swap chain
-			pSwapChain->Present(0,0);
-		}
-	}
-} // Render */
 /*******************************************
 ** Render (D3DX10_SPRITE* spritePool, int SpritesToRender
 **  Renders the sprites to the buffer which is in turn displayed on screen
@@ -194,13 +150,21 @@ void Render(GameSprite* sprites, int spritesToRender) {
 			// Start Drawing the sprites
 			pSpriteObject->Begin(NULL);
 
-   			// Draw the srpites
+   			// Push the DX Sprites into the sprite pool
+            int c = 0;
+           
+            for (int i = 0; i < MAX_SPRITES; i++) { 
+                if ((sprites + i)->sprite.isVisible && (sprites + i)->sprite.textureLoaded) { 
+                    spritePool[c] = (sprites + i)->dxSprite;
+                    c++;
+                }
+            }
 
-			//pSpriteObject->DrawSpritesBuffered(sprites, spritesToRender);
+			pSpriteObject->DrawSpritesBuffered(spritePool, numActiveSprites);
 
 
             // Draw the text on top
-			int c = 0;
+			c = 0;
 			while (c < MAX_SPRITES) { 
 				if ((sprites + c)->sprite.kindOf == Type::font)
 					DrawTextNow(pGameFont, pSpriteObject, (sprites + c)->sprite.position.x, (sprites + c)->sprite.position.y, ((FontSprite*)(sprites + c))->message.c_str());
@@ -343,7 +307,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
                         windowOffsets.offsetLeft += moveX;
 
                         // Translate the world to the right
-                        ::SpriteUtil::TranslateSprites((moveX *-1),0,gameSprites,0);
+                        ::SpriteUtil::TranslateSprites((moveX *-1),0,sprites,0);
                         // Ensure our sprite doesn't go below the right edge
                         posX -= moveX;
                     }
@@ -362,7 +326,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
                         windowOffsets.offsetLeft -= moveX;
 
                         // Translate the world to the right
-                        ::SpriteUtil::TranslateSprites((moveX),0,gameSprites,0);
+                        ::SpriteUtil::TranslateSprites((moveX),0,sprites,0);
                         // Ensure our sprite doesn't go below the right edge
                         posX -= moveX;
                     }
@@ -381,7 +345,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
 						windowOffsets.offsetTop += moveY;
 
 						// Translate the world up
-                        ::SpriteUtil::TranslateSprites(0, (moveY * -1), gameSprites, i);
+                        ::SpriteUtil::TranslateSprites(0, (moveY * -1), sprites, i);
 						// ensure our sprite doesn't go below the bottom edge
 						posY -= moveY;
 					} 
@@ -402,7 +366,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
                         
 
                         // Translate the world down
-                        ::SpriteUtil::TranslateSprites(0, moveY, gameSprites, i);
+                        ::SpriteUtil::TranslateSprites(0, moveY, sprites, i);
                         posY -= moveY;
                     }
                 }
@@ -412,21 +376,44 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
 			(sprites + i)->sprite.position.y = posY;
 			(sprites + i)->sprite.position.z = (sprites + i)->sprite.position.z;
 		}
+
+        // One final check to see if the sprite is no longer in the visible range
+        (sprites + i)->sprite.isVisible = SpriteUtil::IsSpriteVisible((sprites + i));
 	}
 } // MoveSprites
 
+/*******************************************
+***    Loads the textures for the sprites
+***    
+*******************************************/
+void LoadTextures(GameSprite* sprites) {
+	int c = 0; // Sprites to render 
+	int i = 0; 
+	while (i < MAX_SPRITES) {
+        if ((sprites + i)->sprite.isVisible && !(sprites + i)->sprite.textureLoaded) { 
+			// Check and load textures for any sprites that still need it
+			ID3D10Texture2D* texture = TextureHandler::GetTexture2DFromFile((sprites + i)->sprite.resource.c_str(), pD3DDevice);
+			if (texture) { 
+				ID3D10ShaderResourceView* srv;
+				TextureHandler::GetResourceViewFromTexture(texture, &srv, pD3DDevice);
+				texture->Release();
+				texture = NULL;
 
-
-
-
-
-
-
-
-
-
-
-
+				// Set the srv into the poolSprite
+                (sprites + i)->dxSprite.pTexture = srv;
+				(sprites + i)->dxSprite.TextureIndex = 0;
+				(sprites + i)->dxSprite.TexCoord.x = 0;
+				(sprites + i)->dxSprite.TexCoord.y = 0;
+				(sprites + i)->dxSprite.TexSize.x = 1.0f;
+				(sprites + i)->dxSprite.TexSize.y = 1.0f;
+				(sprites + i)->dxSprite.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+                (sprites + i)->sprite.textureLoaded = true;
+			}
+			c++;
+		}
+		i++;
+	}
+} // LoadTextures
 
 
 
@@ -453,42 +440,6 @@ bool InitSprites() {
 
 	return true;
 } // InitSprites
-
-
-
-/*******************************************
-***    Loads the textures for the sprites
-***    
-*******************************************/
-int LoadTexturesForSprites() {
-	int c = 0; // Sprites to render 
-	int i = 0; 
-	while (i < MAX_SPRITES) {
-		if (gameSprites[i].sprite.isVisible) { 
-			// Check and load textures for any sprites that still need it
-			ID3D10Texture2D* texture = TextureHandler::GetTexture2DFromFile(gameSprites[i].sprite.resource.c_str(), pD3DDevice);
-			if (texture) { 
-				ID3D10ShaderResourceView* srv;
-				TextureHandler::GetResourceViewFromTexture(texture, &srv, pD3DDevice);
-				texture->Release();
-				texture = NULL;
-
-				// Set the srv into the poolSprite
-				spritePool[i].pTexture = srv;
-				spritePool[i].TextureIndex = 0;
-				spritePool[i].TexCoord.x = 0;
-				spritePool[i].TexCoord.y = 0;
-				spritePool[i].TexSize.x = 1.0f;
-				spritePool[i].TexSize.y = 1.0f;
-				spritePool[i].ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-			}
-			c++;
-		}
-		i++;
-	}
-
-	return c;
-}
 
 
 /*******************************************

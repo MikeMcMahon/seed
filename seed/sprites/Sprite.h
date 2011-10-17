@@ -45,11 +45,12 @@ namespace Sprites {
 		bool			canAnimate;
 		bool			isVisible;
 		bool			canMove;
+        bool            textureLoaded;
 	};
 
 	const struct Position	DefaultPosition		= { 0, 0, 0 };
 	const struct Size		DefaultSize			= { 0, 0 };
 	const struct Animation	DefaultAnimation	= { 0, 0, 1, 0 };
 	const struct Move		DefaultMove			= { 0, 0, 0, 0 };
-	const struct Sprite		DefaultSprite		= { "", "", Type::base, DefaultPosition, DefaultSize, DefaultAnimation, DefaultMove, false, false , false };
+	const struct Sprite		DefaultSprite		= { "", "", Type::base, DefaultPosition, DefaultSize, DefaultAnimation, DefaultMove, false, false , false, false };
 }

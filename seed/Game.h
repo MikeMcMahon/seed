@@ -20,9 +20,11 @@
 #define SKIP_TICKS (1000.0f / (float)TICKS_PER_SECOND)
 #define MAX_FRAMESKIP 5
 
+// Sprite calcs
 #define MAX_SPRITES			1024
 #define NUM_POOL_SPRITES	1024
 
+// Window handling stuff
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
 #define CLASS_NAME TEXT("SEED")
@@ -32,3 +34,8 @@
 #else 
     #define DIRECTORY_PREFIX "./"
 #endif
+
+// Define for which engine to render against
+#define RENDER_ENG_DX
+
+/* eof */

@@ -10,6 +10,7 @@
 typedef void (*RENDER_DX)(Sprites::GameSprite*, int);
 typedef void (*UPDATE_DX)(Sprites::GameSprite*);
 typedef void (*MOVE_DX)(Sprites::GameSprite*, float);
+typedef void (*LOADTX_DX)(Sprites::GameSprite*);
 
 struct RenderEngine { enum type { 
     directx };};
@@ -18,13 +19,15 @@ class GameMain
 {
 private:
 	Sprites::GameSprite gameSprites[MAX_SPRITES];
-	GameModes::modes gameMode;
-    
+    GameModes::modes gameMode;
+
 public:
 // If we support GL or DX...we don't support GL yet and probably not for a while...ever 
     RENDER_DX lpfRender;
     UPDATE_DX lpfUpdateSc;
     MOVE_DX lpfMoveSprts;
+    LOADTX_DX lpfLoadTxtrs;
+
     WindowOffsets* windowOffsets;
 
     RenderEngine::type engineType;         // The kind of engine to render against, DX only right now
@@ -89,14 +92,23 @@ public:
 	** Render()
 	**	Calls the render function passed in 
 	** Returns
-	**	
 	*************************************************/
     void Render() { 
-        (*this->lpfRender)(gameSprites, 0);
+        (*this->lpfRender)(this->gameSprites, 0);
     }
 
+	/************************************************
+	** UpdateScene()
+	**	Calls the updatescene function 
+	*************************************************/
     void UpdateScene() { 
-        (*this->lpfUpdateSc)(gameSprites);
+        (*this->lpfUpdateSc)(this->gameSprites);
+    }
+
+private:
+    void LoadTextures() { 
+        // Sprites to load textures for
+        (*this->lpfLoadTxtrs)(this->gameSprites);
     }
 };
 

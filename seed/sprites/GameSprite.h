@@ -9,6 +9,11 @@ namespace Sprites {
 		float skipFrames;
 		void Init();
 	public:
+#ifdef RENDER_ENG_DX
+        D3DX10_SPRITE   dxSprite;
+#elif defined(RENDER_ENG_GL)
+        // No support for OpenGL Yet...or ever, who knows :) 
+#endif
 		GameSprite();
         GameSprite(const char* resource, const char* name, float width, float height);
 		~GameSprite();

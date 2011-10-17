@@ -13,6 +13,9 @@ Sprites::GameSprite::GameSprite() {
 
 Sprites::GameSprite::GameSprite(const char* resource, const char* name, float width, float height) { 
 	this->Init();
+#ifdef RENDER_ENG_DX
+    ZeroMemory(&(this->dxSprite), sizeof(D3DX10_SPRITE));
+#endif
 	ZeroMemory(&(this->sprite.position), sizeof(Position));
 
     this->sprite.canAnimate = (false);
