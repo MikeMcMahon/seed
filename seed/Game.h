@@ -21,8 +21,8 @@
 #define MAX_FRAMESKIP 5
 
 // Sprite calcs
-#define MAX_SPRITES			1024
-#define NUM_POOL_SPRITES	1024
+#define MAX_SPRITES			2048
+#define NUM_POOL_SPRITES	MAX_SPRITES
 
 // Window handling stuff
 #define WINDOW_WIDTH 1024
