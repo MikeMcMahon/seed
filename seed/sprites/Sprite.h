@@ -34,7 +34,7 @@ namespace Sprites {
 			left,
 			right;
 	};
-	struct Sprite { 
+    struct Sprite { 
 		std::string		name;
 		std::string		resource;
 		Type::type		kindOf;
