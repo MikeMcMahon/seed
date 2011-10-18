@@ -47,15 +47,18 @@ public:
 	** Initializes the game
 	**	Creates the StartMenu To Display
 	**	Pre-Loads any textures / resources
-	** Returns
-	**	an array of game sprites to be rendered by the system.
 	*************************************************/
-	Sprites::GameSprite* InitGame() { 
+	void InitGame() { 
 		gameMode = GameModes::MAIN_MENU;
-        
-		// Get the main menu
-		
-		return gameSprites;
+		Sprites::GameSprite *gs = new Sprites::GameSprite("", "", WINDOW_WIDTH, WINDOW_HEIGHT);
+		gs[0].sprite.isVisible = true;
+		gs[0].sprite.textureLoaded = false;
+		gs[0].sprite.canAnimate = true;
+		gs[0].sprite.canMove = false;
+		gs[0].sprite.position.z = 0.5f;
+		this->gameSprites[0] = *gs;
+		this->LoadTextures();
+
 	}
 
 
