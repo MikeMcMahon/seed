@@ -197,7 +197,7 @@ void Render(GameSprite* sprites, int spritesToRender) {
 			sprite.matWorld = matScaling * matTranslation;*/
 
 
-			pSpriteObject->DrawSpritesBuffered(spritePool, 1);
+            pSpriteObject->DrawSpritesBuffered(spritePool, numActiveSprites);
 
             // Draw the text on top
 /*			c = 0;
@@ -249,7 +249,10 @@ void UpdateScene(GameSprite* sprites) {
 			D3DXMATRIX matScaling;
 			D3DXMATRIX matTranslation;
 
-			D3DXMatrixScaling(&matScaling, sprites[i].sprite.size.width, sprites[i].sprite.size.height, sprites[i].sprite.position.z);
+			D3DXMatrixScaling(&matScaling, 
+                sprites[i].sprite.size.width * sprites[i].sprite.scale.x, 
+                sprites[i].sprite.size.height * sprites[i].sprite.scale.y, 
+                sprites[i].sprite.position.z);
 			D3DXMatrixTranslation(&matTranslation, 
 				(float)sprites[i].sprite.position.x + (sprites[i].sprite.size.width/2), 
 				(float)(WINDOW_HEIGHT - sprites[i].sprite.position.y - (sprites[i].sprite.size.height/2)), 
@@ -300,8 +303,6 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
 			// Check to see which direction was pressed
 			float posY = sprites[i].sprite.position.y;
 			float posX = sprites[i].sprite.position.x;
-			float moveX = sprites[i].sprite.moveDistance.right * interpolation;
-            float moveY = sprites[i].sprite.moveDistance.down * interpolation;
                 
             float moveU = sprites[i].sprite.moveDistance.up * interpolation;
             float moveD = sprites[i].sprite.moveDistance.down * interpolation;
@@ -334,76 +335,76 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
 
 			// Direction is right
             if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_RIGHT)) { 
-				posX += moveX;
+				posX += moveR;
                 if (actualWidth >= actualWindowRight && windowOffsets.offsetRight <= 0) {
                     posX = actualWindowRight - sprites[i].sprite.size.width;
                 } else { 
                     if (windowOffsets.offsetRight > 0 && actualWidth >= actualWindowRight) { 
-                        windowOffsets.offsetRight -= moveX;
-                        windowOffsets.offsetLeft += moveX;
+                        windowOffsets.offsetRight -= moveR;
+                        windowOffsets.offsetLeft += moveR;
 
                         // Translate the world to the right
-                        ::SpriteUtil::TranslateSprites((moveX *-1),0,sprites,0);
+                        ::SpriteUtil::TranslateSprites((moveR *-1),0,sprites,0);
                         // Ensure our sprite doesn't go below the right edge
-                        posX -= moveX;
+                        posX -= moveR;
                     }
                 }
             } // Translate for Right
 
 			// Direciton is left
 			if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_LEFT)) { 
-				posX -= moveX;
+				posX -= moveL;
 
                 if (posX <= actualWindowLeft && windowOffsets.offsetLeft <= 0) {
                     posX = actualWindowLeft;
                 } else { 
                     if (windowOffsets.offsetLeft > 0 && posX <= 0) { 
-                        windowOffsets.offsetRight += moveX;
-                        windowOffsets.offsetLeft -= moveX;
+                        windowOffsets.offsetRight += moveL;
+                        windowOffsets.offsetLeft -= moveL;
 
                         // Translate the world to the right
-                        ::SpriteUtil::TranslateSprites((moveX),0,sprites,0);
+                        ::SpriteUtil::TranslateSprites((moveL),0,sprites,0);
                         // Ensure our sprite doesn't go below the right edge
-                        posX -= moveX;
+                        posX -= moveL;
                     }
                 }
             } // Translate for left
 
             // Direction is down
 			if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_DOWN)) {
-				posY += moveY;
+				posY += moveD;
 				if ( actualHeight >= actualWindowBottom && windowOffsets.offsetBottom <= 0) { 
 					posY = actualWindowBottom - sprites[i].sprite.size.height;
 				} else { 
 					// Check our _offsetBottom if it is a positive nbr we can translate the world up
 					if (windowOffsets.offsetBottom > 0 && actualHeight >= actualWindowBottom) {
-						windowOffsets.offsetBottom -= moveY;
-						windowOffsets.offsetTop += moveY;
+						windowOffsets.offsetBottom -= moveD;
+						windowOffsets.offsetTop += moveD;
 
 						// Translate the world up
-                        ::SpriteUtil::TranslateSprites(0, (moveY * -1), sprites, i);
+                        ::SpriteUtil::TranslateSprites(0, (moveD * -1), sprites, i);
 						// ensure our sprite doesn't go below the bottom edge
-						posY -= moveY;
+						posY -= moveD;
 					} 
 				}
 			} // Translate for down
 
             // Direction is up 
             if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_UP)) {
-				posY -= moveY;
+				posY -= moveU;
 
                 if (posY <= actualWindowTop && windowOffsets.offsetTop <= 0) { 
                     posY = actualWindowTop;
                 } else { 
                     // check out _offsetTop if it is a positive nbr we can translate the world down
                     if (windowOffsets.offsetTop > 0 && posY <= 0) { 
-                        windowOffsets.offsetBottom += moveY;
-                        windowOffsets.offsetTop -= moveY;
+                        windowOffsets.offsetBottom += moveU;
+                        windowOffsets.offsetTop -= moveU;
                         
 
                         // Translate the world down
-                        ::SpriteUtil::TranslateSprites(0, moveY, sprites, i);
-                        posY -= moveY;
+                        ::SpriteUtil::TranslateSprites(0, moveU, sprites, i);
+                        posY -= moveU;
                     }
                 }
             } // Translate for up
@@ -414,7 +415,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
 		}
 
         // One final check to see if the sprite is no longer in the visible range
-        sprites[i].sprite.isVisible = SpriteUtil::IsSpriteVisible((sprites + i));
+        sprites[i].sprite.isVisible = SpriteUtil::IsSpriteVisible ( &sprites[i] );
 	}
 } // MoveSprites
 
@@ -428,8 +429,8 @@ void LoadTextures(GameSprite* sprites) {
         if (sprites[i].sprite.isVisible && !sprites[i].sprite.textureLoaded) { 
 			// Check and load textures for any sprites that still need it
 			ID3D10Texture2D* texture;
-			if (strcmp(sprites[i].sprite.resource.c_str(), "") != 0) {
-				texture = TextureHandler::GetTexture2DFromFile(sprites[i].sprite.resource.c_str(), pD3DDevice);
+			if (strcmp(sprites[i].sprite.resource, "") != 0) {
+				texture = TextureHandler::GetTexture2DFromFile(sprites[i].sprite.resource, pD3DDevice);
 			} else {
 				texture = TextureHandler::GetTexture2DFromFile("../textures/main-menu-1024x768.png", pD3DDevice);
 			}
