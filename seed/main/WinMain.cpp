@@ -71,12 +71,13 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	}*/
 
     // Setup the main game loop / rendering funciton
+	ZeroMemory(&windowOffsets, sizeof(WindowOffsets));
     GameMain* gameMain = new GameMain();
-    gameMain->lpfRender = (RENDER_DX)Render;
-    gameMain->lpfUpdateSc = (UPDATE_DX)UpdateScene;
-    gameMain->lpfMoveSprts = (MOVE_DX)MoveSprites;
+    gameMain->lpfRender = (RENDER)Render;
+    gameMain->lpfUpdateSc = (UPDATE)UpdateScene;
+    gameMain->lpfMoveSprts = (MOVE)MoveSprites;
     gameMain->windowOffsets = &windowOffsets;
-    gameMain->lpfLoadTxtrs = (LOADTX_DX)LoadTextures;
+    gameMain->lpfLoadTxtrs = (LOADTX)LoadTextures;
 
 	// Initialize the window
 	if (!InitWindow(hInstance, WINDOW_WIDTH, WINDOW_HEIGHT, &wndHandle) ) {

@@ -6,14 +6,18 @@
 #include "..\input\XGamePad.h"
 
 #include "GameModes.h"
-
-typedef void (*RENDER_DX)(Sprites::GameSprite*, int);
-typedef void (*UPDATE_DX)(Sprites::GameSprite*);
-typedef void (*MOVE_DX)(Sprites::GameSprite*, float);
-typedef void (*LOADTX_DX)(Sprites::GameSprite*);
+#ifdef RENDER_ENG_DX 
+typedef void (*RENDER)(Sprites::GameSprite*, int);
+typedef void (*UPDATE)(Sprites::GameSprite*);
+typedef void (*MOVE)(Sprites::GameSprite*, float);
+typedef void (*LOADTX)(Sprites::GameSprite*);
+#else
+// Typedef's for opengl when we support it
+#endif
 
 struct RenderEngine { enum type { 
-    directx };};
+    directx,
+	opengl};};
 
 class GameMain
 {
@@ -22,11 +26,14 @@ private:
     GameModes::modes gameMode;
 
 public:
-// If we support GL or DX...we don't support GL yet and probably not for a while...ever 
-    RENDER_DX lpfRender;
-    UPDATE_DX lpfUpdateSc;
-    MOVE_DX lpfMoveSprts;
-    LOADTX_DX lpfLoadTxtrs;
+// If we support GL or DX...we don't support GL yet and probably not for a while
+#ifdef RENDER_ENG_DX
+    RENDER lpfRender;
+    UPDATE lpfUpdateSc;
+    MOVE lpfMoveSprts;
+    LOADTX lpfLoadTxtrs;
+#else
+#endif
 
     WindowOffsets* windowOffsets;
 
@@ -35,7 +42,11 @@ public:
 	GameMain(void)
 	{
         // We only support directx right now
+#ifdef RENDER_ENG_DX
         this->engineType = RenderEngine::directx;
+#else
+		this->engineType = RenderEngine::opengl;
+#endif
 	}
 
 	~GameMain(void)
@@ -69,7 +80,6 @@ public:
 	void MoveSprites(float interpolation) { 
         // Calculate the window offsets based on the current map sprite
         // TODO - there will be times when we don't need to calculate offsets (waste of time) probably want to create a flag 
-        this->windowOffsets->offsetBottom = 100; // testing
         (*this->lpfMoveSprts)(gameSprites, interpolation);
 	} // MoveSprites
 
