@@ -61,13 +61,15 @@ public:
 	*************************************************/
 	void InitGame() { 
 		gameMode = GameModes::MAIN_MENU;
+
+        // Demo sprite to test color only sprites
 		Sprites::GameSprite *gs = new Sprites::GameSprite("", "", WINDOW_WIDTH, WINDOW_HEIGHT);
 		gs[0].sprite.isVisible = true;
 		gs[0].sprite.textureLoaded = false;
 		gs[0].sprite.canAnimate = true;
 		gs[0].sprite.canMove = false;
 		gs[0].sprite.position.z = 0.5f;
-		this->gameSprites[0] = *gs;
+	    this->gameSprites[0] = *gs; 
 		this->LoadTextures();
 
 	}
