@@ -25,8 +25,9 @@ Sprites::GameSprite::GameSprite(const char* resource, const char* name, float wi
     // Set the width and height
 	this->sprite.size.height = height;
 	this->sprite.size.width = width;
-	this->sprite.resource = resource;
-	this->sprite.name = name;
+    strcpy_s ( this->sprite.resource, resource );
+	strcpy_s ( this->sprite.name, name );
+
 }// GameSprite
 
 Sprites::GameSprite::~GameSprite() { 
