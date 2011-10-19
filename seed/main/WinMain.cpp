@@ -11,10 +11,12 @@
 #include "../gui/StartMenu.h"
 #include "../font/GameFonts.h"
 #include "GameMain.h"
+#include "../sprites/base/FrameAnimation.h"
 
 using namespace Input;
 using namespace Sprites;
 using namespace GameUtil;
+using namespace Seed;
 
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
@@ -62,7 +64,7 @@ void LoadTextures(GameSprite*);
 *** 
 ***************************************/
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) 
-{
+{ 
 	// TODO - Implement resulation changing? Maybe? 
 	/*DEVMODE dm = { 0 };
 	dm.dmSize = sizeof(dm);
@@ -106,22 +108,35 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	// Initialize the game!
 	gameMain->InitGame();
 
+    // Get the current time in milis
+    float start = Time::GetMilis();
+    int countLoops = 0;
+
+    LONGLONG curTime;
+    LONGLONG perCnt;
+    LONGLONG nextTime;
+    DWORD    timeCount;
+
+    QueryPerformanceFrequency((LARGE_INTEGER *) &perCnt);
+    timeCount = perCnt / TICKS_PER_SECOND;
+    QueryPerformanceCounter((LARGE_INTEGER *) &nextTime);
+
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 		// Detects the xbox controllers
-		xControl->GetControllerStates();
+		//xControl->GetControllerStates();
 		
 		loops = 0;
-		while ( ::Time::GetMilis() > next_game_tick && loops < MAX_FRAMESKIP) { 
-			// Handles the textures / animation
+        QueryPerformanceCounter((LARGE_INTEGER *) &curTime);
+		if ( curTime > nextTime ) { 
 			gameMain->UpdateScene();
 			gameMain->UpdateSprites();
-		
-			next_game_tick += SKIP_TICKS;
-			loops++;
+
+            nextTime + timeCount;
+            countLoops++;
 		}
 
     	// Render the sprites to the screen
@@ -158,30 +173,30 @@ void Render(GameSprite* sprites, int spritesToRender) {
             int c = 0;
 			int i = 0;
             while(i < MAX_SPRITES ) { 
-                if (sprites[i].sprite.isVisible && sprites[i].sprite.textureLoaded) { 
+                if (sprites[i].IsVisible() && sprites[i].TextureLoaded()) { 
                     spritePool[c] = sprites[i].dxSprite;
                     c++;
                 }
 				i++;
             }
+
 			/*D3DXMATRIX matScaling;
 			D3DXMATRIX matTranslation;
 
-			D3DXMatrixScaling(&matScaling, 1024, 768, 0);
+			D3DXMatrixScaling(&matScaling, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 			D3DXMatrixTranslation(&matTranslation, 
-				(float)0 + (1024/2), 
+				(float)0 + (WINDOW_WIDTH/2), 
 				(float)(WINDOW_HEIGHT - 0 - (WINDOW_HEIGHT/2)), 
 				0.1f);	// ZOrder
 
-			
-			ID3D10Texture2D * ballBounce = NULL;
-			ballBounce = TextureHandler::GetTexture2DFromFile("../textures/main-menu-1024x768.png", pD3DDevice);
-			ID3D10ShaderResourceView * srv;
-			TextureHandler::GetResourceViewFromTexture(ballBounce, &srv, pD3DDevice);
-			ballBounce->Release();
+			// ID3D10Texture2D * ballBounce = NULL;
+			// ballBounce = TextureHandler::GetTexture2DFromFile(L"../textures/main-menu-1024x768.png", pD3DDevice);
+			// ID3D10ShaderResourceView * srv;
+			// TextureHandler::GetResourceViewFromTexture(ballBounce, &srv, pD3DDevice);
+			// ballBounce->Release();
 			D3DX10_SPRITE sprite;
-			sprite.pTexture = srv;
-			sprite.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+			sprite.pTexture = NULL; // srv;
+			sprite.ColorModulate = D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f);
 			sprite.TexCoord.x = 0;
 			sprite.TexCoord.y = 0;
 			sprite.TexSize.x = 1.0f;
@@ -196,7 +211,7 @@ void Render(GameSprite* sprites, int spritesToRender) {
 /*			c = 0;
 			while (c < MAX_SPRITES) { 
 				if ((sprites + c)->sprite.kindOf == Type::font)
-					DrawTextNow(pGameFont, pSpriteObject, (sprites + c)->sprite.position.x, (sprites + c)->sprite.position.y, ((FontSprite*)(sprites + c))->message.c_str());
+					DrawTextNow(pGameFont, pSpriteObject, (sprites + c)->Position().x, (sprites + c)->Position().y, ((FontSprite*)(sprites + c))->message.c_str());
 				c++;
 			}*/
 
@@ -237,18 +252,18 @@ void UpdateScene(GameSprite* sprites) {
 	// loop through the sprite
 	for (int i = 0; i < MAX_SPRITES; i++) {
 		// Only update visible sprites
-		if (sprites[i].sprite.isVisible) {
+		if (sprites[i].IsVisible()) {
 			// Set the proper scale for the sprite
 			D3DXMATRIX matScaling;
 			D3DXMATRIX matTranslation;
 
 			D3DXMatrixScaling(&matScaling, 
-                sprites[i].sprite.size.width * sprites[i].sprite.scale.x, 
-                sprites[i].sprite.size.height * sprites[i].sprite.scale.y, 
-                sprites[i].sprite.position.z);
+                sprites[i].Size().width * sprites[i].scale.x, 
+                sprites[i].Size().height * sprites[i].scale.y, 
+                sprites[i].Position().z);
 			D3DXMatrixTranslation(&matTranslation, 
-				(float)sprites[i].sprite.position.x + (sprites[i].sprite.size.width/2), 
-				(float)(WINDOW_HEIGHT - sprites[i].sprite.position.y - (sprites[i].sprite.size.height/2)), 
+				(float)sprites[i].Position().x + (sprites[i].Size().width/2), 
+				(float)(WINDOW_HEIGHT - sprites[i].Position().y - (sprites[i].Size().height/2)), 
 				0.1f);	// ZOrder
 
 			// TODO - Refactor this out into its own function
@@ -267,9 +282,12 @@ void UpdateScene(GameSprite* sprites) {
 			sprites[i].dxSprite.matWorld = (matScaling * matTranslation);
 			
 			// Animate the sprite
-			if (sprites[i].sprite.canAnimate) {
-				float texCoordX = (float)(sprites[i].curFrame() / sprites[i].sprite.animation.numFrames);
-				float texSizeX = (float)(sprites[i].sprite.size.width / (sprites[i].sprite.size.width * sprites[i].sprite.animation.numFrames));
+			if (sprites[i].CanAnimate()) {
+                float curFrame = sprites[i].CurFrame();
+                float numFrames = sprites[i].NumFrames();
+                float div = curFrame / numFrames;
+                float texCoordX = div; 
+                float texSizeX = (float)(sprites[i].Size().width / (sprites[i].Size().width * sprites[i].NumFrames()));
 				sprites[i].dxSprite.TexCoord.x = texCoordX;
 				sprites[i].dxSprite.TexSize.x = texSizeX;
 			}
@@ -292,18 +310,19 @@ void UpdateScene(GameSprite* sprites) {
 void MoveSprites(GameSprite* sprites, float interpolation) { 
     // We want to move a moveable sprite of course! 
 	for (int i = 0; i < MAX_SPRITES; i++) {
-		if (sprites[i].sprite.isVisible && sprites[i].sprite.canMove) { 
+        if (sprites[i].IsVisible() && sprites[i].CanMove()) { 
+            
 			// Check to see which direction was pressed
-			float posY = sprites[i].sprite.position.y;
-			float posX = sprites[i].sprite.position.x;
+			float posY = sprites[i].Position().y;
+			float posX = sprites[i].Position().x;
                 
-            float moveU = sprites[i].sprite.moveDistance.up * interpolation;
-            float moveD = sprites[i].sprite.moveDistance.down * interpolation;
-            float moveR = sprites[i].sprite.moveDistance.right * interpolation;
-            float moveL = sprites[i].sprite.moveDistance.left * interpolation;
+            float moveU = sprites[i].MoveDistance().up * interpolation;
+            float moveD = sprites[i].MoveDistance().down * interpolation;
+            float moveR = sprites[i].MoveDistance().right * interpolation;
+            float moveL = sprites[i].MoveDistance().left * interpolation;
 
-			float actualHeight = posY + sprites[i].sprite.size.height;
-			float actualWidth = posX + sprites[i].sprite.size.width;
+			float actualHeight = posY + sprites[i].Size().height;
+			float actualWidth = posX + sprites[i].Size().width;
 
 			// TODO - Create a means to pause
 			if (xControl->IsButtonPressedForController(0, GameControls::XboxController::BACK))
@@ -330,7 +349,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
             if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_RIGHT)) { 
 				posX += moveR;
                 if (actualWidth >= actualWindowRight && windowOffsets.offsetRight <= 0) {
-                    posX = actualWindowRight - sprites[i].sprite.size.width;
+                    posX = actualWindowRight - sprites[i].Size().width;
                 } else { 
                     if (windowOffsets.offsetRight > 0 && actualWidth >= actualWindowRight) { 
                         windowOffsets.offsetRight -= moveR;
@@ -367,7 +386,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
 			if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_DOWN)) {
 				posY += moveD;
 				if ( actualHeight >= actualWindowBottom && windowOffsets.offsetBottom <= 0) { 
-					posY = actualWindowBottom - sprites[i].sprite.size.height;
+					posY = actualWindowBottom - sprites[i].Size().height;
 				} else { 
 					// Check our _offsetBottom if it is a positive nbr we can translate the world up
 					if (windowOffsets.offsetBottom > 0 && actualHeight >= actualWindowBottom) {
@@ -402,13 +421,11 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
                 }
             } // Translate for up
 
-			sprites[i].sprite.position.x = posX;
-			sprites[i].sprite.position.y = posY;
-			sprites[i].sprite.position.z = sprites[i].sprite.position.z;
+			sprites[i].Position ( posX, posY, sprites[i].Position().z );
 		}
 
         // One final check to see if the sprite is no longer in the visible range
-        sprites[i].sprite.isVisible = SpriteUtil::IsSpriteVisible ( &sprites[i] );
+        sprites[i].IsVisible ( SpriteUtil::IsSpriteVisible ( &sprites[i] ) );
 	}
 } // MoveSprites
 
@@ -419,13 +436,11 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
 void LoadTextures(GameSprite* sprites) {
 	int i = 0; 
 	while (i < MAX_SPRITES) {
-        if (sprites[i].sprite.isVisible && !sprites[i].sprite.textureLoaded) { 
+        if (sprites[i].IsVisible() && !sprites[i].TextureLoaded()) { 
 			// Check and load textures for any sprites that still need it
-			ID3D10Texture2D* texture;
-			if (wcscmp(sprites[i].sprite.resource, L"") != 0) {
-				texture = TextureHandler::GetTexture2DFromFile(sprites[i].sprite.resource, pD3DDevice);
-			} else {
-				texture = TextureHandler::GetTexture2DFromFile(L"../textures/main-menu-1024x768.png", pD3DDevice);
+			ID3D10Texture2D* texture = NULL;
+            if (sprites[i].kindOf != Type::color) {
+                texture = TextureHandler::GetTexture2DFromFile(sprites[i].Resource(), pD3DDevice);
 			}
 
 			ID3D10ShaderResourceView* srv = NULL;
@@ -442,8 +457,8 @@ void LoadTextures(GameSprite* sprites) {
 			sprites[i].dxSprite.TexCoord.y = 0;
 			sprites[i].dxSprite.TexSize.x = 1.0f;
 			sprites[i].dxSprite.TexSize.y = 1.0f;
-			sprites[i].dxSprite.ColorModulate = sprites[i].sprite.color; // D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-            sprites[i].sprite.textureLoaded = true;
+			sprites[i].dxSprite.ColorModulate = sprites[i].color; // D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+            sprites[i].TextureLoaded ( true );
 		}
 		i++;
 	}

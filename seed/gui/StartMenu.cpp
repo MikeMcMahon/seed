@@ -17,9 +17,9 @@ StartMenu::StartMenu(void)
 		(float)WINDOW_WIDTH, 
 		(float)WINDOW_HEIGHT
 		);
-	this->background.sprite.canAnimate = false;
-	this->background.sprite.isVisible = true;
-	this->background.sprite.canMove = false;
+	this->background.CanAnimate ( false );
+	this->background.IsVisible ( true );
+	this->background.CanMove( false );
 
 	this->cursor = Sprites::GameSprite(
 		L"../textures/cursor.png", 
@@ -27,11 +27,10 @@ StartMenu::StartMenu(void)
 		24.0f, 
 		24.0f
 		);
-	this->cursor.sprite.canAnimate = false;
-	this->cursor.sprite.isVisible = true;
-	this->cursor.sprite.canMove = false;
-	this->cursor.sprite.position.x = 441;
-	this->cursor.sprite.position.y = 336;
+	this->cursor.CanAnimate ( false );
+	this->cursor.IsVisible ( true );
+	this->cursor.CanMove ( false );
+	this->cursor.Position (441, 336, 0);
 
 	// Create the text sprites
 

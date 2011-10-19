@@ -16,7 +16,7 @@ FontSprite::~FontSprite(void)
 }
 
 FontSprite::FontSprite(LPCWSTR message) { 
-	this->sprite.kindOf = Type::font;
+    this->kindOf = Type::font;
 	this->fontColor = DEFAULT;
 	this->fontColorDisabled = DISABLED;
 	this->fontColorHi = HILIGHT;

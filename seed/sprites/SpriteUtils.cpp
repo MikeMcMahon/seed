@@ -11,11 +11,12 @@ void ::SpriteUtil::TranslateSprites(float x, float y, GameSprite* sprites, int i
 		if (i == ignore) 
 			continue;	// Skip this loop and continue on
 
-		float sX = (sprites + i)->sprite.position.x += x;
-		float sY = (sprites + i)->sprite.position.y += y;
+        float sX = sprites[i].Position().x + x;
+		float sY = sprites[i].Position().y + y;
+        sprites[i].Position(sX, sY, 0);
 
         // Quick check of the sprite, did the x/y movement take it outside the visible bounds? if so we can clip the sprite
-        (sprites + i)->sprite.isVisible = IsSpriteVisible(sprites);
+        sprites[i].IsVisible( IsSpriteVisible(sprites) );
     }
 } // TranslateSprites
 
@@ -26,10 +27,10 @@ bool SpriteUtil::IsSpriteVisible(GameSprite* sprite) {
     float bottom    = 0;
     float left      = 0;
 
-    top = sprite->sprite.position.y;
-    right = sprite->sprite.position.x + sprite->sprite.size.width;
-    bottom = sprite->sprite.position.y + sprite->sprite.size.height;
-    left = sprite->sprite.position.x;
+    top = sprite->Position().y;
+    right = sprite->Position().x + sprite->Size().width;
+    bottom = sprite->Position().y + sprite->Size().height;
+    left = sprite->Position().x;
 
     if (top > WINDOW_HEIGHT)
         return false;

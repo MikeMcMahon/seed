@@ -21,9 +21,6 @@
     <ClCompile Include="input\XGamePad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sprites\CharacterSprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="font\GameFonts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,15 +54,15 @@
     <ClCompile Include="gui\UIMessageBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main\GameMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sprites\CharacterSprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sprites\CharacterSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sprites\GameSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\MapSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="input\XGamePad.h">
@@ -117,6 +114,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gui\UIMessageBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\ISprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\IAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\FrameAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\Scale.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\CharacterSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\MapSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

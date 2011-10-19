@@ -2,6 +2,6 @@
 using namespace Sprites;
 
 ::CharacterSprite::CharacterSprite() { 
-	this->sprite.kindOf = Type::character;
+	this->kindOf = Type::character;
 }
 /* eof */

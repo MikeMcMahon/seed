@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 namespace Sprites { 
 	struct Type { enum type { 
@@ -25,6 +25,9 @@ namespace Sprites {
 			width;
 	};
 	struct Animation {
+        int curSkip;
+        int curFrameAnimate;
+        float skipFrames;
 		int curFrame;
 		int startFrame;
 		int numFrames;
@@ -43,13 +46,13 @@ namespace Sprites {
         float b;
         float a;
 #ifdef RENDER_ENG_DX
-	operator D3DXCOLOR() {
-		return D3DXCOLOR(r, g, b, a);
-	}
+	    operator D3DXCOLOR() {
+		    return D3DXCOLOR(r, g, b, a);
+	    }
 #else
 // Opengl color struct, not supported yet, is there one?
 #endif
-    };
+        };
 
     // Allows the user to specify if they would like the sprite to fade between colors or alphas or both
     // TODO - Implement fade
@@ -100,4 +103,4 @@ namespace Sprites {
                                                     DefaultScale,
                                                     false, false , 
                                                     false, false };
-}
+}*/
