@@ -15,11 +15,11 @@ FontSprite::~FontSprite(void)
 {
 }
 
-FontSprite::FontSprite(LPCSTR message) { 
+FontSprite::FontSprite(LPCWSTR message) { 
 	this->sprite.kindOf = Type::font;
 	this->fontColor = DEFAULT;
 	this->fontColorDisabled = DISABLED;
 	this->fontColorHi = HILIGHT;
-	this->message = message;
+	wcscpy_s ( this->message, message );
 	this->selected = false;
 }

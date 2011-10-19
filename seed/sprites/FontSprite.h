@@ -15,10 +15,10 @@ namespace Sprites {
 		};
 
 		FontSprite(void);
-		FontSprite(LPCSTR message);
+		FontSprite(LPCWSTR message);
 		~FontSprite(void);
 
-		std::string message;
+		wchar_t message[1000];
 		Color fontColor;
 		Color fontColorDisabled;
 		Color fontColorHi;

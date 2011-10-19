@@ -42,6 +42,13 @@ namespace Sprites {
         float g;
         float b;
         float a;
+#ifdef RENDER_ENG_DX
+	operator D3DXCOLOR() {
+		return D3DXCOLOR(r, g, b, a);
+	}
+#else
+// Opengl color struct, not supported yet, is there one?
+#endif
     };
 
     // Allows the user to specify if they would like the sprite to fade between colors or alphas or both
@@ -60,8 +67,8 @@ namespace Sprites {
     };
 
     struct Sprite { 
-		char 		name[100];
-		char 		resource[100];
+		wchar_t		name[100];
+		wchar_t		resource[100];
 		Type::type	kindOf;
 		Position	position;
 		Size		size;
@@ -82,8 +89,8 @@ namespace Sprites {
 	const struct Size		DefaultSize			= { 0, 0 };
 	const struct Animation	DefaultAnimation	= { 0, 0, 1, 0 };
 	const struct Move		DefaultMove			= { 0, 0, 0, 0 };
-	const struct Sprite		DefaultSprite		= { "", 
-                                                    "", 
+	const struct Sprite		DefaultSprite		= { L"", 
+                                                    L"", 
                                                     Type::base, 
                                                     DefaultPosition, 
                                                     DefaultSize, 

@@ -11,7 +11,7 @@ Sprites::GameSprite::GameSprite() {
 	this->Init();
 }
 
-Sprites::GameSprite::GameSprite(const char* resource, const char* name, float width, float height) { 
+Sprites::GameSprite::GameSprite(const wchar_t* resource, const wchar_t* name, float width, float height) { 
 	this->Init();
 #ifdef RENDER_ENG_DX
     ZeroMemory(&(this->dxSprite), sizeof(D3DX10_SPRITE));
@@ -25,13 +25,19 @@ Sprites::GameSprite::GameSprite(const char* resource, const char* name, float wi
     // Set the width and height
 	this->sprite.size.height = height;
 	this->sprite.size.width = width;
-    strcpy_s ( this->sprite.resource, resource );
-	strcpy_s ( this->sprite.name, name );
+    wcscpy_s ( this->sprite.resource, resource );
+	wcscpy_s ( this->sprite.name, name );
 
 }// GameSprite
 
 Sprites::GameSprite::~GameSprite() { 
 } 
+
+Sprites::GameSprite::operator D3DX10_SPRITE() { 
+	D3DX10_SPRITE sprite;
+	sprite.ColorModulate = this->sprite.color;
+	return sprite;
+}
 
 void Sprites::GameSprite::animationDetail(int startFrame, int numFrames, float animDuration) { 
 	this->sprite.animation.curFrame = 1; // Always start on the first frame

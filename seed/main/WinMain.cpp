@@ -103,15 +103,8 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	float interpolation = 0;
 	float next_game_tick = ::Time::GetMilis();
 
+	// Initialize the game!
 	gameMain->InitGame();
-	Sprites::GameSprite foo[MAX_SPRITES];
-	Sprites::GameSprite * gs = new GameSprite("", "", WINDOW_WIDTH, WINDOW_HEIGHT);
-		gs[0].sprite.isVisible = true;
-		gs[0].sprite.textureLoaded = false;
-		gs[0].sprite.canAnimate = true;
-		gs[0].sprite.canMove = false;
-		gs[0].sprite.position.z = 0.5f;
-		foo[0] = *gs;
 
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
@@ -429,10 +422,10 @@ void LoadTextures(GameSprite* sprites) {
         if (sprites[i].sprite.isVisible && !sprites[i].sprite.textureLoaded) { 
 			// Check and load textures for any sprites that still need it
 			ID3D10Texture2D* texture;
-			if (strcmp(sprites[i].sprite.resource, "") != 0) {
+			if (wcscmp(sprites[i].sprite.resource, L"") != 0) {
 				texture = TextureHandler::GetTexture2DFromFile(sprites[i].sprite.resource, pD3DDevice);
 			} else {
-				texture = TextureHandler::GetTexture2DFromFile("../textures/main-menu-1024x768.png", pD3DDevice);
+				texture = TextureHandler::GetTexture2DFromFile(L"../textures/main-menu-1024x768.png", pD3DDevice);
 			}
 
 			ID3D10ShaderResourceView* srv = NULL;
@@ -449,7 +442,7 @@ void LoadTextures(GameSprite* sprites) {
 			sprites[i].dxSprite.TexCoord.y = 0;
 			sprites[i].dxSprite.TexSize.x = 1.0f;
 			sprites[i].dxSprite.TexSize.y = 1.0f;
-			sprites[i].dxSprite.ColorModulate = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+			sprites[i].dxSprite.ColorModulate = sprites[i].sprite.color; // D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
             sprites[i].sprite.textureLoaded = true;
 		}
 		i++;

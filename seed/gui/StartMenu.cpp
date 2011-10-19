@@ -12,8 +12,8 @@ const float padding = 5;
 StartMenu::StartMenu(void)
 {
 	this->background = Sprites::GameSprite(
-		"../textures/main-menu-1024x768.png", 
-		"background",
+		L"../textures/main-menu-1024x768.png", 
+		L"background",
 		(float)WINDOW_WIDTH, 
 		(float)WINDOW_HEIGHT
 		);
@@ -22,8 +22,8 @@ StartMenu::StartMenu(void)
 	this->background.sprite.canMove = false;
 
 	this->cursor = Sprites::GameSprite(
-		"../textures/cursor.png", 
-		"cursor",
+		L"../textures/cursor.png", 
+		L"cursor",
 		24.0f, 
 		24.0f
 		);
