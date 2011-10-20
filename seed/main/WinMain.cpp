@@ -109,17 +109,20 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	gameMain->InitGame();
 
     // Get the current time in milis
-    float start = Time::GetMilis();
     int countLoops = 0;
 
     LONGLONG curTime;
-    LONGLONG perCnt;
+    LONGLONG perfCnt;
     LONGLONG nextTime;
     DWORD    timeCount;
 
-    QueryPerformanceFrequency((LARGE_INTEGER *) &perCnt);
-    timeCount = perCnt / TICKS_PER_SECOND;
+    QueryPerformanceFrequency((LARGE_INTEGER *) &perfCnt);
+    timeCount = perfCnt / TICKS_PER_SECOND;
     QueryPerformanceCounter((LARGE_INTEGER *) &nextTime);
+
+	wchar_t buffer[100];
+
+	float start = Time::GetMilis();
 
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
@@ -131,11 +134,23 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		
 		loops = 0;
         QueryPerformanceCounter((LARGE_INTEGER *) &curTime);
-		if ( curTime > nextTime ) { 
+		while ( curTime > nextTime && loops <= MAX_FRAMESKIP ) { 
+			//swprintf_s(buffer, 100, L"Current Loop: %d and current time: %.0f\n", countLoops, Time::GetMilis());
+			OutputDebugString(buffer); 
+
 			gameMain->UpdateScene();
 			gameMain->UpdateSprites();
 
-            nextTime + timeCount;
+            nextTime += timeCount;
+			if (countLoops >= TICKS_PER_SECOND) { 
+				float end = Time::GetMilis();
+				swprintf_s(buffer, 100, L"Started at: %.0f ended at %.0f for a diff of %.02f\n", start, end, (end - start));
+				OutputDebugString(buffer);
+				start = end;
+				countLoops = -1;
+				//return 1;
+			}
+			loops++;
             countLoops++;
 		}
 

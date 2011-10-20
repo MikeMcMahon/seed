@@ -52,3 +52,4 @@ namespace Seed {
         void LoadTextures();
     }; // GameMain
 }
+/* eof */

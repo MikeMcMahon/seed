@@ -30,7 +30,7 @@ void GameMain::InitGame() {
 	gs[0].IsVisible ( true );
     gs[0].CanAnimate ( true );
     gs[0].CanMove ( true );
-    gs[0].AnimationDetail(8.0f, 8);
+    gs[0].AnimationDetail(1.0f, 8);
 	gs[0].Position ( WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0.5f );
     gs[0].kindOf = Sprites::Type::background;
         
