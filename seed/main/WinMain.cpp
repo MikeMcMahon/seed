@@ -130,18 +130,18 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 			DispatchMessage(&msg);
 		}
 		// Detects the xbox controllers
-		//xControl->GetControllerStates();
+		xControl->GetControllerStates();
 		
 		loops = 0;
         QueryPerformanceCounter((LARGE_INTEGER *) &curTime);
-		while ( curTime > nextTime && loops <= MAX_FRAMESKIP ) { 
+		while ( Time::GetMilis() > next_game_tick && loops <= MAX_FRAMESKIP ) { 
 			//swprintf_s(buffer, 100, L"Current Loop: %d and current time: %.0f\n", countLoops, Time::GetMilis());
-			OutputDebugString(buffer); 
+			//OutputDebugString(buffer); 
 
 			gameMain->UpdateScene();
 			gameMain->UpdateSprites();
 
-            nextTime += timeCount;
+            next_game_tick += SKIP_TICKS;
 			if (countLoops >= TICKS_PER_SECOND) { 
 				float end = Time::GetMilis();
 				swprintf_s(buffer, 100, L"Started at: %.0f ended at %.0f for a diff of %.02f\n", start, end, (end - start));
@@ -158,7 +158,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
         gameMain->Render();
 
 		// Moves the sprites around directionaly
-		interpolation = float ( ::Time::GetMilis() + SKIP_TICKS - next_game_tick ) / float ( SKIP_TICKS );
+		interpolation = float ( Time::GetMilis() + SKIP_TICKS - next_game_tick ) / float ( SKIP_TICKS );
 		gameMain->MoveSprites(interpolation);
 	}
 
@@ -251,8 +251,6 @@ void Render(GameSprite* sprites, int spritesToRender) {
 	}
 } // Render
 
-
-
 /**************************************
 *** updates the texture locations and orients the sprites to the world 
 *** 
@@ -316,7 +314,6 @@ void UpdateScene(GameSprite* sprites) {
 	numActiveSprites = curPoolIndex;
 } // UpdateScene 
 
-
 /*****************************************************
 **  MoveSprites
 **      Moves the sprites around the screen and translates the world as necessary
@@ -371,8 +368,8 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
                         windowOffsets.offsetLeft += moveR;
 
                         // Translate the world to the right
-                        ::SpriteUtil::TranslateSprites((moveR *-1),0,sprites,0);
-                        // Ensure our sprite doesn't go below the right edge
+                        ::SpriteUtil::TranslateSprites((moveR *-1),0,sprites,i);
+                        // Ensure our sprite doesn't go beyond the right edge
                         posX -= moveR;
                     }
                 }
@@ -390,9 +387,9 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
                         windowOffsets.offsetLeft -= moveL;
 
                         // Translate the world to the right
-                        ::SpriteUtil::TranslateSprites((moveL),0,sprites,0);
-                        // Ensure our sprite doesn't go below the right edge
-                        posX -= moveL;
+                        ::SpriteUtil::TranslateSprites((moveL),0,sprites,i);
+                        // Ensure our sprite doesn't go beyond the left edge
+                        posX += moveL;
                     }
                 }
             } // Translate for left
@@ -427,11 +424,10 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
                     if (windowOffsets.offsetTop > 0 && posY <= 0) { 
                         windowOffsets.offsetBottom += moveU;
                         windowOffsets.offsetTop -= moveU;
-                        
 
                         // Translate the world down
                         ::SpriteUtil::TranslateSprites(0, moveU, sprites, i);
-                        posY -= moveU;
+                        posY += moveU;
                     }
                 }
             } // Translate for up

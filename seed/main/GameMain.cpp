@@ -31,13 +31,30 @@ void GameMain::InitGame() {
     gs[0].CanAnimate ( true );
     gs[0].CanMove ( true );
     gs[0].AnimationDetail(1.0f, 8);
+	gs[0].MoveDistance(0.5, 0.5f, 0.5f, 0.5f);
 	gs[0].Position ( WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0.5f );
-    gs[0].kindOf = Sprites::Type::background;
+	gs[0].kindOf = Sprites::Type::character;
         
-    Sprites::GameSprite *gs2 = new Sprites::GameSprite(L"../textures/main-menu-1024x768.png", L"background", WINDOW_WIDTH, WINDOW_HEIGHT);
-    gs2->IsVisible(true);
-    gs2->Position(0, 0, 0.5f );
+    Sprites::GameSprite *gs2 = new Sprites::GameSprite(L"../textures/main-menu-1024x768.png", L"background", WINDOW_WIDTH, WINDOW_HEIGHT );
+
+	// TODO - Pull this out into it's own "center" function
+	// Used to calculate and center the sprite
+	float width = gs2->Size().width;
+	float height = gs2->Size().height;
+
+	width = WINDOW_WIDTH - width;
+	height = WINDOW_HEIGHT - height;
+	width /= 2;
+	height /= 2;
+
+    gs2->IsVisible ( true );
+    gs2->Position ( width, height, 0.5f );
     gs2->kindOf = Sprites::Type::background;
+
+	this->windowOffsets->offsetBottom	= ( gs2->Size().height - WINDOW_HEIGHT ) / 2 ;
+	this->windowOffsets->offsetTop		= ( gs2->Size().height - WINDOW_HEIGHT ) / 2 ;
+	this->windowOffsets->offsetLeft		= ( gs2->Size().width - WINDOW_WIDTH ) / 2 ;
+	this->windowOffsets->offsetRight	= ( gs2->Size().width - WINDOW_WIDTH ) / 2 ;
 
     this->gameSprites[0] = *gs2;
 	this->gameSprites[1] = *gs; 
