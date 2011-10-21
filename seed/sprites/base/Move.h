@@ -1,6 +1,7 @@
+#pragma once
+
 namespace Sprites { 
 	struct Move { 
-        bool canMove;
 		float
 			up,
 			down,

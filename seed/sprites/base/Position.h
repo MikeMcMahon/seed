@@ -1,3 +1,5 @@
+#pragma once 
+
 namespace Sprites { 
 	struct Position { 
 		float 

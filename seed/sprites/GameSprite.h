@@ -4,11 +4,14 @@
 #include "..\sprites\animations\FrameAnimation.h" 
 #include "..\sprites\base\Scale.h"
 #include "..\sprites\base\Color.h"
+#include "..\sprites\base\SpriteSheet.h"
 
 namespace Sprites {
-	class GameSprite : public ISprite, public FrameAnimation {
+	class GameSprite : public ISprite, public FrameAnimation, public SpriteSheet {
 	private: 
         bool canAnimate;
+        bool isVisible;
+        bool canMove;
     	void Init();
 	public:
         Color color;
@@ -28,6 +31,15 @@ namespace Sprites {
 
 		bool CanAnimate();
 		void CanAnimate(bool animate);
+
+        void Name(wchar_t* name);
+        const wchar_t* Name();
+
+        void CanMove(bool canMove);
+        bool CanMove();
+
+        void IsVisible(bool visible);
+        bool IsVisible();
 	}; // GameSprite
 } // Sprites
 /* eof */

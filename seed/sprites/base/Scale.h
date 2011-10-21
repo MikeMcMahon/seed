@@ -1,3 +1,5 @@
+#pragma once
+
 namespace Sprites { 
     // Allows the user to specify the sprite should scale in or out 
     struct Scale {

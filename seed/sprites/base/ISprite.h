@@ -10,8 +10,6 @@ namespace Sprites {
     class ISprite { 
     protected:
         wchar_t         name[100];
-        wchar_t         resource[100];
-        bool            isVisible;
         bool            textureLoaded;
         Position        position;
         Size            size;
@@ -20,18 +18,6 @@ namespace Sprites {
     public:
 		virtual void SpriteType(Type::type kindOf) = 0;
 		virtual Type::type SpriteType() = 0;
-
-        void CanMove(bool canMove) { this->move.canMove = canMove; }
-        bool CanMove() { return this->move.canMove; }
-
-        void Name(wchar_t* name) { wcscpy_s ( this->name, name ); }
-        const wchar_t* Name() { return this->name; }
-
-        void Resource(wchar_t* resource) { wcscpy_s ( this->resource, resource ); }
-        const wchar_t* Resource() { return this->resource; };
-
-        void IsVisible(bool visible) { this->isVisible = visible; }
-        bool IsVisible() { return this->isVisible; };
 
         void TextureLoaded(bool loaded) { this->textureLoaded = loaded; }
         bool TextureLoaded() { return this->textureLoaded; };

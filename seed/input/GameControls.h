@@ -24,15 +24,15 @@ namespace Input {
 		enum Buttons { 
 			KEY_NULL	= 0x0,
 			KEY_UP		= 0x1,
-			KEY_DOWN	= (KEY_UP * 2),
-			KEY_LEFT	= (KEY_DOWN * 2),
-			KEY_RIGHT	= (KEY_LEFT * 2),
-			KEY_START	= (KEY_RIGHT * 2),
+			KEY_DOWN	= (KEY_UP << 1),
+			KEY_LEFT	= (KEY_DOWN << 1),
+			KEY_RIGHT	= (KEY_LEFT << 1),
+			KEY_START	= (KEY_RIGHT << 1),
 			KEY_PAUSE = KEY_START,
-			KEY_SELECT	= (KEY_PAUSE * 2),
-			KEY_INTERACT= (KEY_SELECT * 2),
-			KEY_RUN		= (KEY_INTERACT * 2),
-			KEY_CANCEL	= (KEY_RUN * 2)
+			KEY_SELECT	= (KEY_PAUSE << 1),
+			KEY_INTERACT= (KEY_SELECT << 1),
+			KEY_RUN		= (KEY_INTERACT << 1),
+			KEY_CANCEL	= (KEY_RUN << 1)
 		};}; // Buttons
 	};
 }
