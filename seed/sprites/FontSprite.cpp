@@ -8,6 +8,7 @@ const struct FontSprite::Color HILIGHT	= { 1.0f, 0.0f, 0.0f, 0.0f };
 
 FontSprite::FontSprite(void)
 {
+	this->SpriteType ( Type::font );
 }
 
 
@@ -16,7 +17,7 @@ FontSprite::~FontSprite(void)
 }
 
 FontSprite::FontSprite(LPCWSTR message) { 
-    this->kindOf = Type::font;
+    //this->kindOf = Type::font;
 	this->fontColor = DEFAULT;
 	this->fontColorDisabled = DISABLED;
 	this->fontColorHi = HILIGHT;

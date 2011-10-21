@@ -11,7 +11,6 @@
 #include "../gui/StartMenu.h"
 #include "../font/GameFonts.h"
 #include "GameMain.h"
-#include "../sprites/base/FrameAnimation.h"
 
 using namespace Input;
 using namespace Sprites;
@@ -111,15 +110,6 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
     // Get the current time in milis
     int countLoops = 0;
 
-    LONGLONG curTime;
-    LONGLONG perfCnt;
-    LONGLONG nextTime;
-    DWORD    timeCount;
-
-    QueryPerformanceFrequency((LARGE_INTEGER *) &perfCnt);
-    timeCount = perfCnt / TICKS_PER_SECOND;
-    QueryPerformanceCounter((LARGE_INTEGER *) &nextTime);
-
 	wchar_t buffer[100];
 
 	float start = Time::GetMilis();
@@ -133,7 +123,6 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		xControl->GetControllerStates();
 		
 		loops = 0;
-        QueryPerformanceCounter((LARGE_INTEGER *) &curTime);
 		while ( Time::GetMilis() > next_game_tick && loops <= MAX_FRAMESKIP ) { 
 			//swprintf_s(buffer, 100, L"Current Loop: %d and current time: %.0f\n", countLoops, Time::GetMilis());
 			//OutputDebugString(buffer); 
@@ -225,7 +214,7 @@ void Render(GameSprite* sprites, int spritesToRender) {
             // Draw the text on top
 /*			c = 0;
 			while (c < MAX_SPRITES) { 
-				if ((sprites + c)->sprite.kindOf == Type::font)
+				if ((sprites + c)->sprite.SpriteType() == Type::font)
 					DrawTextNow(pGameFont, pSpriteObject, (sprites + c)->Position().x, (sprites + c)->Position().y, ((FontSprite*)(sprites + c))->message.c_str());
 				c++;
 			}*/
@@ -296,8 +285,8 @@ void UpdateScene(GameSprite* sprites) {
 			
 			// Animate the sprite
 			if (sprites[i].CanAnimate()) {
-                float curFrame = sprites[i].CurFrame();
-                float numFrames = sprites[i].NumFrames();
+                float curFrame = (float)sprites[i].CurFrame();
+                float numFrames = (float)sprites[i].NumFrames();
                 float div = curFrame / numFrames;
                 float texCoordX = div; 
                 float texSizeX = (float)(sprites[i].Size().width / (sprites[i].Size().width * sprites[i].NumFrames()));
@@ -322,7 +311,7 @@ void UpdateScene(GameSprite* sprites) {
 void MoveSprites(GameSprite* sprites, float interpolation) { 
     // We want to move a moveable sprite of course! 
 	for (int i = 0; i < MAX_SPRITES; i++) {
-        if (sprites[i].IsVisible() && sprites[i].CanMove()) { 
+		if (sprites[i].IsVisible() && sprites[i].CanMove() && sprites[i].SpriteType() == Type::character) { 
             
 			// Check to see which direction was pressed
 			float posY = sprites[i].Position().y;
@@ -450,7 +439,7 @@ void LoadTextures(GameSprite* sprites) {
         if (sprites[i].IsVisible() && !sprites[i].TextureLoaded()) { 
 			// Check and load textures for any sprites that still need it
 			ID3D10Texture2D* texture = NULL;
-            if (sprites[i].kindOf != Type::color) {
+            if (sprites[i].SpriteType() != Type::color) {
                 texture = TextureHandler::GetTexture2DFromFile(sprites[i].Resource(), pD3DDevice);
 			}
 

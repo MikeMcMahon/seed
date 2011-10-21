@@ -35,8 +35,16 @@ void GameSprite::Init() {
     this->CanMove ( false );
     this->IsVisible ( false );
 
-    this->kindOf = Type::base;
     this->TextureLoaded ( false );
+	this->SpriteType ( Type::base );
 }
 
+void GameSprite::SpriteType(Type::type kindOf) { 
+	this->kindOf = kindOf;
+}
+
+Type::type GameSprite::SpriteType() { return this->kindOf; }
+
+bool GameSprite::CanAnimate() { return canAnimate; } 
+void GameSprite::CanAnimate(bool animate) { this->canAnimate = animate; } 
 /* eof */

@@ -1,39 +1,12 @@
 #pragma once
 
-#include "FrameAnimation.h"
+#include "..\animations\FrameAnimation.h"
+#include "SpriteType.h"
+#include "Size.h"
+#include "Position.h"
+#include "Move.h"
 
 namespace Sprites {
-	struct Type { enum type { 
-		base,
-		character,
-		battlecharacter,
-		monster,
-		npc,
-		tile,
-		font,
-		map,
-		background,
-		color
-	};};
-	struct Position { 
-		float 
-			x, 
-			y, 
-			z;
-	};
-	struct Size { 
-		float 
-			height, 
-			width;
-	};
-	struct Move { 
-        bool canMove;
-		float
-			up,
-			down,
-			left,
-			right;
-	};
     class ISprite { 
     protected:
         wchar_t         name[100];
@@ -43,8 +16,11 @@ namespace Sprites {
         Position        position;
         Size            size;
         Move            move;
-    public:
         Type::type      kindOf;
+    public:
+		virtual void SpriteType(Type::type kindOf) = 0;
+		virtual Type::type SpriteType() = 0;
+
         void CanMove(bool canMove) { this->move.canMove = canMove; }
         bool CanMove() { return this->move.canMove; }
 

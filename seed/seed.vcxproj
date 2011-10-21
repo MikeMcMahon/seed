@@ -52,8 +52,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(DXSDK_DIR)\include;..\Include</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>../Game.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)\include;..\Include;$(ProjectDir)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>Game.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,7 +81,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main\GameMain.cpp" />
-    <ClCompile Include="sprites\CharacterSprite.cpp" />
+    <ClCompile Include="sprites\base\SpriteSheet.cpp" />
+    <ClCompile Include="sprites\MainCharacter.cpp" />
     <ClCompile Include="sprites\FontSprite.cpp" />
     <ClCompile Include="gui\StartMenu.cpp" />
     <ClCompile Include="gui\GameWindow.cpp" />
@@ -91,12 +92,17 @@
     <ClCompile Include="gui\UIMessageBox.cpp" />
     <ClCompile Include="util\TextureHandler.cpp" />
     <ClInclude Include="main\GameMain.h" />
+    <ClInclude Include="sprites\base\Move.h" />
+    <ClInclude Include="sprites\base\Position.h" />
+    <ClInclude Include="sprites\base\Size.h" />
+    <ClInclude Include="sprites\base\SpriteSheet.h" />
     <ClInclude Include="sprites\base\Color.h" />
-    <ClInclude Include="sprites\base\FrameAnimation.h" />
-    <ClInclude Include="sprites\base\IAnimation.h" />
+    <ClInclude Include="sprites\animations\FrameAnimation.h" />
+    <ClInclude Include="sprites\animations\IAnimation.h" />
     <ClInclude Include="sprites\base\ISprite.h" />
     <ClInclude Include="sprites\base\Scale.h" />
-    <ClInclude Include="sprites\CharacterSprite.h" />
+    <ClInclude Include="sprites\base\SpriteType.h" />
+    <ClInclude Include="sprites\MainCharacter.h" />
     <ClInclude Include="sprites\FontSprite.h" />
     <ClInclude Include="font\GameFonts.h">
       <FileType>CppCode</FileType>

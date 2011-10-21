@@ -5,7 +5,6 @@
 namespace Sprites { 
     class FrameAnimation : public IAnimation { 
     private:
-        bool canAnimate;
         int curFrameAnimate;
     public:
         FrameAnimation(void) { 
@@ -16,8 +15,11 @@ namespace Sprites {
         int CurFrame() { 
             return this->curFrameAnimate; 
         }
-        bool CanAnimate() { return canAnimate; } 
-        void CanAnimate(bool animate) { this->canAnimate = animate; } 
+		
+		void SetFrame(int frame) { 
+			this->curFrameAnimate = frame;
+		}
+
         void IncrementFrame() { 
 	        if (this->curSkip <= this->skipFrames && this->curSkip == 0) { 
                 // If there are still available frames to animate
@@ -25,7 +27,7 @@ namespace Sprites {
 		            this->curFrameAnimate++; 
 
                 // If there are no more frames to animate
-                if (this->curFrameAnimate >= this->numFrames)
+				if (this->curFrameAnimate >= this->numFrames)
                     this->curFrameAnimate = 0;
 	        }
 	        if (this->curSkip >= this->skipFrames) {

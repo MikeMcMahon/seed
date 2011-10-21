@@ -33,7 +33,6 @@ void GameMain::InitGame() {
     gs[0].AnimationDetail(1.0f, 8);
 	gs[0].MoveDistance(0.5, 0.5f, 0.5f, 0.5f);
 	gs[0].Position ( WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0.5f );
-	gs[0].kindOf = Sprites::Type::character;
         
     Sprites::GameSprite *gs2 = new Sprites::GameSprite(L"../textures/main-menu-1024x768.png", L"background", WINDOW_WIDTH, WINDOW_HEIGHT );
 
@@ -49,7 +48,6 @@ void GameMain::InitGame() {
 
     gs2->IsVisible ( true );
     gs2->Position ( width, height, 0.5f );
-    gs2->kindOf = Sprites::Type::background;
 
 	this->windowOffsets->offsetBottom	= ( gs2->Size().height - WINDOW_HEIGHT ) / 2 ;
 	this->windowOffsets->offsetTop		= ( gs2->Size().height - WINDOW_HEIGHT ) / 2 ;

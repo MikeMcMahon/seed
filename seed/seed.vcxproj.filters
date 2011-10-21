@@ -57,7 +57,10 @@
     <ClCompile Include="main\GameMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sprites\CharacterSprite.cpp">
+    <ClCompile Include="sprites\MainCharacter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sprites\base\SpriteSheet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,22 +122,37 @@
     <ClInclude Include="sprites\base\ISprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprites\base\IAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\base\FrameAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sprites\base\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprites\base\Scale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprites\CharacterSprite.h">
+    <ClInclude Include="sprites\MapSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprites\MapSprite.h">
+    <ClInclude Include="sprites\MainCharacter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\SpriteType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\SpriteSheet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\animations\IAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\animations\FrameAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\Size.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\Position.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\Move.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

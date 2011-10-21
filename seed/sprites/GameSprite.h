@@ -1,7 +1,7 @@
 #pragma once
 
 #include "..\sprites\base\ISprite.h"
-#include "..\sprites\base\FrameAnimation.h" 
+#include "..\sprites\animations\FrameAnimation.h" 
 #include "..\sprites\base\Scale.h"
 #include "..\sprites\base\Color.h"
 
@@ -22,6 +22,12 @@ namespace Sprites {
         GameSprite();
         GameSprite(wchar_t* resource, wchar_t* name, float width, float height);
 		~GameSprite();
+		
+		void SpriteType( Type::type kindOf );
+		Type::type SpriteType();
+
+		bool CanAnimate();
+		void CanAnimate(bool animate);
 	}; // GameSprite
 } // Sprites
 /* eof */
