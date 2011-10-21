@@ -92,6 +92,7 @@
     <ClCompile Include="gui\UIMessageBox.cpp" />
     <ClCompile Include="util\TextureHandler.cpp" />
     <ClInclude Include="main\GameMain.h" />
+    <ClInclude Include="sprites\animations\Animation.h" />
     <ClInclude Include="sprites\base\Move.h" />
     <ClInclude Include="sprites\base\Position.h" />
     <ClInclude Include="sprites\base\Size.h" />

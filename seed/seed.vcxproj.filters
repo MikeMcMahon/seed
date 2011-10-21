@@ -155,6 +155,9 @@
     <ClInclude Include="sprites\base\Move.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sprites\animations\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="textures\text_1_64x64.png">
