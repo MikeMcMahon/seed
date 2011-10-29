@@ -1,8 +1,8 @@
-#include "GameMain.h"
+#include "DarkSeed.h"
 
-using namespace Seed;
+using namespace Game;
 
-GameMain::GameMain(void)
+DarkSeed::DarkSeed(void)
 {
     // We only support directx right now
 #ifdef RENDER_ENG_DX
@@ -12,7 +12,7 @@ GameMain::GameMain(void)
 #endif
 }
 
-GameMain::~GameMain(void)
+DarkSeed::~DarkSeed(void)
 {
 }
 
@@ -22,17 +22,27 @@ GameMain::~GameMain(void)
 **	Creates the StartMenu To Display
 **	Pre-Loads any textures / resources
 *************************************************/
-void GameMain::InitGame() { 
+void DarkSeed::InitGame() { 
 	gameMode = GameModes::MAIN_MENU;
 		
     // HACK - Demo sprite to test sprite engine
+	//Sprites::Character *mc = new Sprites::GameSprite(L"../textures/ball-bounce-512x64.png", L"Vance", 32, 32) )
+
 	Sprites::GameSprite *gs = new Sprites::GameSprite(L"../textures/ball-bounce-512x64.png", L"bouncingball", 64, 64);
 	gs[0].IsVisible ( true );
     gs[0].CanAnimate ( true );
     gs[0].CanMove ( true );
-    gs[0].AnimationDetail(1.0f, 8);
-	gs[0].MoveDistance(0.5, 0.5f, 0.5f, 0.5f);
-	gs[0].Position ( WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0.5f );
+	
+	Sprites::Coordinates c;
+	c.x = 0;
+	c.y = 0;
+	
+	gs[0].AddAnimation(L"bounce", 0.5f, 8, c);
+	gs->SyncPlayAnimation ( L"bounce" );
+
+	gs[0].MoveDistance(0.05f, 0.05f, 0.05f, 0.05f);
+	gs[0].Position ( ( WINDOW_WIDTH / 2 ) - ( gs->Size().width /2 ), ( WINDOW_HEIGHT / 2 ) - ( gs->Size().height / 2 ) , 0.5f );
+	gs->SpriteType ( Sprites::Type::character );
         
     Sprites::GameSprite *gs2 = new Sprites::GameSprite(L"../textures/main-menu-1024x768.png", L"background", WINDOW_WIDTH, WINDOW_HEIGHT );
 
@@ -47,7 +57,7 @@ void GameMain::InitGame() {
 	height /= 2;
 
     gs2->IsVisible ( true );
-    gs2->Position ( width, height, 0.5f );
+    gs2->Position (  width, height, 0.5f );
 
 	this->windowOffsets->offsetBottom	= ( gs2->Size().height - WINDOW_HEIGHT ) / 2 ;
 	this->windowOffsets->offsetTop		= ( gs2->Size().height - WINDOW_HEIGHT ) / 2 ;
@@ -65,7 +75,7 @@ void GameMain::InitGame() {
 ** MoveSprites()
 **	Handles any incomming key presses
 *************************************************/
-void GameMain::MoveSprites(float interpolation) { 
+void DarkSeed::MoveSprites(float interpolation) { 
     // Calculate the window offsets based on the current map sprite
     // TODO - there will be times when we don't need to calculate offsets (waste of time) probably want to create a flag 
     (*this->lpfMoveSprts)(gameSprites, interpolation);
@@ -76,7 +86,7 @@ void GameMain::MoveSprites(float interpolation) {
 *** Sprites must maintain their own knowledge of FPS 
 *** TODO - sprites should animate on time without having to calculate skips themselves
 ***************************************/
-void GameMain::UpdateSprites() { 
+void DarkSeed::UpdateSprites() { 
 	for (int i = 0; i < MAX_SPRITES; i++) { 
         if (gameSprites[i].IsVisible() && gameSprites[i].CanAnimate()) { 
 			gameSprites[i].IncrementFrame();
@@ -89,7 +99,7 @@ void GameMain::UpdateSprites() {
 **	Calls the render function passed in 
 ** Returns
 *************************************************/
-void GameMain::Render() { 
+void DarkSeed::Render() { 
     (*this->lpfRender)(this->gameSprites, 0);
 }
 
@@ -97,11 +107,11 @@ void GameMain::Render() {
 ** UpdateScene()
 **	Calls the updatescene function 
 *************************************************/
-void GameMain::UpdateScene() { 
+void DarkSeed::UpdateScene() { 
     (*this->lpfUpdateSc)(this->gameSprites);
 }
 
-void GameMain::LoadTextures() { 
+void DarkSeed::LoadTextures() { 
     // Sprites to load textures for
     (*this->lpfLoadTxtrs)(this->gameSprites);
 }

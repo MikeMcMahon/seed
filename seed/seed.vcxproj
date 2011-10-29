@@ -80,9 +80,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main\GameMain.cpp" />
+    <ClCompile Include="darkseed\DarkSeed.cpp" />
     <ClCompile Include="sprites\base\SpriteSheet.cpp" />
-    <ClCompile Include="sprites\MainCharacter.cpp" />
+    <ClCompile Include="sprites\Character.cpp" />
     <ClCompile Include="sprites\FontSprite.cpp" />
     <ClCompile Include="gui\StartMenu.cpp" />
     <ClCompile Include="gui\GameWindow.cpp" />
@@ -91,10 +91,11 @@
     <ClCompile Include="sprites\SpriteUtils.cpp" />
     <ClCompile Include="gui\UIMessageBox.cpp" />
     <ClCompile Include="util\TextureHandler.cpp" />
-    <ClInclude Include="main\GameMain.h" />
+    <ClInclude Include="main\GameLocations.h" />
+    <ClInclude Include="darkseed\DarkSeed.h" />
     <ClInclude Include="sprites\animations\Animation.h" />
     <ClInclude Include="sprites\base\Move.h" />
-    <ClInclude Include="sprites\base\Position.h" />
+    <ClInclude Include="sprites\base\Coordinates.h" />
     <ClInclude Include="sprites\base\Size.h" />
     <ClInclude Include="sprites\base\SpriteSheet.h" />
     <ClInclude Include="sprites\base\Color.h" />
@@ -103,7 +104,7 @@
     <ClInclude Include="sprites\base\ISprite.h" />
     <ClInclude Include="sprites\base\Scale.h" />
     <ClInclude Include="sprites\base\SpriteType.h" />
-    <ClInclude Include="sprites\MainCharacter.h" />
+    <ClInclude Include="sprites\Character.h" />
     <ClInclude Include="sprites\FontSprite.h" />
     <ClInclude Include="font\GameFonts.h">
       <FileType>CppCode</FileType>

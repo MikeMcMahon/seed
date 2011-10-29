@@ -12,7 +12,7 @@ namespace Sprites {
         }
         ~FrameAnimation(void) { }
 
-        int CurFrame() { 
+		int CurFrame() { 
             return this->curFrameAnimate; 
         }
 		

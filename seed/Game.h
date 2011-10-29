@@ -27,7 +27,7 @@
 // Window handling stuff
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
-#define CLASS_NAME TEXT("SEED")
+#define CLASS_NAME TEXT("DarkSeed")
 
 #if _DEBUG
     #define DIRECTORY_PREFIX "../"

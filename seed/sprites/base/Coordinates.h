@@ -1,7 +1,7 @@
 #pragma once 
 
 namespace Sprites { 
-	struct Position { 
+	struct Coordinates { 
 		float 
 			x, 
 			y, 

@@ -30,7 +30,7 @@ StartMenu::StartMenu(void)
 	this->cursor.CanAnimate ( false );
 	this->cursor.IsVisible ( true );
 	this->cursor.CanMove ( false );
-	this->cursor.Position (441, 336, 0);
+	this->cursor.Position ( 441, 336, 0);
 
 	// Create the text sprites
 

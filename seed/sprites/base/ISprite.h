@@ -1,9 +1,9 @@
 #pragma once
 
-#include "..\animations\FrameAnimation.h"
+#include "../animations/FrameAnimation.h"
 #include "SpriteType.h"
 #include "Size.h"
-#include "Position.h"
+#include "Coordinates.h"
 #include "Move.h"
 
 namespace Sprites {
@@ -11,7 +11,7 @@ namespace Sprites {
     protected:
         wchar_t         name[100];
         bool            textureLoaded;
-        Position        position;
+        Coordinates     position;
         Size            size;
         Move            move;
         Type::type      kindOf;
@@ -30,7 +30,7 @@ namespace Sprites {
             this->move.down = down;
         }
 
-        virtual Position Position() { return position; }
+        virtual Coordinates Position() { return position; }
         virtual void Position(float x, float y, float z) {
             position.x = x;
             position.y = y;

@@ -54,13 +54,13 @@
     <ClCompile Include="gui\UIMessageBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main\GameMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sprites\MainCharacter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sprites\base\SpriteSheet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sprites\Character.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="darkseed\DarkSeed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,9 +113,6 @@
     <ClInclude Include="gui\StartMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main\GameMain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gui\UIMessageBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -129,9 +126,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprites\MapSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\MainCharacter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprites\base\SpriteType.h">
@@ -149,13 +143,22 @@
     <ClInclude Include="sprites\base\Size.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprites\base\Position.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sprites\base\Move.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprites\animations\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\base\Coordinates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main\GameLocations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites\Character.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="darkseed\DarkSeed.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

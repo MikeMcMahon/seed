@@ -1,18 +1,23 @@
 #pragma once
 
-#include "..\sprites\base\ISprite.h"
-#include "..\sprites\animations\FrameAnimation.h" 
-#include "..\sprites\base\Scale.h"
-#include "..\sprites\base\Color.h"
-#include "..\sprites\base\SpriteSheet.h"
+#include "../sprites/base/ISprite.h"
+#include "../sprites/animations/FrameAnimation.h" 
+#include "../sprites/animations/Animation.h"
+#include "../sprites/base/Coordinates.h"
+#include "../sprites/base/Scale.h"
+#include "../sprites/base/Color.h"
+#include "../sprites/base/SpriteSheet.h"
 
 namespace Sprites {
 	class GameSprite : public ISprite, public FrameAnimation, public SpriteSheet {
 	private: 
+		static const int MAX_ANIMTATIONS = 100;
         bool canAnimate;
         bool isVisible;
         bool canMove;
     	void Init();
+		int savedAnimations;
+		Animation animations[GameSprite::MAX_ANIMTATIONS];
 	public:
         Color color;
         Scale scale;
@@ -25,7 +30,12 @@ namespace Sprites {
         GameSprite();
         GameSprite(wchar_t* resource, wchar_t* name, float width, float height);
 		~GameSprite();
-		
+
+		bool AddAnimation ( wchar_t[100], float duration, int numFrames, Coordinates );
+		Animation GetAnimation ( wchar_t[100] );
+		bool SetAnimation ( Animation );
+		void SyncPlayAnimation ( wchar_t description[100] );
+
 		void SpriteType( Type::type kindOf );
 		Type::type SpriteType();
 

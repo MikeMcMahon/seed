@@ -1,12 +1,13 @@
 #pragma once
 
-#include "..\input\GameControls.h"
-#include "..\sprites\GameSprite.h"
-#include "..\gui\StartMenu.h"
-#include "..\input\XGamePad.h"
-#include "..\gui\GameWindow.h"
+#include "../input/GameControls.h"
+#include "../sprites/GameSprite.h"
+#include "../gui/StartMenu.h"
+#include "../input/XGamePad.h"
+#include "../gui/GameWindow.h"
 
-#include "GameModes.h"
+#include "../main/GameModes.h"
+
 #ifdef RENDER_ENG_DX 
 typedef void (*RENDER)(Sprites::GameSprite*, int);
 typedef void (*UPDATE)(Sprites::GameSprite*);
@@ -19,10 +20,11 @@ typedef void (*LOADTX)(Sprites::GameSprite*);
 struct RenderEngine { enum type { 
     directx,
 	opengl};};
-namespace Seed { 
-    class GameMain
+namespace Game { 
+    class DarkSeed
     {
     private:
+		
 	    Sprites::GameSprite gameSprites[MAX_SPRITES];
         GameModes::modes gameMode;
 
@@ -40,8 +42,8 @@ namespace Seed {
         WindowOffsets* windowOffsets;
         RenderEngine::type engineType;         // The kind of engine to render against, DX only right now
 
-	    GameMain(void);
-	    ~GameMain(void);
+	    DarkSeed(void);
+	    ~DarkSeed(void);
 	    void InitGame();
 	    void MoveSprites(float interpolation);
         void UpdateSprites();
@@ -50,6 +52,6 @@ namespace Seed {
 
     private:
         void LoadTextures();
-    }; // GameMain
+    }; // DarkSeed
 }
 /* eof */

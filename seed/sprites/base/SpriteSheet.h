@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\base\Size.h"
+#include "../base/Size.h"
 
 namespace Sprites { 
 	class SpriteSheet

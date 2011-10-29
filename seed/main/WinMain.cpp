@@ -10,12 +10,12 @@
 #include "../util/Time.h"
 #include "../gui/StartMenu.h"
 #include "../font/GameFonts.h"
-#include "GameMain.h"
+#include "../DarkSeed/DarkSeed.h"
 
 using namespace Input;
 using namespace Sprites;
 using namespace GameUtil;
-using namespace Seed;
+using namespace Game;
 
 // GLOBALS ////////////////////////////////////
 HWND wndHandle;
@@ -73,12 +73,12 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 
     // Setup the main game loop / rendering funciton
 	ZeroMemory(&windowOffsets, sizeof(WindowOffsets));
-    GameMain* gameMain = new GameMain();
-    gameMain->lpfRender = (RENDER)Render;
-    gameMain->lpfUpdateSc = (UPDATE)UpdateScene;
-    gameMain->lpfMoveSprts = (MOVE)MoveSprites;
-    gameMain->windowOffsets = &windowOffsets;
-    gameMain->lpfLoadTxtrs = (LOADTX)LoadTextures;
+    DarkSeed* darkSeed = new DarkSeed();
+    darkSeed->lpfRender = (RENDER)Render;
+    darkSeed->lpfUpdateSc = (UPDATE)UpdateScene;
+    darkSeed->lpfMoveSprts = (MOVE)MoveSprites;
+    darkSeed->windowOffsets = &windowOffsets;
+    darkSeed->lpfLoadTxtrs = (LOADTX)LoadTextures;
 
 	// Initialize the window
 	if (!InitWindow(hInstance, WINDOW_WIDTH, WINDOW_HEIGHT, &wndHandle) ) {
@@ -105,7 +105,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	float next_game_tick = ::Time::GetMilis();
 
 	// Initialize the game!
-	gameMain->InitGame();
+	darkSeed->InitGame();
 
     // Get the current time in milis
     int countLoops = 0;
@@ -135,11 +135,11 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
         
         QueryPerformanceCounter((LARGE_INTEGER *) &curTime);
 		while ( curTime > nextTime && loops <= MAX_FRAMESKIP ) { 
-			//swprintf_s(buffer, 100, L"Current Loop: %d and current time: %.0f\n", countLoops, Time::GetMilis());
+			//swprintf_s(buffer, 100, L"Current Loop: %d and current time: %.0f/n", countLoops, Time::GetMilis());
 			//OutputDebugString(buffer); 
 
-			gameMain->UpdateScene();
-			gameMain->UpdateSprites();
+			darkSeed->UpdateScene();
+			darkSeed->UpdateSprites();
 
             nextTime += timeCount;
 			if (countLoops >= TICKS_PER_SECOND) { 
@@ -155,16 +155,18 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		}
 
     	// Render the sprites to the screen
-        gameMain->Render();
+        darkSeed->Render();
 
 		// Moves the sprites around directionaly
-		interpolation = float ( Time::GetMilis() + SKIP_TICKS - next_game_tick ) / float ( SKIP_TICKS );
-		gameMain->MoveSprites(interpolation);
+		// interpolation = float ( (nextTime - curTime ) / 1000 ) / float ( SKIP_TICKS );
+		swprintf_s(buffer, 100, L"%.4f\n", interpolation);
+		OutputDebugString(buffer);
+		darkSeed->MoveSprites(interpolation);
 	}
 
 	// Clean up the resources we allocated
 	ShutdownDirect3D();
-    delete gameMain;
+    delete darkSeed;
 	return (int)msg.wParam;
 }
 
@@ -432,7 +434,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
                 }
             } // Translate for up
 
-			sprites[i].Position ( posX, posY, sprites[i].Position().z );
+			sprites[i].Position (  posX, posY, sprites[i].Position().z );
 		}
 
         // One final check to see if the sprite is no longer in the visible range
