@@ -58,7 +58,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d10.lib;d3dx10.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;d3d10.lib;d3dx10.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)\lib\x86;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="darkseed\DarkSeed.cpp" />
+    <ClCompile Include="util\GameClock.cpp" />
     <ClCompile Include="sprites\base\SpriteSheet.cpp" />
     <ClCompile Include="sprites\Character.cpp" />
     <ClCompile Include="sprites\FontSprite.cpp" />
@@ -91,6 +92,7 @@
     <ClCompile Include="sprites\SpriteUtils.cpp" />
     <ClCompile Include="gui\UIMessageBox.cpp" />
     <ClCompile Include="util\TextureHandler.cpp" />
+    <ClInclude Include="util\GameClock.h" />
     <ClInclude Include="main\GameLocations.h" />
     <ClInclude Include="darkseed\DarkSeed.h" />
     <ClInclude Include="sprites\animations\Animation.h" />

@@ -8,6 +8,7 @@
 #include "../gui/GameWindow.h"
 #include "../util/TextureHandler.h"
 #include "../util/Time.h"
+#include "../util/GameClock.h"
 #include "../gui/StartMenu.h"
 #include "../font/GameFonts.h"
 #include "../DarkSeed/DarkSeed.h"
@@ -110,19 +111,12 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
     // Get the current time in milis
     int countLoops = 0;
 
-	wchar_t buffer[100];
-
-	float start = Time::GetMilis();
-
-    LONGLONG curTime;
-    LONGLONG perfCnt;
-    LONGLONG nextTime;
-    DWORD    timeCount;
-
-    QueryPerformanceFrequency((LARGE_INTEGER *) &perfCnt);
-    timeCount = DWORD(perfCnt / TICKS_PER_SECOND);
-    QueryPerformanceCounter((LARGE_INTEGER *) &nextTime);
-
+	wchar_t buffer[200];
+   
+    LONGLONG curTime = NULL;
+    LONGLONG nextTime = NULL;
+  
+    GameClock::GetInstance()->GetTime(&nextTime);
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -133,25 +127,22 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		
 		loops = 0;
         
-        QueryPerformanceCounter((LARGE_INTEGER *) &curTime);
-		while ( curTime > nextTime && loops <= MAX_FRAMESKIP ) { 
+        GameClock::GetInstance()->GetTime(&curTime);
+		if ( curTime > nextTime  && loops <= MAX_FRAMESKIP ) { 
 			//swprintf_s(buffer, 100, L"Current Loop: %d and current time: %.0f/n", countLoops, Time::GetMilis());
 			//OutputDebugString(buffer); 
 
 			darkSeed->UpdateScene();
 			darkSeed->UpdateSprites();
 
-            nextTime += timeCount;
+            nextTime += GameClock::GetInstance()->timeCount;
 			if (countLoops >= TICKS_PER_SECOND) { 
-				float end = Time::GetMilis();
-				swprintf_s(buffer, 100, L"Started at: %.0f ended at %.0f for a diff of %.02f\n", start, end, (end - start));
+				swprintf_s(buffer, 200, L"Started at: %e ended at %e for a diff of %d\n", nextTime, curTime, (curTime - nextTime));
 				OutputDebugString(buffer);
-				start = end;
 				countLoops = -1;
-				//return 1;
 			}
-			loops++;
             countLoops++;
+			loops++;
 		}
 
     	// Render the sprites to the screen
@@ -159,8 +150,8 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 
 		// Moves the sprites around directionaly
 		// interpolation = float ( (nextTime - curTime ) / 1000 ) / float ( SKIP_TICKS );
-		swprintf_s(buffer, 100, L"%.4f\n", interpolation);
-		OutputDebugString(buffer);
+		// swprintf_s(buffer, 200, L"%.4f\n", interpolation);
+		// OutputDebugString(buffer);
 		darkSeed->MoveSprites(interpolation);
 	}
 

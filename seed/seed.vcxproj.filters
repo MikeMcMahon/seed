@@ -63,6 +63,9 @@
     <ClCompile Include="darkseed\DarkSeed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="util\GameClock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sprites\GameSprite.h">
@@ -159,6 +162,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="darkseed\DarkSeed.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\GameClock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
