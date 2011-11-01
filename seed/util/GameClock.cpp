@@ -19,21 +19,28 @@ GameClock::GameClock(void) {
 }
 
 void GameClock::GetTime ( LONGLONG * t ) { 
-    QueryPerformanceCounter( (LARGE_INTEGER *) t);
+    // Use timeGetTime() if queryperformancecounter is not supported 
+    if (!QueryPerformanceCounter( (LARGE_INTEGER *) t)) { 
+        *t = timeGetTime();
+    }
+
     cacheTime = *t;
 }
 
 LONGLONG GameClock::GetTimeElapsed ( void ) { 
     LONGLONG t; 
-    QueryPerformanceCounter( (LARGE_INTEGER *) &t );
+    
+    // Use timeGetTime() if queryperformancecounter is not supported
+    if (!QueryPerformanceCounter( (LARGE_INTEGER *) &t )) { 
+        t = timeGetTime();
+    }
+
     return (t - cacheTime);
 }
 
 void GameClock::Initialize ( void ) { 
-    LONGLONG perfCnt;
-    QueryPerformanceFrequency((LARGE_INTEGER *) &perfCnt);
-
-    this->timeCount = DWORD(perfCnt / TICKS_PER_SECOND);
+    QueryPerformanceFrequency((LARGE_INTEGER *) &this->frequency);
+    this->timeCount = DWORD(this->frequency / TICKS_PER_SECOND);
 }
 
 GameClock::~GameClock(void)

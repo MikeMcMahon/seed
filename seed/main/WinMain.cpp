@@ -117,6 +117,10 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
     LONGLONG nextTime = NULL;
   
     GameClock::GetInstance()->GetTime(&nextTime);
+
+    DWORD start = timeGetTime();
+    DWORD end = timeGetTime();
+
 	while (WM_QUIT != msg.message) {
 		while (PeekMessage(&msg, NULL, 0,0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -137,9 +141,12 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 
             nextTime += GameClock::GetInstance()->timeCount;
 			if (countLoops >= TICKS_PER_SECOND) { 
-				swprintf_s(buffer, 200, L"Started at: %e ended at %e for a diff of %d\n", nextTime, curTime, (curTime - nextTime));
+                end = timeGetTime();
+                swprintf_s(buffer, 200, L"Started at: %d ended at %d for a diff of %d\n", start, end, (end-start) );
 				OutputDebugString(buffer);
 				countLoops = -1;
+
+                start = timeGetTime();
 			}
             countLoops++;
 			loops++;

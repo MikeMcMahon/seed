@@ -10,6 +10,7 @@ namespace GameUtil {
 
         void GetTime ( LONGLONG* t );
         LONGLONG GetTimeElapsed ( void );
+        LONGLONG frequency; 
 
         ~GameClock(void);
     protected:

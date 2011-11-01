@@ -37,7 +37,7 @@ void DarkSeed::InitGame() {
 	c.x = 0;
 	c.y = 0;
 	
-	gs[0].AddAnimation(L"bounce", 0.5f, 8, c);
+	gs[0].AddAnimation(L"bounce", 1.0f, 8, c);
 	gs->SyncPlayAnimation ( L"bounce" );
 
 	gs[0].MoveDistance(0.05f, 0.05f, 0.05f, 0.05f);

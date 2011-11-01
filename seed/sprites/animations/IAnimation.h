@@ -7,12 +7,16 @@ namespace Sprites {
         int numFrames;
         float skipFrames;
         bool loop;
+        float elapseFrame;
+        LONGLONG lastFrameTime;
     public:
         int NumFrames() { 
             return this->numFrames; 
         } 
         virtual void AnimationDetail(float duration, int numFrames) {
             this->skipFrames = (TICKS_PER_SECOND * duration) / (float)numFrames;
+            this->elapseFrame = ( (TICKS_PER_SECOND * duration) / (float)numFrames ) * ( ( 1000.0f / (float)TICKS_PER_SECOND ) );
+            this->lastFrameTime = 0;
             this->curSkip = 0;
             this->numFrames = numFrames;
         }
