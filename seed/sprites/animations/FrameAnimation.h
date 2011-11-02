@@ -30,8 +30,7 @@ namespace Sprites {
                 GameUtil::GameClock::GetInstance()->GetTime ( &currentFrameTime ); 
             }
 
-            LONGLONG freq = GameUtil::GameClock::GetInstance()->frequency;
-            LONGLONG frameDiff = ( currentFrameTime - this->lastFrameTime ) / GameUtil::GameClock::GetInstance()->frequency;
+            float frameDiff = ( (float) ( currentFrameTime - this->lastFrameTime ) / (float) GameUtil::GameClock::GetInstance()->frequency ) * 1000.0f;
             if ( frameDiff >= this->elapseFrame ) { 
 
                 if (this->curFrameAnimate < this->numFrames) { 
@@ -43,7 +42,6 @@ namespace Sprites {
                     this->curFrameAnimate = 0;
 
                 GameUtil::GameClock::GetInstance()->GetTime ( &this->lastFrameTime );
-                // OutputDebugString ( L"Incremeting frame on time\n" );
             }
             
             /*
