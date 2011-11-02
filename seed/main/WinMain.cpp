@@ -156,7 +156,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
         darkSeed->Render();
 
 		// Moves the sprites around directionaly
-		// interpolation = float ( (nextTime - curTime ) / 1000 ) / float ( SKIP_TICKS );
+		interpolation = float ( (nextTime - curTime ) / 1000 ) / float ( SKIP_TICKS );
 		// swprintf_s(buffer, 200, L"%.4f\n", interpolation);
 		// OutputDebugString(buffer);
 		darkSeed->MoveSprites(interpolation);
@@ -320,6 +320,7 @@ void UpdateScene(GameSprite* sprites) {
 **
 *****************************************************/
 void MoveSprites(GameSprite* sprites, float interpolation) { 
+	bool canAnimate = false;
     // We want to move a moveable sprite of course! 
 	for (int i = 0; i < MAX_SPRITES; i++) {
 		if (sprites[i].IsVisible() && sprites[i].CanMove() && sprites[i].SpriteType() == Type::character) { 
@@ -359,6 +360,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
 
 			// Direction is right
             if (xControl->IsButtonPressedForController(0, GameControls::XboxController::DPAD_RIGHT)) { 
+				canAnimate = true;
 				posX += moveR;
                 if (actualWidth >= actualWindowRight && windowOffsets.offsetRight <= 0) {
                     posX = actualWindowRight - sprites[i].Size().width;
@@ -433,6 +435,7 @@ void MoveSprites(GameSprite* sprites, float interpolation) {
             } // Translate for up
 
 			sprites[i].Position (  posX, posY, sprites[i].Position().z );
+			sprites[i].CanAnimate ( canAnimate );
 		}
 
         // One final check to see if the sprite is no longer in the visible range

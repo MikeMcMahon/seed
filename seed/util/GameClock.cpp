@@ -39,7 +39,9 @@ LONGLONG GameClock::GetTimeElapsed ( void ) {
 }
 
 void GameClock::Initialize ( void ) { 
-    QueryPerformanceFrequency((LARGE_INTEGER *) &this->frequency);
+    if ( !QueryPerformanceFrequency((LARGE_INTEGER *) &this->frequency) ) { 
+		this->frequency = 1000; // 1000ms to one second 
+	}
     this->timeCount = DWORD(this->frequency / TICKS_PER_SECOND);
 }
 

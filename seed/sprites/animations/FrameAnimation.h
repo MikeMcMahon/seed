@@ -21,6 +21,10 @@ namespace Sprites {
 			this->curFrameAnimate = frame;
 		}
 
+		void Reset ( ) { 
+			this->SetFrame ( 0 );
+		}
+
         void IncrementFrame() {
             LONGLONG currentFrameTime; 
             if (this->lastFrameTime == 0) { 
