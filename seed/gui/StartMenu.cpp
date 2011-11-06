@@ -1,9 +1,7 @@
 #include "StartMenu.h"
 
 #include "../sprites/SpriteUtils.h"
-#include "../util/TextureHandler.h"
 #include "MenuConstants.h"
-#include "../font/GameFonts.h"
 
 using namespace Gui;
 

@@ -21,12 +21,6 @@
     <ClCompile Include="input\XGamePad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="font\GameFonts.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main\DXDrawing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main\GameModes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,9 +28,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sprites\SpriteUtils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="util\TextureHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="input\KMInput.cpp">
@@ -63,7 +54,7 @@
     <ClCompile Include="darkseed\DarkSeed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util\GameClock.cpp">
+    <ClCompile Include="main\DXDrawing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,9 +65,6 @@
     <ClInclude Include="input\XGamePad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="font\GameFonts.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="main\DXDrawing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,12 +72,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprites\SpriteUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\TextureHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="input\KMInput.h">
@@ -120,9 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprites\base\ISprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\base\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprites\base\Scale.h">
@@ -162,9 +141,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="darkseed\DarkSeed.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\GameClock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

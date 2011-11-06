@@ -1,5 +1,5 @@
 #include "GameWindow.h"
-
+/*
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	// Check any available messages from the queue
 	switch (message)
@@ -68,5 +68,5 @@ bool InitWindow(HINSTANCE hInstance, int windowWidth, int windowHeight, HWND* wi
 	UpdateWindow(*windowHandle);
 
 	return true;
-}
+} */
 /* eof */

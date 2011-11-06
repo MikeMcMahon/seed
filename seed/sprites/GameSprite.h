@@ -5,7 +5,6 @@
 #include "../sprites/animations/Animation.h"
 #include "../sprites/base/Coordinates.h"
 #include "../sprites/base/Scale.h"
-#include "../sprites/base/Color.h"
 #include "../sprites/base/SpriteSheet.h"
 
 namespace Sprites {
@@ -19,7 +18,7 @@ namespace Sprites {
 		int savedAnimations;
 		Animation animations[GameSprite::MAX_ANIMTATIONS];
 	public:
-        Color color;
+        Util::SWColor color;
         Scale scale;
 
 #ifdef RENDER_ENG_DX

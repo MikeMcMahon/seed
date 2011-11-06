@@ -6,16 +6,11 @@
 #include "../input/XGamePad.h"
 #include "DXDrawing.h"
 #include "../gui/GameWindow.h"
-#include "../util/TextureHandler.h"
-#include "../util/Time.h"
-#include "../util/GameClock.h"
 #include "../gui/StartMenu.h"
-#include "../font/GameFonts.h"
 #include "../DarkSeed/DarkSeed.h"
 
 using namespace Input;
 using namespace Sprites;
-using namespace GameUtil;
 using namespace Game;
 
 // GLOBALS ////////////////////////////////////
@@ -37,10 +32,10 @@ ID3D10BlendState* pFontOriginalBlendState10 = NULL;
 ID3D10ShaderResourceView* gSpriteTextureRV = NULL;
 
 // Sprite stuff
-TextureHandler* pTextureHandler = NULL;
 ID3DX10Sprite* pSpriteObject = NULL;
 D3DX10_SPRITE  spritePool[NUM_POOL_SPRITES];
 ID3DX10Font* pGameFont = NULL;
+
 int numActiveSprites;
 
 // Configure the xbox controller stuff
@@ -59,12 +54,16 @@ void MoveSprites(GameSprite*, float);
 bool InitSprites();
 void LoadTextures(GameSprite*);
 
+SW2D::SWDevice* pSWDevice = NULL;
+
 /**************************************
 *** Main Application entry point
 *** 
 ***************************************/
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) 
 { 
+	pSWDevice = new SW2D::SWDevice ( );
+
 	// TODO - Implement resulation changing? Maybe? 
 	/*DEVMODE dm = { 0 };
 	dm.dmSize = sizeof(dm);
@@ -82,12 +81,16 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
     darkSeed->lpfLoadTxtrs = (LOADTX)LoadTextures;
 
 	// Initialize the window
-	if (!InitWindow(hInstance, WINDOW_WIDTH, WINDOW_HEIGHT, &wndHandle) ) {
+	if (!pSWDevice->CreateGameWindow (hInstance, WINDOW_WIDTH, WINDOW_HEIGHT)) { 
 		return false;
 	}
-	if (!InitDirect3D(wndHandle, WINDOW_WIDTH, WINDOW_HEIGHT) ) {
+	//if (!InitWindow(hInstance, WINDOW_WIDTH, WINDOW_HEIGHT, &wndHandle) ) {
+	//	return false;
+	//}
+	if (!InitDirect3D(*pSWDevice->GetWindowHandle (), WINDOW_WIDTH, WINDOW_HEIGHT) ) {
 		return 0;
 	}
+
 	if (!InitSprites()) {
 		return 0;
 	}
@@ -103,7 +106,6 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 	// Get the timer frequency
 	int loops = 0;
 	float interpolation = 0;
-	float next_game_tick = ::Time::GetMilis();
 
 	// Initialize the game!
 	darkSeed->InitGame();
@@ -116,7 +118,8 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
     LONGLONG curTime = NULL;
     LONGLONG nextTime = NULL;
   
-    GameClock::GetInstance()->GetTime(&nextTime);
+	Timers::GameClock::GetInstance()->GetTime(&nextTime);
+    //GameClock::GetInstance()->GetTime(&nextTime);
 
     DWORD start = timeGetTime();
     DWORD end = timeGetTime();
@@ -131,7 +134,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		
 		loops = 0;
         
-        GameClock::GetInstance()->GetTime(&curTime);
+        Timers::GameClock::GetInstance()->GetTime(&curTime);
 		if ( curTime > nextTime  && loops <= MAX_FRAMESKIP ) { 
 			//swprintf_s(buffer, 100, L"Current Loop: %d and current time: %.0f/n", countLoops, Time::GetMilis());
 			//OutputDebugString(buffer); 
@@ -139,7 +142,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 			darkSeed->UpdateScene();
 			darkSeed->UpdateSprites();
 
-            nextTime += GameClock::GetInstance()->timeCount;
+            nextTime += Timers::GameClock::GetInstance()->timeCount;
 			if (countLoops >= TICKS_PER_SECOND) { 
                 end = timeGetTime();
                 swprintf_s(buffer, 200, L"Started at: %d ended at %d for a diff of %d\n", start, end, (end-start) );
@@ -454,12 +457,12 @@ void LoadTextures(GameSprite* sprites) {
 			// Check and load textures for any sprites that still need it
 			ID3D10Texture2D* texture = NULL;
             if (sprites[i].SpriteType() != Type::color) {
-                texture = TextureHandler::GetTexture2DFromFile(sprites[i].Resource(), pD3DDevice);
+                texture = TextureUtils::TextureHandler::GetTexture2DFromFile(sprites[i].Resource(), pD3DDevice);
 			}
 
 			ID3D10ShaderResourceView* srv = NULL;
 			if (texture) { 
-				TextureHandler::GetResourceViewFromTexture(texture, &srv, pD3DDevice);
+				TextureUtils::TextureHandler::GetResourceViewFromTexture(texture, &srv, pD3DDevice);
 				texture->Release();
 				texture = NULL;
 			}

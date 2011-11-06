@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IAnimation.h"
-#include "../../util/GameClock.h"
+#include <SpriteWorks2D.h>
 
 namespace Sprites { 
     class FrameAnimation : public IAnimation { 
@@ -28,13 +28,13 @@ namespace Sprites {
         void IncrementFrame() {
             LONGLONG currentFrameTime; 
             if (this->lastFrameTime == 0) { 
-                GameUtil::GameClock::GetInstance()->GetTime ( &this->lastFrameTime ); 
+                Timers::GameClock::GetInstance()->GetTime ( &this->lastFrameTime ); 
                 currentFrameTime = this->lastFrameTime;
             } else { 
-                GameUtil::GameClock::GetInstance()->GetTime ( &currentFrameTime ); 
+                Timers::GameClock::GetInstance()->GetTime ( &currentFrameTime ); 
             }
 
-            float frameDiff = ( (float) ( currentFrameTime - this->lastFrameTime ) / (float) GameUtil::GameClock::GetInstance()->frequency ) * 1000.0f;
+            float frameDiff = ( (float) ( currentFrameTime - this->lastFrameTime ) / (float) Timers::GameClock::GetInstance()->frequency ) * 1000.0f;
             if ( frameDiff >= this->elapseFrame ) { 
 
                 if (this->curFrameAnimate < this->numFrames) { 
@@ -45,7 +45,7 @@ namespace Sprites {
 				if (this->curFrameAnimate >= this->numFrames)
                     this->curFrameAnimate = 0;
 
-                GameUtil::GameClock::GetInstance()->GetTime ( &this->lastFrameTime );
+                Timers::GameClock::GetInstance()->GetTime ( &this->lastFrameTime );
             }
             
             /*

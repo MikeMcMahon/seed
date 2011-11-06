@@ -1,10 +1,9 @@
 #include "GameSprite.h"
-#include "../util/TextureHandler.h"
 
 using namespace Sprites;
 
-const struct Scale DefaultScale = { 1.0f, 1.0f };
-const struct Color DefaultColor = Color( 1.0f, 1.0f, 1.0f, 1.0f );
+const Scale DefaultScale = { 1.0f, 1.0f };
+const Util::SWColor DefaultColor = Util::SWColor( 1.0f, 1.0f, 1.0f, 1.0f );
 
 Sprites::GameSprite::GameSprite(wchar_t* resource, wchar_t* name, float width, float height) { 
 	this->Init();
@@ -14,7 +13,7 @@ Sprites::GameSprite::GameSprite(wchar_t* resource, wchar_t* name, float width, f
 
 	// Zero out the animations
 	ZeroMemory(&(this->animations), sizeof(Animation) * MAX_ANIMTATIONS);
-
+	
     // Set the width and height
 	this->Size ( height, width );
     this->Name ( name );
