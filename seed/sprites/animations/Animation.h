@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../base/Coordinates.h"
-
 #define MOVE_DIR_U   L"MOVE_DIR_U"
 #define MOVE_DIR_UL  L"MOVE_DIR_UL"
 #define MOVE_DIR_UR  L"MOVE_DIR_UR"
@@ -17,6 +15,6 @@ namespace Sprites {
 		wchar_t description[100];
         float duration; 
         int totalFrames;
-        Coordinates frameOnePosition;
+        Util::SWCoordinates frameOnePosition;
     };
 }

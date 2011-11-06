@@ -3,8 +3,6 @@
 #include "../sprites/base/ISprite.h"
 #include "../sprites/animations/FrameAnimation.h" 
 #include "../sprites/animations/Animation.h"
-#include "../sprites/base/Coordinates.h"
-#include "../sprites/base/Scale.h"
 #include "../sprites/base/SpriteSheet.h"
 
 namespace Sprites {
@@ -19,7 +17,7 @@ namespace Sprites {
 		Animation animations[GameSprite::MAX_ANIMTATIONS];
 	public:
         Util::SWColor color;
-        Scale scale;
+		Util::SWScale scale;
 
 #ifdef RENDER_ENG_DX
         D3DX10_SPRITE   dxSprite;
@@ -30,7 +28,7 @@ namespace Sprites {
         GameSprite(wchar_t* resource, wchar_t* name, float width, float height);
 		~GameSprite();
 
-		bool AddAnimation ( wchar_t[100], float duration, int numFrames, Coordinates );
+		bool AddAnimation ( wchar_t[100], float duration, int numFrames, Util::SWCoordinates );
 		Animation GetAnimation ( wchar_t[100] );
 		bool SetAnimation ( Animation );
 		void SyncPlayAnimation ( wchar_t description[100] );

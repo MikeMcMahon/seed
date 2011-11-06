@@ -1,8 +1,8 @@
 #pragma once
 
-namespace Sprites { 
+namespace Util { 
     // Allows the user to specify the sprite should scale in or out 
-    struct Scale {
+    typedef struct _SWScale {
         float y;            // 1.0f = 100%
         float x;
-    }; }
+    } SWScale; }

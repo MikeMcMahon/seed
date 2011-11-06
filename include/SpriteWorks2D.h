@@ -8,7 +8,6 @@
 #define RENDER_ENG_DX // Render for the DX System
 // #define RENDER_ENG_GL // not supported yet 
 
-
 // Required for rendering stuff on time
 #ifndef TICKS_PER_SECOND
 	#define TICKS_PER_SECOND 60
@@ -39,27 +38,43 @@
 	#define CLASS_NAME TEXT("DEFAULT")
 #endif
 
-
 #include "SWColor.h"
+#include "SWCoordinates.h"
+#include "SWMove.h" 
+#include "SWScale.h"
+#include "SWSize.h"
+#include "SWIRenderer.h"
+
+#ifdef RENDER_ENG_DX 
+#include "SWD3D.h"
+#endif
+
+typedef struct _WindowOffsets { 
+    float offsetTop;
+    float offsetRight;
+    float offsetBottom;
+    float offsetLeft;
+} WindowOffsets;
 
 namespace SW2D { 
-	class SWDevice { 
-	private:
-		HWND hWnd;
-	
-	public:
-		SWDevice ( void );
-		~SWDevice ( void );
-		
-		/// Creates a game window with the given size 
-		/// Returns a handle to the created window
-		/// If DX is the engine, will initialize the DX system and attach it to the window
-		bool CreateGameWindow ( HINSTANCE hInstance, int width, int height);
-		HWND* GetWindowHandle ( void );
-	private:
-		void InitInterface ( void );
 
-	}; // SWDevice
+class SWDevice { 
+private:
+	HWND hWnd;
+protected:
+	Renderers::IRenderer* renderer;
+	Util::SWSizeI windowDimensions;
+public:
+	/// Creates a game window with the given size 
+	/// Returns a handle to the created window
+	/// If DX is the engine, will initialize the DX system and attach it to the window 
+	bool CreateGameWindow ( HINSTANCE hInstance, int width, int height);
+	HWND* GetWindowHandle ( void );
+	bool InitInterface ( void );
+	Renderers::IRenderer* GetRenderer ( void );
+
+}; // SWDevice
+
 } // Engine
 
 namespace Timers { 

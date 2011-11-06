@@ -1,11 +1,11 @@
 #pragma once
 
-namespace Sprites { 
-	struct Move { 
+namespace Util { 
+	typedef struct _SWMove { 
 		float
 			up,
 			down,
 			left,
 			right;
-	};
+	} SWMove;
 }

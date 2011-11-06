@@ -21,20 +21,20 @@ const wchar_t* SpriteSheet::Resource () {
 	return this->resource;
 }
 
-void SpriteSheet::SheetSize ( Size size ) { 
+void SpriteSheet::SheetSize ( Util::SWSizeI size ) { 
 	this->sheetSize = size;
 }
 
-Size SpriteSheet::SheetSize ( void ) { 
+Util::SWSizeI SpriteSheet::SheetSize ( void ) { 
 	return this->sheetSize;
 }
 
 void SpriteSheet::FrameDimensions ( int wide, int tall ) { 
-	this->frameDimensions.width = (float)wide;
-	this->frameDimensions.height = (float)tall;
+	this->frameDimensions.width = wide;
+	this->frameDimensions.height = tall;
 }
 
-Size SpriteSheet::FrameDimensions ( void ) { 
+Util::SWSizeI SpriteSheet::FrameDimensions ( void ) { 
 	return this->frameDimensions;
 }
 

@@ -33,7 +33,7 @@ void DarkSeed::InitGame() {
     gs[0].CanAnimate ( true );
     gs[0].CanMove ( true );
 	
-	Sprites::Coordinates c;
+	Util::SWCoordinates c;
 	c.x = 0;
 	c.y = 0;
 	

@@ -33,9 +33,6 @@
     <ClCompile Include="input\KMInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui\GameWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sprites\FontSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -77,9 +74,6 @@
     <ClInclude Include="input\KMInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gui\GameWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="input\GameControls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -104,9 +98,6 @@
     <ClInclude Include="sprites\base\ISprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprites\base\Scale.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sprites\MapSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -122,16 +113,7 @@
     <ClInclude Include="sprites\animations\FrameAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprites\base\Size.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\base\Move.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sprites\animations\Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\base\Coordinates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="main\GameLocations.h">

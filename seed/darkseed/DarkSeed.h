@@ -4,7 +4,6 @@
 #include "../sprites/GameSprite.h"
 #include "../gui/StartMenu.h"
 #include "../input/XGamePad.h"
-#include "../gui/GameWindow.h"
 
 #include "../main/GameModes.h"
 

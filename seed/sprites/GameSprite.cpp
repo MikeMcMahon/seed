@@ -2,7 +2,7 @@
 
 using namespace Sprites;
 
-const Scale DefaultScale = { 1.0f, 1.0f };
+const Util::SWScale DefaultScale = { 1.0f, 1.0f };
 const Util::SWColor DefaultColor = Util::SWColor( 1.0f, 1.0f, 1.0f, 1.0f );
 
 Sprites::GameSprite::GameSprite(wchar_t* resource, wchar_t* name, float width, float height) { 
@@ -58,7 +58,7 @@ Type::type GameSprite::SpriteType() { return this->kindOf; }
 /// AddAnimation () 
 /// Adds the given animation to the list of currently stored animations
 /// Returns false if we've already stored as many animations as possible
-bool GameSprite::AddAnimation ( wchar_t description[100], float duration, int numFrames, Coordinates positionInSheet ) { 
+bool GameSprite::AddAnimation ( wchar_t description[100], float duration, int numFrames, Util::SWCoordinates positionInSheet ) { 
 	if (this->savedAnimations < MAX_ANIMTATIONS) { 
 		Animation anim;
 		wcscpy_s(anim.description, description);

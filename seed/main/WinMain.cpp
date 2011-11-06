@@ -5,7 +5,6 @@
 #include "GameModes.h"
 #include "../input/XGamePad.h"
 #include "DXDrawing.h"
-#include "../gui/GameWindow.h"
 #include "../gui/StartMenu.h"
 #include "../DarkSeed/DarkSeed.h"
 
@@ -61,15 +60,16 @@ SW2D::SWDevice* pSWDevice = NULL;
 *** 
 ***************************************/
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) 
-{ 
-	pSWDevice = new SW2D::SWDevice ( );
-
+{
 	// TODO - Implement resulation changing? Maybe? 
 	/*DEVMODE dm = { 0 };
 	dm.dmSize = sizeof(dm);
 	for (int iModeNum = 0; EnumDisplaySettings( NULL, iModeNum, &dm ) != 0; iModeNum++) { 
 		
 	}*/
+
+	// Create the SpriteWorks device for use throughout the game
+	pSWDevice = new SW2D::SWDevice( );	
 
     // Setup the main game loop / rendering funciton
 	ZeroMemory(&windowOffsets, sizeof(WindowOffsets));
@@ -80,14 +80,18 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
     darkSeed->windowOffsets = &windowOffsets;
     darkSeed->lpfLoadTxtrs = (LOADTX)LoadTextures;
 
+	pSWDevice->GetRenderer ();
 	// Initialize the window
 	if (!pSWDevice->CreateGameWindow (hInstance, WINDOW_WIDTH, WINDOW_HEIGHT)) { 
-		return false;
+		return -1;
 	}
-	//if (!InitWindow(hInstance, WINDOW_WIDTH, WINDOW_HEIGHT, &wndHandle) ) {
-	//	return false;
-	//}
-	if (!InitDirect3D(*pSWDevice->GetWindowHandle (), WINDOW_WIDTH, WINDOW_HEIGHT) ) {
+
+	// Initializes the DirectX or OpenGL Interface and attaches it to the window
+	if (!pSWDevice->InitInterface()) { 
+		return -1;
+	}
+
+	 if (!InitDirect3D(*pSWDevice->GetWindowHandle(), WINDOW_WIDTH, WINDOW_HEIGHT) ) {
 		return 0;
 	}
 
