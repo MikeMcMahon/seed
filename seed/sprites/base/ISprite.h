@@ -6,12 +6,12 @@
 namespace Sprites {
     class ISprite { 
     protected:
-        wchar_t         name[100];
-        bool            textureLoaded;
+        wchar_t					name[100];
+        bool					textureLoaded;
         Util::SWCoordinates     position;
-        Util::SWSizeF            size;
+        Util::SWSizeF           size;
         Util::SWMove            move;
-        Type::type      kindOf;
+        Type::type				kindOf;
     public:
 		virtual void SpriteType(Type::type kindOf) = 0;
 		virtual Type::type SpriteType() = 0;
