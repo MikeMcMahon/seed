@@ -211,22 +211,22 @@ void Render(GameSprite* sprites, int spritesToRender) {
 				(float)(WINDOW_HEIGHT - 0 - (WINDOW_HEIGHT/2)), 
 				0.1f);	// ZOrder
 
-			// ID3D10Texture2D * ballBounce = NULL;
-			// ballBounce = TextureHandler::GetTexture2DFromFile(L"../textures/main-menu-1024x768.png", pD3DDevice);
-			// ID3D10ShaderResourceView * srv;
-			// TextureHandler::GetResourceViewFromTexture(ballBounce, &srv, pD3DDevice);
-			// ballBounce->Release();
+			 ID3D10Texture2D * ballBounce = NULL;
+			 ballBounce = ::TextureUtils::TextureHandler::GetTexture2DFromFile(L"../textures/main-menu-1024x768.png", pD3DDevice);
+			 ID3D10ShaderResourceView * srv;
+			 ::TextureUtils::TextureHandler::GetResourceViewFromTexture(ballBounce, &srv, pD3DDevice);
+			 ballBounce->Release();
 			D3DX10_SPRITE sprite;
-			sprite.pTexture = NULL; // srv;
+			sprite.pTexture = srv; // srv;
 			sprite.ColorModulate = D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f);
 			sprite.TexCoord.x = 0;
 			sprite.TexCoord.y = 0;
 			sprite.TexSize.x = 1.0f;
 			sprite.TexSize.y = 1.0f;
 			sprite.TextureIndex = 0;
-			sprite.matWorld = matScaling * matTranslation;*/
+			sprite.matWorld = matScaling * matTranslation;
 
-
+			pSpriteObject->DrawSpritesBuffered(&sprite, 1);*/
             pSpriteObject->DrawSpritesBuffered(spritePool, numActiveSprites);
 
             // Draw the text on top
@@ -537,13 +537,13 @@ bool InitDirect3D(HWND hWnd, int windowWidth, int windowHeight) {
 
 	// Create the D3D device and the swap chain
 	HRESULT hr = D3D10CreateDeviceAndSwapChain(NULL,
-												D3D10_DRIVER_TYPE_HARDWARE, // IF this is anything other than hardware, GAME WILL SUCK
-												NULL,
-												0,
-												D3D10_SDK_VERSION,
-												&swapChainDesc,
-												&pSwapChain,
-												&pD3DDevice);
+		D3D10_DRIVER_TYPE_HARDWARE, // IF this is anything other than hardware, GAME WILL SUCK
+		NULL,
+		0,
+		D3D10_SDK_VERSION,
+		&swapChainDesc,
+		&pSwapChain,
+		&pD3DDevice);
 
 	// Ensure the device was created
 	if (hr != S_OK) {
@@ -557,11 +557,13 @@ bool InitDirect3D(HWND hWnd, int windowWidth, int windowHeight) {
 	if (hr != S_OK) {
 		return false;
 	}
+
 	// Create the render target view
 	hr = pD3DDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView);
 
 	// Release the back buffer
 	pBackBuffer->Release();
+	pBackBuffer = NULL;
 
 	// Make sure the render target view was created successfully
 	if (hr != S_OK) {

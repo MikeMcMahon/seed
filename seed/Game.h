@@ -12,8 +12,8 @@
 #define MAX_SPRITES			2048
 
 // Window handling stuff
-#define WINDOW_WIDTH 1028
-#define WINDOW_HEIGHT 768
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 #define CLASS_NAME TEXT("Dark Seed")
 
 #if _DEBUG

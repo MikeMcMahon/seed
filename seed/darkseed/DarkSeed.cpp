@@ -45,7 +45,7 @@ void DarkSeed::InitGame() {
 	gs->SpriteType ( Sprites::Type::character );
         
     Sprites::GameSprite *gs2 = new Sprites::GameSprite(L"../textures/main-menu-1024x768.png", L"background", WINDOW_WIDTH, WINDOW_HEIGHT );
-
+	gs2->SpriteType ( Sprites::Type::background );
 	// TODO - Pull this out into it's own "center" function
 	// Used to calculate and center the sprite
 	float width = gs2->Size().width;
