@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "seed", "seed\seed.vcxproj", "{19827A19-938C-4FD0-B438-BFB7C142E7B1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpriteWorks2D", "..\SpriteWorks2D\SpriteWorks2D\SpriteWorks2D.vcxproj", "{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +24,16 @@ Global
 		{19827A19-938C-4FD0-B438-BFB7C142E7B1}.Release|Win32.Build.0 = Release|Win32
 		{19827A19-938C-4FD0-B438-BFB7C142E7B1}.SingleImage|Win32.ActiveCfg = Release|Win32
 		{19827A19-938C-4FD0-B438-BFB7C142E7B1}.SingleImage|Win32.Build.0 = Release|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.CD_ROM|Win32.ActiveCfg = Release|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.CD_ROM|Win32.Build.0 = Release|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.Debug|Win32.Build.0 = Debug|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.DVD-5|Win32.ActiveCfg = Debug|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.DVD-5|Win32.Build.0 = Debug|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.Release|Win32.ActiveCfg = Release|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.Release|Win32.Build.0 = Release|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.SingleImage|Win32.ActiveCfg = Release|Win32
+		{7CA842C0-583E-4CEE-A9CF-54E8CDC97618}.SingleImage|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,5 @@
 // My Headers
-#include "../sprites/GameSprite.h"
 #include "../sprites/SpriteUtils.h"
-#include "../sprites/FontSprite.h"
 #include "GameModes.h"
 #include "../input/XGamePad.h"
 #include "DXDrawing.h"
@@ -122,7 +120,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
     LONGLONG curTime = NULL;
     LONGLONG nextTime = NULL;
   
-	Timers::GameClock::GetInstance()->GetTime(&nextTime);
+	Timers::SWGameClock::GetInstance()->GetTime(&nextTime);
     //GameClock::GetInstance()->GetTime(&nextTime);
 
     DWORD start = timeGetTime();
@@ -138,7 +136,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 		
 		loops = 0;
         
-        Timers::GameClock::GetInstance()->GetTime(&curTime);
+        Timers::SWGameClock::GetInstance()->GetTime(&curTime);
 		if ( curTime > nextTime  && loops <= MAX_FRAMESKIP ) { 
 			//swprintf_s(buffer, 100, L"Current Loop: %d and current time: %.0f/n", countLoops, Time::GetMilis());
 			//OutputDebugString(buffer); 
@@ -146,7 +144,7 @@ int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpC
 			darkSeed->UpdateScene();
 			darkSeed->UpdateSprites();
 
-            nextTime += Timers::GameClock::GetInstance()->timeCount;
+            nextTime += Timers::SWGameClock::GetInstance()->timeCount;
 			if (countLoops >= TICKS_PER_SECOND) { 
                 end = timeGetTime();
                 swprintf_s(buffer, 200, L"Started at: %d ended at %d for a diff of %d\n", start, end, (end-start) );

@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sprites\GameSprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="input\XGamePad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,19 +30,10 @@
     <ClCompile Include="input\KMInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sprites\FontSprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gui\StartMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gui\UIMessageBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sprites\base\SpriteSheet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sprites\Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="darkseed\DarkSeed.cpp">
@@ -56,9 +44,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sprites\GameSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="input\XGamePad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -83,43 +68,13 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprites\FontSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\Sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gui\StartMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gui\UIMessageBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprites\base\ISprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\MapSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\base\SpriteType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\base\SpriteSheet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\animations\IAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\animations\FrameAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\animations\Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="main\GameLocations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sprites\Character.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="darkseed\DarkSeed.h">

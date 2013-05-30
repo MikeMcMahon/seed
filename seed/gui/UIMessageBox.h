@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../sprites/FontSprite.h"
-
 class UIMessageBox
 {
 private: 

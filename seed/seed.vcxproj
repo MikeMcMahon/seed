@@ -21,12 +21,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -52,15 +54,22 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(DXSDK_DIR)\include;..\Include;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(DXSDK_DIR)\include;..\Include</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>Game.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SpriteWorks2D.lib;Winmm.lib;d3d10.lib;d3dx10.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)\lib\x86;..\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)\lib\x86;$(SolutionDir)\lib\</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)\script\moveheaders.bat</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>
+      </Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -82,25 +91,13 @@
   <ItemGroup>
     <ClCompile Include="darkseed\DarkSeed.cpp" />
     <ClCompile Include="main\DXDrawing.cpp" />
-    <ClCompile Include="sprites\base\SpriteSheet.cpp" />
-    <ClCompile Include="sprites\Character.cpp" />
-    <ClCompile Include="sprites\FontSprite.cpp" />
     <ClCompile Include="gui\StartMenu.cpp" />
     <ClCompile Include="input\KMInput.cpp" />
     <ClCompile Include="sprites\SpriteUtils.cpp" />
     <ClCompile Include="gui\UIMessageBox.cpp" />
     <ClInclude Include="main\GameLocations.h" />
     <ClInclude Include="darkseed\DarkSeed.h" />
-    <ClInclude Include="sprites\animations\Animation.h" />
-    <ClInclude Include="sprites\base\SpriteSheet.h" />
-    <ClInclude Include="sprites\animations\FrameAnimation.h" />
-    <ClInclude Include="sprites\animations\IAnimation.h" />
-    <ClInclude Include="sprites\base\ISprite.h" />
-    <ClInclude Include="sprites\base\SpriteType.h" />
-    <ClInclude Include="sprites\Character.h" />
-    <ClInclude Include="sprites\FontSprite.h" />
     <ClCompile Include="main\GameModes.cpp" />
-    <ClCompile Include="sprites\GameSprite.cpp" />
     <ClCompile Include="main\WinMain.cpp" />
     <ClCompile Include="input\XGamePad.cpp" />
     <ClInclude Include="gui\StartMenu.h" />
@@ -108,15 +105,12 @@
     <ClInclude Include="input\GameControls.h" />
     <ClInclude Include="input\KMInput.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="sprites\MapSprite.h" />
-    <ClInclude Include="sprites\Sprite.h" />
     <ClInclude Include="gui\UIMessageBox.h" />
     <ClInclude Include="sprites\SpriteUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main\DXDrawing.h" />
     <ClInclude Include="main\GameModes.h" />
-    <ClInclude Include="sprites\GameSprite.h" />
     <ClInclude Include="input\XGamePad.h" />
   </ItemGroup>
   <ItemGroup>

@@ -3,12 +3,13 @@
 #include "SWIRenderer.h"
 
 namespace Renderers {
-	class D3DRend : public IRenderer { 
+	class DXRend : public IRenderer { 
 	public:
-		D3DRend ( void );
+		DXRend ( void );
 
 		bool StartupInterface ( HWND hWnd, int width, int height );
 		void ShutdownInterface ( void );
+		void Render ( void );
 		
 		ID3D10Device* GetDevice ( void );
 

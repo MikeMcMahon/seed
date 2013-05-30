@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../input/GameControls.h"
-#include "../sprites/GameSprite.h"
 #include "../gui/StartMenu.h"
 #include "../input/XGamePad.h"
 

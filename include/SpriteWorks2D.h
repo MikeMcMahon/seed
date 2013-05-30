@@ -1,5 +1,4 @@
 #pragma once
-
 /// NOTE ///////////////////////////////////////////////
 /// The render engine must be set in here and then
 /// recompiled for the specific engine the users wishes 
@@ -38,12 +37,8 @@
 	#define CLASS_NAME TEXT("DEFAULT")
 #endif
 
-#include "SWColor.h"
-#include "SWCoordinates.h"
-#include "SWMove.h" 
-#include "SWScale.h"
-#include "SWSize.h"
-#include "SWIRenderer.h"
+// Main include, pulls in all of the other includes 
+#include "SW2D.h"
 
 #ifdef RENDER_ENG_DX 
 #include "SWD3D.h"
@@ -76,27 +71,6 @@ public:
 }; // SWDevice
 
 } // Engine
-
-namespace Timers { 
-    class GameClock
-    {
-    public:
-        static GameClock* GetInstance();
-        void Initialize ( void );
-        DWORD timeCount;
-
-        void GetTime ( LONGLONG* t );
-        LONGLONG GetTimeElapsed ( void );
-        LONGLONG frequency; 
-
-        ~GameClock(void);
-    protected:
-        GameClock(void);
-
-    private:
-        static GameClock* pInstance;
-    }; // GameClock
-} // Timers
 
 namespace TextureUtils { 
 

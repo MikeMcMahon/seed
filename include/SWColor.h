@@ -20,8 +20,8 @@ namespace Util {
 	    operator D3DXCOLOR() {
 		    return D3DXCOLOR(this->r, this->g, this->b, this->a);
 	    }
-#else
-// Opengl color struct, not supported yet, is there one?
+#elif defined(RENDER_ENGINE_GL)
+		// Opengl color struct, not supported yet, is there one?
 #endif
 	} SWColor; // Color
 } // Sprites

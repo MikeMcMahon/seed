@@ -2,9 +2,6 @@
 
 #define RESOURCE_BUFFER 200
 
-#include "../sprites/GameSprite.h"
-#include "../sprites/FontSprite.h"
-
 namespace Gui { 
 
 	struct MenuStyle { enum style {
@@ -18,9 +15,9 @@ namespace Gui {
    class StartMenu
     {
     private:
-        std::vector<Sprites::FontSprite> menuOpts;
 		Sprites::GameSprite background;
 		Sprites::GameSprite cursor;
+		std::vector<Sprites::GameSprite> menuOpts; 
 		int menuChoiceHeight;
     public:
         StartMenu(void);

@@ -1,8 +1,8 @@
 #pragma once
 
-// #define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
+//#define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
 #define STRICT
-#define WINVER       0x500
+#define WINVER       0x501
 
 // Required for rendering stuff on time
 #define TICKS_PER_SECOND 60
